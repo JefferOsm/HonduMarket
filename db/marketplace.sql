@@ -27,4 +27,4 @@ VALUES('Inmuebles','<FontAwesomeIcon icon="fa-solid fa-house-chimney" />'),
 ('Electronica','<FontAwesomeIcon icon="fa-solid fa-computer" style={{color: "#2693ff",}} />'),
 ('Servicios','<FontAwesomeIcon icon="fa-solid fa-bell-concierge" style={{color: "#27521d",}} />'),
 ('Negocios','<FontAwesomeIcon icon="fa-solid fa-user-tie" style={{color: "#008080",}} />'),
-('Empleos','<FontAwesomeIcon icon="fa-solid fa-briefcase" style={{color: "#6800d0",}} />'),
+('Empleos','<FontAwesomeIcon icon="fa-solid fa-briefcase" style={{color: "#6800d0",}} />')
