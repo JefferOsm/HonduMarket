@@ -27,4 +27,4 @@ VALUES('Mascotas','<FontAwesomeIcon icon="fa-solid fa-cat" style={{color: "#9b00
 VALUES('Electronica','<FontAwesomeIcon icon="fa-solid fa-computer" style={{color: "#2693ff",}} />'),
 VALUES('Servicios','<FontAwesomeIcon icon="fa-solid fa-bell-concierge" style={{color: "#27521d",}} />'),
 VALUES('Negocios','<FontAwesomeIcon icon="fa-solid fa-user-tie" style={{color: "#008080",}} />'),
-VALUES('Empleos','<FontAwesomeIcon icon="fa-solid fa-briefcase" style={{color: "#6800d0",}} />'),
+VALUES('Empleos','<FontAwesomeIcon icon="fa-solid fa-briefcase" style={{color: "#6800d0",}} />');
