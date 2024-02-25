@@ -7,6 +7,8 @@ CREATE TABLE tbl_usuarios (
     correo varchar(100) NOT NULL,
     telefono varchar(14) NOT NULL,
     direccion varchar(100) NOT NULL,
+    pass varchar(100) NOT NULL,
+    url_usuarios TEXT NULL,
     CONSTRAINT Pk_usuarios PRIMARY KEY (id)
 );
 
