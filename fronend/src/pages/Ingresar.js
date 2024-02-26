@@ -16,7 +16,11 @@ export const Ingresar = () => {
           <label for="exampleDropdownFormPassword1" class="form-label">Password</label>
           <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password" />
       </div>
-        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+      <dip>
+      <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/perfil">iniciar secion</a>
+      </li>
+      </dip>
       </form>
       <div class="dropdown-divider"></div>
       <p style={{marginLeft: "30px"}}><a>Nuevo por aquí? </a><a href="/crear" class="link-light">Inscribirse</a></p>

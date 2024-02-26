@@ -41,7 +41,7 @@ export const Crear = () => {
         </label>
       </div>
      <div class="col-12">
-      <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+      <button  type="submit" class="btn btn-primary">Crear Cuenta</button>
     </div>
       </form>
       <div class="dropdown-divider"></div>
