@@ -1,4 +1,80 @@
-body{
-  background: #d7d4d4da;
-  overflow: hidden;
+:root{
+  --blanco_fondo: #dcdada;
+  --primario: #2c1a4d;
+  --secundario: #ab296a;
+  --gris: #757575;
+}
+
+
+body {
+  margin: 0;
+  background: #d1d0d0da;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.bc-degrate{
+  background-image: linear-gradient(to left, #6f42c1 0%, var(--primario) 100%);
+  border: none;
+}
+.bc-primary-2{
+  background-color: #59359a;
+}
+
+.bc-secondary{
+  border-color: var(--secundario);
+  color: var(--secundario);
+}
+
+.bc-secondary:hover{
+  background-color: var(--secundario);
+  color: white;
+}
+
+.bc-primary{
+  background-color: var(--primario) !important;
+}
+
+/* Perfil */
+.foto-perfil{
+  border-radius: 50%;
+  background-color: var(--secundario);
+  position: absolute;
+  bottom: 26rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+}
+
+
+/* form para subir imagen de perfil */
+.contenedor-perfil{
+  position: relative !important;
+
+}
+.my-7{
+  margin-top: 7rem !important;
+  margin-bottom: 7rem;
+}
+.mb-8{
+  margin-bottom: 8rem;
+}
+
+.content-perfil{
+  position:  absolute!important;
+  top:5rem;
+}
+.perfil-btn{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
 }
