@@ -9,7 +9,7 @@ CREATE TABLE tbl_usuarios (
     telefono varchar(14) NOT NULL,
     direccion varchar(100) NOT NULL,
     pass varchar(100) NOT NULL,
-    url_usuarios TEXT NULL,
+    url_imagen TEXT NULL,
     CONSTRAINT Pk_usuarios PRIMARY KEY (id)
 );
 
