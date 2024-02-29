@@ -3,7 +3,8 @@ use bd_marketplace
 
 CREATE TABLE tbl_usuarios (
     id INT(11) NOT NULL AUTO_INCREMENT,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(40) NOT NULL,
+    username varchar(40) NOT NULL,
     correo varchar(100) NOT NULL,
     telefono varchar(14) NOT NULL,
     direccion varchar(100) NOT NULL,

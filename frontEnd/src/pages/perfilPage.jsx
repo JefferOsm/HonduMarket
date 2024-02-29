@@ -12,13 +12,16 @@ const {register, handleSubmit, formState:{errors}} = useForm();
 const [imagen,setImagen] = useState(false)
 
 const onSubmit= async(data)=>{
-  const formData= new FormData();
-  formData.append('image',data.imagen[0])
-  console.log(formData)
-
-  await fotoPerfil(formData)
-
-    setImagen(false)
+  const conf= window.confirm('Desa subir esta imagen?')
+  if(conf){
+    const formData= new FormData();
+    formData.append('image',data.imagen[0])
+    console.log(formData)
+  
+    await fotoPerfil(formData)
+  
+      setImagen(false)
+  }
 }
 
 
@@ -44,16 +47,19 @@ const comprobarImg= ()=>{
             {/* Formulario para subir la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
             <div className='input-group d-flex justify-content-center'>
-              <label htmlFor="imagen" className='btn btn-outline-secondary me-3' onClick={comprobarImg}><FontAwesomeIcon icon={faImage}/></label>
+              <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' onClick={comprobarImg} title='Subir Foto'>
+                <FontAwesomeIcon icon={faImage}/>
+              </label>
 
               <input 
                 type='file' className='form-control' accept='image/*'
-                {... register('imagen',{ required: 'Selecciona una imagen' })} id='imagen' style={{ display: 'none' }} />
+                {... register('imagen',{ required: 'Selecciona una imagen' })} id='imagen' style={{ display: 'none' }}
+                onChange={(event) => onSubmit({ imagen: event.target.files })} />
                 
                 {/* Mostar boton para subir imagen */}
-                {imagen &&(
+                {/* {imagen &&(
                   <> <button  className='btn btn-outline-success' type='submit'><FontAwesomeIcon icon={faCheck} /></button></>
-                )}
+                )} */}
              
             </div>
             </form>

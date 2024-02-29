@@ -90,10 +90,13 @@ export const AutenticacionProvider = ({children}) =>{
 
     //Cerrar Sesino
     const logout = async()=>{
-        Cookies.remove('token');
-        setAutenticado(false)
-        setUsuario(null)
-        setPassw(null)
+        const msg = window.confirm('Estas Seguro de Cerrar Sesion?')
+        if(msg){
+            Cookies.remove('token');
+            setAutenticado(false)
+            setUsuario(null)
+            setPassw(null)
+        }
     }
 
     //Eliminar los errores despues de 5 segundos
@@ -117,7 +120,6 @@ export const AutenticacionProvider = ({children}) =>{
             if(!cookies.token){
                 setAutenticado(false);
                 setUsuario(null);
-                setPassw(null)
                 setLoading(false);
                 return;
             }

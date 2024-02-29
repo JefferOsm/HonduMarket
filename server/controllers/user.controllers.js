@@ -97,7 +97,7 @@ export const loginUser = async(req,res) => {
   try {
     const [rows] = await pool.query('Select * from tbl_usuarios where correo=?' ,[correo]);
 
-    if(rows.length <= 0) return res.status(400).json(["Correo no encontrado" ]);
+    if(rows.length <= 0) return res.status(400).json(["Usuario no Existente" ]);
 
     const comparacionPassword = await compare(pass,rows[0].pass);
 
@@ -209,7 +209,7 @@ export const  actualizarImagen = async(req,res)=>{
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
-      console.log("Cloudinary Result:", result);
+      //console.log("Cloudinary Result:", result);
     }
 
     const [rows] = await pool.query(

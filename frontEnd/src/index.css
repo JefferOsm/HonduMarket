@@ -21,6 +21,8 @@ code {
     monospace;
 }
 
+
+/* Estilos de Colores */
 .bc-degrate{
   background-image: linear-gradient(to left, #6f42c1 0%, var(--primario) 100%);
   border: none;
@@ -41,6 +43,19 @@ code {
 
 .bc-primary{
   background-color: var(--primario) !important;
+}
+
+
+/* Estilos Variados */
+/* texto justifycado */
+.justify{
+  text-align: justify;
+}
+.w-280{
+  width: 280px;
+}
+.w-400{
+  width: 360px;
 }
 
 /* Perfil */
@@ -77,4 +92,27 @@ code {
   bottom: 0;
   left: 0;
 
+}
+
+
+/* Navegacion */
+.btn-nav{
+  background-color: #59359a;
+}
+.btn-nav:hover{
+  background-color: #553492;
+}
+@media (min-width: 768px) {
+  .btn-nav{
+    background-color: transparent;
+  }
+}
+
+/* Botones Nav */
+.bc-secondary-body{
+  background-color: var(--secundario);
+}
+
+.bc-secondary-body:hover{
+  background-color: #982760;
 }
