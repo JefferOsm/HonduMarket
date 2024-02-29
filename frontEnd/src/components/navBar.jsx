@@ -20,6 +20,7 @@ function NavBar() {
           {/* Cambiar navgar si esta o no autenticado */}
           {autenticado ? (
             <>
+            {/* Mostrar Cuando el Usuario esta Autenticado */}
               <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
                     <li className="nav-item ">
@@ -46,19 +47,20 @@ function NavBar() {
             </>
           ):(
             <>
-              <div className="collapse navbar-collapse w-400" id="navbarSupportedContent">
+            {/* Mostrar Cuando no hay Usuario Logueado */}
+              <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
               
-              <form className="d-flex mx-auto me-5 my-2" role="search">
+              <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
                   <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                  <input className="form-control me-2 w-280" type="search" placeholder="Search" aria-label="Search" />
+                  <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
               </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
 
-                  <li className="nav-item p-1 btn-nav rounded-3 my-2">
+                  <li className="nav-item p-1 btn-nav rounded-3 my-2 text-center">
                     <Link className="nav-link active text-light" to={'/registro'}>Registrate</Link>
                   </li>
 
-                  <li className="nav-item p-1 btn-nav my-2  rounded-3">
+                  <li className="nav-item p-1 btn-nav my-2 rounded-3 text-center">
                     <Link className="nav-link text-light" to={'/login'}>Inicia Sesion</Link>
                   </li>
 

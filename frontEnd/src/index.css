@@ -54,8 +54,8 @@ code {
 .w-280{
   width: 280px;
 }
-.w-400{
-  width: 360px;
+.w-340{
+  width: 340px;
 }
 
 /* Perfil */
@@ -105,6 +105,9 @@ code {
 @media (min-width: 768px) {
   .btn-nav{
     background-color: transparent;
+  }
+  .w-340{
+    width: 500px;
   }
 }
 
