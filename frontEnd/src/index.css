@@ -111,6 +111,15 @@ code {
   }
 }
 
+@media (max-width: 768px) {
+  .direct-flex-row{
+    flex-direction: column !important;
+  }
+  .direct-flex-row > div{
+    margin-left: 0 !important;
+  }
+}
+
 /* Botones Nav */
 .bc-secondary-body{
   background-color: var(--secundario);

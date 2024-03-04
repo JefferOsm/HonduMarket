@@ -9,20 +9,22 @@ function RegistroPage() {
 
   //funcionalidades para el modal de terminos
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
-
+  
+  //Funcionalidades para el Registro
   const {register, handleSubmit, formState:{errors}} = useForm();
   const {registro,autenticado,erroresAut} = usarAutenticacion();
   const navegacion = useNavigate();
 
+  //si se autentica mandar a Home
    useEffect(()=>{
      if(autenticado){
        navegacion('/')
      }
    },[autenticado])
+
 
   //Peticion Al Backend
   const peticion= handleSubmit(async (values) => {
@@ -32,7 +34,6 @@ function RegistroPage() {
 
   //Aceptar terminos
   const [isAcept, setIsAcept] = useState(false);
-
   const comprobarCheck = () => {
     setIsAcept(!isAcept);
   };
@@ -83,8 +84,8 @@ function RegistroPage() {
 
                       <div className="col-12">
                         <label className="form-label">Número de teléfono:</label>
-                        <input className="form-control" maxLength={8} type="tel" placeholder="Número de teléfono" 
-                        {... register('telefono', {required:true, maxLength:8})} />
+                        <input className="form-control" maxLength={8}  placeholder="Número de teléfono: Ej 88121502" 
+                        {... register('telefono', {required:true, maxLength:8})} pattern="[0-9]*" />
                       </div>
 
                       {
@@ -97,30 +98,33 @@ function RegistroPage() {
                         <label className="form-label">Nombre de Usuario: </label>
                         <div className="input-group">
                           <div className="input-group-text">@</div>
-                          <input style={{width:"345px"}} type="text" className="form-control text-dark" 
+                          <input type="text" className="form-control text-dark" 
                           placeholder="Username" {... register('username', {required:true})} />
                         </div>
                       </div>
 
                       {
                         errors.username && (
-                          <p className="text-danger">El Username es Obligatorio</p>
+                          <p className="text-danger">El Nombre de Usuario es Obligatorio</p>
                         )
                       }
 
                       </div>
 
-                    <div className="d-flex justify-content-between">
-                      <div className="w-100">
-                        <label className="form-label">Email</label>
+                    <div className="d-flex justify-content-between  direct-flex-row">
+                      {/* Correo */}
+                      <div className="w-100 ">
+                        <label className="form-label">Correo Electrónico</label>
                         <input type="email" className="form-control"
                         {...register('correo',{required:true})} />
                       </div>
 
-                      <div className="w-100 ms-5">
-                        <label className="form-label">Password</label>
-                        <input type="password" minLength={5} className="form-control" 
+                      {/* Contraseña */}
+                      <div className="w-100 ms-5 ">
+                        <label className="form-label">Contraseña</label>
+                        <input type="password" minLength={5} className="form-control text-dark" 
                         {... register('pass', {required:true,minLength:5})}/>
+                        <p className="text-info mt-1">Debe ser de mínimo de 5 Caracteres</p>
                       </div>
 
                     </div>

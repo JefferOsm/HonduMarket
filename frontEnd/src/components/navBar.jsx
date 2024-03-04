@@ -21,7 +21,13 @@ function NavBar() {
           {autenticado ? (
             <>
             {/* Mostrar Cuando el Usuario esta Autenticado */}
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
+
+                <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
+                    <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
+                    <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
+                </form>
+
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
                     <li className="nav-item ">
                       <Link className="nav-link active text-light me-2">Bienvenido {usuario.username}</Link>
@@ -38,10 +44,6 @@ function NavBar() {
                         <FontAwesomeIcon icon={faRightFromBracket} style={{color: "#ab296a",}} />
                       </Link> 
                     </li>
-
-
-
-
                 </ul>
               </div>         
             </>

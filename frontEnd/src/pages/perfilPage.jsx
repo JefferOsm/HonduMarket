@@ -4,16 +4,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMap, faPhone, faEnvelope, faImage, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import {useForm} from 'react-hook-form';
-
+import DeleteProfileModal from '../components/deleteProfileModal';
 
 function PerfilPage() {
+//Estados para el Modal de elminar perfil
+const [show, setShow] = useState(false);
+const handleClose = () => setShow(false);
+const handleShow = () => setShow(true);
+
+//Funciones para la pagina
 const {usuario,eliminarUsuario,fotoPerfil}= usarAutenticacion();
 const {register, handleSubmit, formState:{errors}} = useForm();
-const [imagen,setImagen] = useState(false)
 
+
+//Peticion
 const onSubmit= async(data)=>{
-  const conf= window.confirm('Desa subir esta imagen?')
-  if(conf){
+
     const formData= new FormData();
     formData.append('image',data.imagen[0])
     console.log(formData)
@@ -21,18 +27,12 @@ const onSubmit= async(data)=>{
     await fotoPerfil(formData)
   
       setImagen(false)
-  }
-}
-
-
-//Funcion para habilitar boton de save
-const comprobarImg= ()=>{
-  setImagen(true)
 }
 
 
 
   return (
+    <>
     <div className='container-md bg-primary-light my-7 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white',}}> 
       <div className="row ">
         {/* Imagen */}
@@ -40,14 +40,12 @@ const comprobarImg= ()=>{
         height:'160px', backgroundImage:`url(${usuario.url_imagen})`, backgroundRepeat:'no-repeat', backgroundSize:'cover'}} >
           
         </Link>
-
-
             
           <div className="content-perfil">
             {/* Formulario para subir la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
             <div className='input-group d-flex justify-content-center'>
-              <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' onClick={comprobarImg} title='Subir Foto'>
+              <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' title='Subir Foto'>
                 <FontAwesomeIcon icon={faImage}/>
               </label>
 
@@ -55,12 +53,7 @@ const comprobarImg= ()=>{
                 type='file' className='form-control' accept='image/*'
                 {... register('imagen',{ required: 'Selecciona una imagen' })} id='imagen' style={{ display: 'none' }}
                 onChange={(event) => onSubmit({ imagen: event.target.files })} />
-                
-                {/* Mostar boton para subir imagen */}
-                {/* {imagen &&(
-                  <> <button  className='btn btn-outline-success' type='submit'><FontAwesomeIcon icon={faCheck} /></button></>
-                )} */}
-             
+
             </div>
             </form>
 
@@ -92,11 +85,13 @@ const comprobarImg= ()=>{
                 <Link to={'/perfil/editar'} className='btn btn-outline-success mx-auto'>Editar</Link>
               </div>
               <div>
-                <Link to={'/'} className='btn btn-outline-danger mx-auto' onClick={()=>{eliminarUsuario()}}>Eliminar Perfil</Link>
+                <Link  className='btn btn-outline-danger mx-auto' onClick={(handleShow)}>Eliminar Perfil</Link>
               </div>
             </div>     
       </div>
     </div>
+    <DeleteProfileModal show={show} handleClose={handleClose}/>
+    </>
   )
 }
 

@@ -66,16 +66,14 @@ export const AutenticacionProvider = ({children}) =>{
 
     //Eliminar Cuenta
     const eliminarUsuario = async()=>{
-        try {
-            const confirm= window.confirm('Su Perfil Sera Eliminado de Forma Permanente')
-            if(confirm){            
+        try {        
                 const response= await eliminarUsuarioRequest();
                 console.log(response)
                 Cookies.remove('token');
-                setAutenticado(false)
-                setUsuario(null)
-                setPassw(null)
-             }
+                setAutenticado(false);
+                setUsuario(null);
+                setPassw(null);
+                window.location.href= '/';
         } catch (error) {
             setErroresAut(error.response.data)
         }
