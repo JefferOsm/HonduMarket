@@ -3,6 +3,7 @@ import {useForm} from 'react-hook-form';
 import { usarAutenticacion } from "../context/autenticacion";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import EditpasswordModal from '../components/editpasswordModal';
 
 
 function EditPerfilPage() {
@@ -11,6 +12,12 @@ function EditPerfilPage() {
     const {usuario,autenticado,erroresAut,actualizarUsuario,passw} = usarAutenticacion();
     const navegacion = useNavigate();
     const [pass,setpass]= useState('');
+
+    //funcionalidades para el modal de cambiar contraseña
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    console.log(show)
 
     //Peticion Al Backend
     const peticion= handleSubmit(async (values) => {
@@ -24,7 +31,6 @@ function EditPerfilPage() {
     useEffect(()=>{
         setpass(usuario.pass)
     },[])
-  
   
     return (
       <div className="container p-4">
@@ -100,15 +106,16 @@ function EditPerfilPage() {
   
                     <div className="d-flex justify-content-between">
                       <div className="w-100">
-                        <label className="form-label">Email</label>
+                        <label className="form-label">Correo</label>
                         <input type="email" className="form-control" defaultValue={usuario.correo}
                         {...register('correo',{required:true})} />
                       </div>
   
-                      <div className="w-100 ms-5">
-                        <label className="form-label" defaultValue={passw}>Password</label>
-                        <input type="password" minLength={5} className="form-control" defaultValue={passw}
-                         {... register('pass', {required:true,minLength:5})}/>
+                      <div className='w-100 ms-3'>
+                        <label className="form-label">Contraseña</label>
+                        <button type="button" className="btn btn-outline-primary" onClick={handleShow}>Cambiar Contraseña</button>
+                        <EditpasswordModal show={show} handleClose={handleClose} />
+
                       </div>
   
                     </div>
@@ -123,6 +130,9 @@ function EditPerfilPage() {
                           <p className="text-danger">Debes cambiar tu Contraseña y que tenga mas de 5 Caracteres</p>
                         )
                     }
+
+
+
                     <div className="col-12 d-flex">
                       <button type="submit" className="btn btn-outline-success ">Actualizar</button>
                       <Link to={'/perfil'} className='btn btn-outline-danger ms-3'>Cancelar</Link>
