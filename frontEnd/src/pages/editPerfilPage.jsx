@@ -125,13 +125,6 @@ function EditPerfilPage() {
                         )
                     }
                     
-                    {
-                        errors.pass && (
-                          <p className="text-danger">Debes cambiar tu Contraseña y que tenga mas de 5 Caracteres</p>
-                        )
-                    }
-
-
 
                     <div className="col-12 d-flex">
                       <button type="submit" className="btn btn-outline-success ">Actualizar</button>
