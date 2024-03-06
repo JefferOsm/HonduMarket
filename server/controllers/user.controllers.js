@@ -48,15 +48,20 @@ export const getUser = async (req, res) => {
 };
 
 
-// Agregar Usuarios
+// Crear Usuarios
 export const createUser = async (req, res) => {
 
   const { nombre,username, correo, telefono, direccion, pass } = req.body;
   const password = await encrypt(pass);
 
   try {
+    //Validar que correo y telefono no se repita
     const [validacionUsuario] = await pool.query('Select * from tbl_usuarios where correo=? or telefono=?' ,[correo,telefono]);
     if(validacionUsuario.length > 0) return res.status(400).json(['El Correo o Telefono Esta en Uso ']);
+
+    //validar que el usuario no se repita
+    const [validacionUserName] = await pool.query('Select * from tbl_usuarios where username= ?' ,[username]);
+    if(validacionUserName.length > 0) return res.status(400).json(['El Nombre de Usuario Esta en Uso ']);
 
     const [rows] = await pool.query(
       "INSERT INTO tbl_usuarios(nombre,username,correo,telefono,direccion,pass) VALUES (?, ?, ?, ?, ?, ?)",
@@ -65,8 +70,8 @@ export const createUser = async (req, res) => {
 
     const token= await createToken({id: rows.insertId});
     res.cookie('token', token,{
-      SameSite:'None',
-      Secure:true
+      sameSite:'none',
+      secure:true,
     });
     res.json({
       id: rows.insertId,
@@ -97,7 +102,7 @@ export const loginUser = async(req,res) => {
   try {
     const [rows] = await pool.query('Select * from tbl_usuarios where correo=?' ,[correo]);
 
-    if(rows.length <= 0) return res.status(400).json(["Correo no encontrado" ]);
+    if(rows.length <= 0) return res.status(400).json(["Usuario no Existente" ]);
 
     const comparacionPassword = await compare(pass,rows[0].pass);
 
@@ -105,8 +110,8 @@ export const loginUser = async(req,res) => {
 
     const token= await createToken({id: rows[0].id});
     res.cookie('token', token,{
-      SameSite: 'None',
-      secure:true
+      sameSite: 'none',
+      secure:true,
     });
     res.json({
       id: rows[0].id,
@@ -133,8 +138,6 @@ export const loginUser = async(req,res) => {
 export const logoutUser = (req,res)=>{
   res.cookie('token', "", {
     expires: new Date(0),
-    SameSite: 'None',
-    Secure:true
   })
 
   return res.sendStatus(200);
@@ -197,6 +200,8 @@ export const updateUser = async (req, res) => {
   }
 };
 
+
+// Subir Foto de Perfil
 export const  actualizarImagen = async(req,res)=>{
   try {
     // console.log("Req File:", req.file);
@@ -204,17 +209,19 @@ export const  actualizarImagen = async(req,res)=>{
     // Obtén la URL de la imagen existente del usuario
     const [existingUser] = await pool.query("SELECT url_imagen FROM tbl_usuarios WHERE id=?", [req.user]);
     let imageUrl = existingUser[0].url_imagen;
+    let id_imagen
 
     // Si se proporcionó un archivo, sube la imagen a Cloudinary y obtén la URL de la imagen
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
-      console.log("Cloudinary Result:", result);
+      id_imagen= result.original_filename;
+      // console.log("Cloudinary Result:", result);
     }
 
     const [rows] = await pool.query(
-      "UPDATE tbl_usuarios SET url_imagen=? WHERE id=?",
-      [imageUrl, req.user]
+      "UPDATE tbl_usuarios SET id_imagen=?, url_imagen=? WHERE id=?",
+      [id_imagen, imageUrl, req.user]
     );
 
     const [user] = await pool.query("Select *FROM tbl_usuarios where id= ?", [

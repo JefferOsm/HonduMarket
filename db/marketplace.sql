@@ -11,7 +11,17 @@ CREATE TABLE tbl_usuarios (
     pass varchar(100) NOT NULL,
     url_imagen TEXT NULL,
     CONSTRAINT Pk_usuarios PRIMARY KEY (id)
+    nombre VARCHAR(50) NOT NULL,
+    username VARCHAR(20) NOT NULL,
+    correo VARCHAR(100) NOT NULL UNIQUE KEY,
+    telefono VARCHAR(8) NOT NULL UNIQUE KEY,
+    direccion VARCHAR(100) NOT NULL,
+    pass VARCHAR(100) NOT NULL,
+    id_imagen TEXT null,
+    url_imagen TEXT NULL ,
+    CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
+
 
 CREATE TABLE tbl_categorias (
     id INT(11) NOT NULL AUTO_INCREMENT,
