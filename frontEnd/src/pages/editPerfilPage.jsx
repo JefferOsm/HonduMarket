@@ -92,7 +92,7 @@ function EditPerfilPage() {
   
                       {
                         errors.username && (
-                          <p className="text-danger">El Username es Obligatorio</p>
+                          <p className="text-danger">El Nombre de Usuario es Obligatorio</p>
                         )
                       }
   
@@ -100,13 +100,13 @@ function EditPerfilPage() {
   
                     <div className="d-flex justify-content-between">
                       <div className="w-100">
-                        <label className="form-label">Email</label>
+                        <label className="form-label">Correo Electrónico</label>
                         <input type="email" className="form-control" defaultValue={usuario.correo}
                         {...register('correo',{required:true})} />
                       </div>
   
                       <div className="w-100 ms-5">
-                        <label className="form-label" defaultValue={passw}>Password</label>
+                        <label className="form-label" defaultValue={passw}>Contraseña</label>
                         <input type="password" minLength={5} className="form-control" defaultValue={passw}
                          {... register('pass', {required:true,minLength:5})}/>
                       </div>

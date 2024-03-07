@@ -100,19 +100,21 @@ export const loginUser = async(req,res) => {
   const {correo, pass } = req.body;
 
   try {
+    //Verificar existencia de usuario
     const [rows] = await pool.query('Select * from tbl_usuarios where correo=?' ,[correo]);
-
     if(rows.length <= 0) return res.status(400).json(["Usuario no Existente" ]);
 
+    //comparar contraseñas
     const comparacionPassword = await compare(pass,rows[0].pass);
-
     if(!comparacionPassword) return res.status(400).json([ "Contraseña Incorrecta" ]);
 
+    //Crear token de autenticacion
     const token= await createToken({id: rows[0].id});
     res.cookie('token', token,{
       sameSite: 'none',
       secure:true,
     });
+
     res.json({
       id: rows[0].id,
       nombre: rows[0].nombre,
@@ -152,8 +154,7 @@ export const updateUser = async (req, res) => {
     let validacion= false
 
     //comprobar correos y telefono
-    const[comp]= await pool.query('SELECT correo,telefono FROM tbl_usuarios WHERE id <> ?', [req.user])
-    // console.log(comp);
+    const[comp]= await pool.query('SELECT correo,telefono,username FROM tbl_usuarios WHERE id <> ?', [req.user]);
 
     comp.forEach(objeto => {
       if(objeto.correo === correo || objeto.telefono === telefono ){
@@ -161,8 +162,14 @@ export const updateUser = async (req, res) => {
         validacion=true
         return res.status(400).json(['El Correo o Telefono Esta en Uso ']);
       }
+      if(objeto.username === username ){
+        // console.log(objeto.correo)
+        validacion=true
+        return res.status(400).json(['El Nombre de Usuario esta en uso']);
+      }
     });
 
+    //Si no hay problemas, actualizar el usuario
     if(!validacion){
         // Actualiza el usuario en la base de datos
       const [rows] = await pool.query(
@@ -170,9 +177,10 @@ export const updateUser = async (req, res) => {
         [nombre,username, correo, telefono, direccion, password, req.user]
       );
 
+    // Error por si el usuario no existe
       if (rows.affectedRows <= 0) {
           return res.status(404).json({
-            message: "El usuario a eliminar no existe",
+            message: "El usuario a modificar no existe",
           });
         };
 
@@ -219,11 +227,13 @@ export const  actualizarImagen = async(req,res)=>{
       // console.log("Cloudinary Result:", result);
     }
 
+    //Ejecutar consulta para subir imagen
     const [rows] = await pool.query(
-      "UPDATE tbl_usuarios SET id_imagen=?, url_imagen=? WHERE id=?",
+      "CALL sp_actualizarFotoPerfil(?,?,?)",
       [id_imagen, imageUrl, req.user]
     );
 
+    //Devolver datos del usuario
     const [user] = await pool.query("Select *FROM tbl_usuarios where id= ?", [
       req.user
     ]);
@@ -248,7 +258,7 @@ export const  actualizarImagen = async(req,res)=>{
 //Eliminar Usuario
 export const deleteUser = async (req, res) => {
   try {
-    const [result] = await pool.query("DELETE FROM tbl_usuarios WHERE id= ?", [
+    const [result] = await pool.query("CALL sp_eliminarCuenta(?)", [
       req.user,
     ]);
 

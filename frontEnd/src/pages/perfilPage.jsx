@@ -26,7 +26,6 @@ const onSubmit= async(data)=>{
   
     await fotoPerfil(formData)
   
-      setImagen(false)
 }
 
 
