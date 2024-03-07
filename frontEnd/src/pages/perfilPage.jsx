@@ -17,7 +17,7 @@ const {usuario,eliminarUsuario,fotoPerfil}= usarAutenticacion();
 const {register, handleSubmit, formState:{errors}} = useForm();
 
 
-//Peticion
+//Peticion para foto de perfil
 const onSubmit= async(data)=>{
 
     const formData= new FormData();
@@ -44,6 +44,7 @@ const onSubmit= async(data)=>{
             {/* Formulario para subir la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
             <div className='input-group d-flex justify-content-center'>
+              
               <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' title='Subir Foto'>
                 <FontAwesomeIcon icon={faImage}/>
               </label>

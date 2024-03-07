@@ -1,5 +1,7 @@
 import { createContext,useState,useContext, useEffect } from "react";
-import {registroRequest, loginRequest, verificarTokenRequest, actualizarUsuarioRequest, eliminarUsuarioRequest, actualizarFotoReques} from '../api/auth/registrar'
+import {registroRequest, loginRequest, verificarTokenRequest,
+        actualizarUsuarioRequest, eliminarUsuarioRequest, actualizarFotoReques,
+        actualizarPasswordRequest} from '../api/auth/registrar'
 import Cookies from 'js-cookie';
 
 export const AutenticacionContext = createContext()
@@ -89,6 +91,14 @@ export const AutenticacionProvider = ({children}) =>{
         }
     }
 
+    const actualizarPassword=  async(values)=>{
+        try {
+            const response = await actualizarPasswordRequest(values)
+        } catch (error) {
+            setErroresAut(error.response.data);
+        }
+    }
+
     //Cerrar Sesino
     const logout = async()=>{
         const msg = window.confirm('Estas Seguro de Cerrar Sesion?')
@@ -157,6 +167,7 @@ export const AutenticacionProvider = ({children}) =>{
             autenticado,
             eliminarUsuario,
             fotoPerfil,
+            actualizarPassword,
             passw,
             erroresAut
         }}>

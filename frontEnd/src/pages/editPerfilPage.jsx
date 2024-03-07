@@ -9,15 +9,13 @@ import EditpasswordModal from '../components/editpasswordModal';
 function EditPerfilPage() {
 
     const {register, handleSubmit, formState:{errors}} = useForm();
-    const {usuario,autenticado,erroresAut,actualizarUsuario,passw} = usarAutenticacion();
+    const {usuario,erroresAut,actualizarUsuario} = usarAutenticacion();
     const navegacion = useNavigate();
-    const [pass,setpass]= useState('');
 
     //funcionalidades para el modal de cambiar contraseña
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    console.log(show)
 
     //Peticion Al Backend
     const peticion= handleSubmit(async (values) => {
@@ -28,11 +26,9 @@ function EditPerfilPage() {
       }
     })
 
-    useEffect(()=>{
-        setpass(usuario.pass)
-    },[])
-  
+
     return (
+      <>
       <div className="container p-4">
         <div className="row">
           <div className="col-md-8 mx-auto align-middle ">
@@ -44,7 +40,7 @@ function EditPerfilPage() {
                     {error}
                   </div>
                 ))
-            }
+              }
                 <form className="row g-3 px-4 py-3" 
                   onSubmit={peticion}
                 >
@@ -110,19 +106,16 @@ function EditPerfilPage() {
                         <input type="email" className="form-control" defaultValue={usuario.correo}
                         {...register('correo',{required:true})} />
                       </div>
-  
-                      <div className="w-100 ms-5">
-                        <label className="form-label" defaultValue={passw}>Password</label>
-                        <input type="password" minLength={5} className="form-control" defaultValue={passw}
-                         {... register('pass', {required:true,minLength:5})}/>
-                      </div>
-  
                     </div>
                     {
                         errors.correo && (
                           <p className="text-danger">El Correo es Obligatorio</p>
                         )
                     }
+                    <div className="w-100">
+                        <Link className="form-label text-info" onClick={handleShow}>Cambiar Contraseña</Link>
+                    </div>
+
                     
 
                     <div className="col-12 d-flex">
@@ -136,6 +129,8 @@ function EditPerfilPage() {
           </div>
         </div>
       </div>
+      <EditpasswordModal show={show} handleClose={handleClose} />
+      </>
     )
 }
 

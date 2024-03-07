@@ -27,6 +27,11 @@ export const eliminarUsuarioRequest = async()=>{
     return response.data 
 }
 
+export const actualizarPasswordRequest = async(values)=>{
+    const response = await axios.put(`/usuarios/editarPassword`,values)
+    return response
+}
+
 export const actualizarFotoReques= async(file)=>{
     const response = await axios.put(`/usuarios/editar/foto`,file)
     return response.data

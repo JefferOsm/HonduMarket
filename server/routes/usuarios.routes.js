@@ -1,5 +1,6 @@
 import {Router} from 'express'
-import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,verificarToken,actualizarImagen} from '../controllers/user.controllers.js'
+import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
+        verificarToken,actualizarImagen,actualizarPassword} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import multer from '../middlewares/multer.js';
 
@@ -21,6 +22,9 @@ router.put("/editar", autenticacionUsuario,  updateUser);
 //Actualizar Foto
 router.put('/editar/foto', autenticacionUsuario,multer.single('image'), actualizarImagen)
 
+//Actualizar Contraseña
+router.put('/editarPassword', autenticacionUsuario,actualizarPassword )
+
 //Borrar Cuenta
 router.delete("/eliminar", autenticacionUsuario, deleteUser);
 
@@ -30,6 +34,8 @@ router.post('/login', loginUser)
 //Cerrar Sesion
 router.post('/logout', logoutUser)
 
+
+//Verificar token de autenticacion
 router.get('/verificar', verificarToken)
 
 export default router;

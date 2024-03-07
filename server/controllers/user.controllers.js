@@ -149,8 +149,7 @@ export const logoutUser = (req,res)=>{
 export const updateUser = async (req, res) => {
   try {
     // console.log("Req Body:", req.body);
-    const { nombre,username, correo, telefono, direccion, pass } = req.body;
-    const password = await encrypt(pass);
+    const { nombre,username, correo, telefono, direccion } = req.body;
     let validacion= false
 
     //comprobar correos y telefono
@@ -173,8 +172,8 @@ export const updateUser = async (req, res) => {
     if(!validacion){
         // Actualiza el usuario en la base de datos
       const [rows] = await pool.query(
-        "UPDATE tbl_usuarios SET nombre= ?,username=?, correo=?, telefono=?, direccion=?, pass=?  WHERE id=?",
-        [nombre,username, correo, telefono, direccion, password, req.user]
+        "UPDATE tbl_usuarios SET nombre= ?,username=?, correo=?, telefono=?, direccion=? WHERE id=?",
+        [nombre,username, correo, telefono, direccion, req.user]
       );
 
     // Error por si el usuario no existe
@@ -195,7 +194,6 @@ export const updateUser = async (req, res) => {
         telefono,
         direccion,
         url_imagen:existingUser[0].url_imagen,
-        password
       });
     }
 
@@ -250,6 +248,31 @@ export const  actualizarImagen = async(req,res)=>{
     })
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const actualizarPassword = async(req,res)=>{
+  const {passActual, passNuevo} = req.body
+  const newPass= await encrypt(passNuevo)
+  try {
+    //Verificar existencia de usuario
+    const [rows] = await pool.query('Select * from tbl_usuarios where id=?' ,[req.user]);
+    if(rows.length <= 0) return res.status(400).json(["Usuario no Existente" ]);
+
+    //comparar contraseñas
+    const comparacionPassword = await compare(passActual,rows[0].pass);
+    if(!comparacionPassword) return res.status(400).json([ "La Contraseña Actual no coincide " ]);
+
+
+    await pool.query('UPDATE tbl_usuarios SET pass=? WHERE id=?',[newPass,req.user]);
+    return res.status(200).json(['Actualizacion Correcta']);
+
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
   }
 }
 
