@@ -3,6 +3,14 @@ use bd_marketplace
 
 CREATE TABLE tbl_usuarios (
     id INT(11) NOT NULL AUTO_INCREMENT,
+    nombre varchar(20) NOT NULL,
+    username varchar(20) NOT NULL,
+    correo varchar(100) NOT NULL,
+    telefono varchar(14) NOT NULL,
+    direccion varchar(100) NOT NULL,
+    pass varchar(100) NOT NULL,
+    url_imagen TEXT NULL,
+    CONSTRAINT Pk_usuarios PRIMARY KEY (id)
     nombre VARCHAR(50) NOT NULL,
     username VARCHAR(20) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE KEY,
