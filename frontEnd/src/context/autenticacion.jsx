@@ -91,11 +91,14 @@ export const AutenticacionProvider = ({children}) =>{
         }
     }
 
+    //Actualizar Password
     const actualizarPassword=  async(values)=>{
         try {
             const response = await actualizarPasswordRequest(values)
+            return true
         } catch (error) {
             setErroresAut(error.response.data);
+            return false
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useForm} from 'react-hook-form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';   
@@ -8,19 +8,31 @@ import { usarAutenticacion } from '../context/autenticacion';
 function EditpasswordModal({ show, handleClose }) {
     const {register, handleSubmit, formState:{errors}} = useForm();
     const {actualizarPassword, erroresAut} = usarAutenticacion();
+    const [error,setError] = useState([]);
+
+    //Timer para error
+    useEffect(() => {
+      if (error.length > 0) {
+        const timer = setTimeout(() => {
+          setError([]);
+        }, 5000);
+        return () => clearTimeout(timer);
+      }
+    }, [error]);
 
   //Realizar peticion al backend
-   const peticion= handleSubmit((values)=>{
-    console.log(values)
-    if(values.passNuevo === values.passNuevoConf){
-      console.log('validacion correcta')
-      actualizarPassword(values)
+   const peticion= handleSubmit(async (values)=>{
+    // console.log(values) Ver valores
+    if(values.passNuevo != values.passNuevoConf){
+      setError(['La nueva contraseña no Coincide'])
     }
     else{
-      console.log('La nueva contraseña no coincide ')
-    }
-    }
-    )
+      const res= await actualizarPassword(values);
+      if(res){
+        window.alert('Cambio Realizado Exitosamente');
+        handleClose();
+      }
+    }})
 
   
     return (
@@ -33,6 +45,12 @@ function EditpasswordModal({ show, handleClose }) {
         <Modal.Body className="bc-primary text-light justify">
 
           {erroresAut.map((error, i) => (
+            <div className="bg-danger p-2 text-light" key={i}>
+              {error}
+            </div>
+          ))}
+
+          {error.map((error, i) => (
             <div className="bg-danger p-2 text-light" key={i}>
               {error}
             </div>
