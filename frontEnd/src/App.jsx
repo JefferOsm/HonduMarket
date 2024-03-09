@@ -7,6 +7,7 @@ import { AutenticacionProvider } from './context/autenticacion';
 import ProteccionRoute from './proteccionRoute';
 import NavBar from './components/navBar';
 import EditPerfilPage from './pages/editPerfilPage';
+import PublicarArticulo from './pages/PublicarArticulo';
 
 
 function App(){
@@ -20,9 +21,11 @@ function App(){
           <Route path='/registro' element={<RegistroPage />} />
 
           <Route element={<ProteccionRoute/>}>
+          <Route path='/publicar' element={<h1>PublicarArticulo</h1>} />
             <Route path='/editar' element={<h1>editar</h1>} />
             <Route path='/perfil' element={<PerfilPage/>} />
             <Route path='/perfil/editar' element={<EditPerfilPage/>} />
+            <Route path='/perfil/publicar' element={<PublicarArticulo/>} />
           </Route>
         </Routes>
       </BrowserRouter>
