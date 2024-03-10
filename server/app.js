@@ -1,6 +1,7 @@
 import express from "express";
 import indexRoutes from "./routes/index.routes.js";
 import usuariosRoutes from "./routes/usuarios.routes.js";
+import productosRouter from './routes/productos.routes.js'
 import morgan from 'morgan';
 import cookieParser from "cookie-parser";
 import cors from 'cors'
@@ -21,6 +22,7 @@ app.use(cookieParser());
 //EndPoints
 app.use('/home',indexRoutes);
 app.use('/usuarios',usuariosRoutes);
+app.use('/productos',productosRouter)
 
 
 //fallo al buscar endpoint

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { usarAutenticacion } from '../context/autenticacion';
+import { usarProductosContex } from '../context/productosContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMap, faPhone, faEnvelope, faImage, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,12 @@ const handleShow = () => setShow(true);
 
 //Funciones para la pagina
 const {usuario,eliminarUsuario,fotoPerfil}= usarAutenticacion();
+const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
 const {register, handleSubmit, formState:{errors}} = useForm();
+
+useEffect(()=>{
+  obtenerPublicaciones();
+},[])
 
 
 //Peticion para foto de perfil
@@ -32,7 +38,7 @@ const onSubmit= async(data)=>{
 
   return (
     <>
-    <div className='container-md bg-primary-light my-7 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white',}}> 
+    <div className='container-md bg-primary-light mt-7 mb-4 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white',}}> 
       <div className="row ">
         {/* Imagen */}
         <Link to={usuario.url_imagen} target='_blank' className='foto-perfil rounded-circle mx-auto shadow' style={{width:'160px', 
@@ -90,6 +96,13 @@ const onSubmit= async(data)=>{
             </div>     
       </div>
     </div>
+    {/* <div className="container-fluid bg-primary-light p-2 shadow">
+        {publicacionesUser.map(publicacion => (
+          <div key={publicacion.id}>
+            <p>{publicacion.nombre}</p>
+          </div>
+        ))}
+    </div> */}
     <DeleteProfileModal show={show} handleClose={handleClose}/>
     </>
   )
