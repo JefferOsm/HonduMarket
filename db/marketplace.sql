@@ -41,9 +41,9 @@ CREATE TABLE tbl_productos(
     descripcion_producto TEXT NOT NULL,
     precio_producto FLOAT NOT NULL,
 	producto_inactivo TINYINT(1) DEFAULT 0,
-    producto_calificacion FLOAT NOT NULL CHECK(producto_calificacion>=0 AND producto_calificacion<=5),
-    id_video TEXT NOT NULL,
-    url_video TEXT NOT NULL,
+    producto_calificacion FLOAT CHECK(producto_calificacion>=0 AND producto_calificacion<=5),
+    id_video TEXT ,
+    url_video TEXT ,
     estado_id INT(11) NOT NULL,
     categoria_id INT(11) NOT NULL,
     usuario_id INT(11) NOT NULL,
@@ -56,6 +56,9 @@ CREATE TABLE tbl_productos(
     CONSTRAINT FKproductoDepartamento FOREIGN KEY(departamento_id) REFERENCES tbl_departamentos(id_departamento)
 );
 
+
+
+
 CREATE TABLE tbl_imagenesProductos(
 	id_imagenesProd INT(11) NOT NULL auto_increment,
     id_imagen TEXT NOT NULL,
@@ -65,7 +68,7 @@ CREATE TABLE tbl_imagenesProductos(
     CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id)
 );
 
-
+select *from tbl_productos
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
 ('Vehiculos'),
@@ -84,3 +87,10 @@ VALUES
 ('Usado'),
 ('Dañado'),
 ('Reparado');
+
+INSERT INTO tbl_departamentos(nombre_departamento)
+VALUES
+('Francisco Morazan'),
+('Cortes'),
+('Lempira'),
+('Gracias a Dios');
