@@ -2,7 +2,7 @@ import {Router} from 'express'
 import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
         verificarToken,actualizarImagen,actualizarPassword} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
-import multer from '../middlewares/multer.js';
+import {parserUsuarios} from '../middlewares/multer.js';
 
 
 const router= Router();
@@ -20,7 +20,7 @@ router.post("/crear", createUser);
 router.put("/editar", autenticacionUsuario,  updateUser);
 
 //Actualizar Foto
-router.put('/editar/foto', autenticacionUsuario,multer.single('image'), actualizarImagen)
+router.put('/editar/foto', autenticacionUsuario,parserUsuarios.single('image'), actualizarImagen)
 
 //Actualizar Contraseña
 router.put('/editarPassword', autenticacionUsuario,actualizarPassword )

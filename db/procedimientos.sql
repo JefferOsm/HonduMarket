@@ -53,3 +53,37 @@ BEGIN
 
 END //
 DELIMITER ;
+
+
+-- OBTENER CATEGORIAS
+DELIMITER //
+create procedure sp_categorias (
+)
+BEGIN
+    SELECT *from tbl_categorias;
+END //
+DELIMITER ;
+
+-- OBTENER DEPARTAMENTOS
+DELIMITER //
+create procedure sp_departamentos (
+)
+BEGIN
+    SELECT *from tbl_departamentos;
+END //
+DELIMITER ;
+
+-- OBTENER ESTADOS
+DELIMITER //
+create procedure sp_estados (
+)
+BEGIN
+    SELECT *from tbl_estadoProducto;
+END //
+DELIMITER ;
+
+-- Inhabilitar Productos
+CREATE EVENT inhabilitar_producto
+ON SCHEDULE EVERY 60 DAY
+DO
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 DAY) AND producto_inactivo = 0;

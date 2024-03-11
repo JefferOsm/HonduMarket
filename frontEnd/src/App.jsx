@@ -23,8 +23,6 @@ function App(){
               <Route path='/registro' element={<RegistroPage />} />
 
             <Route element={<ProteccionRoute/>}>
-            <Route path='/publicar' element={<h1>PublicarArticulo</h1>} />
-              <Route path='/editar' element={<h1>editar</h1>} />
               <Route path='/perfil' element={<PerfilPage/>} />
               <Route path='/perfil/editar' element={<EditPerfilPage/>} />
               <Route path='/perfil/publicar' element={<PublicarArticulo/>} />

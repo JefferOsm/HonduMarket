@@ -57,8 +57,6 @@ CREATE TABLE tbl_productos(
 );
 
 
-
-
 CREATE TABLE tbl_imagenesProductos(
 	id_imagenesProd INT(11) NOT NULL auto_increment,
     id_imagen TEXT NOT NULL,
@@ -68,13 +66,12 @@ CREATE TABLE tbl_imagenesProductos(
     CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id)
 );
 
-select *from tbl_productos
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
 ('Vehiculos'),
 ('Hogar'),
 ('Bebes'),
-('Hogar'),
+('Moda'),
 ('Mascotas'),
 ('Electronica'),
 ('Servicios'),
@@ -90,7 +87,22 @@ VALUES
 
 INSERT INTO tbl_departamentos(nombre_departamento)
 VALUES
-('Francisco Morazan'),
+('Atlántida'),
+('Choluteca'),
+('Colón'),
+('Comayagua'),
+('Copán'),
+('El Paraíso'),
+('Intibucá'),
+('Islas de la Bahiá'),
+('La Paz'),
+('Ocotepeque'),
+('Olancho'),
+('Santa Bárbara'),
+('Valle'),
+('Yoro'),
+('Francisco Morazán'),
 ('Cortes'),
 ('Lempira'),
 ('Gracias a Dios');
+
