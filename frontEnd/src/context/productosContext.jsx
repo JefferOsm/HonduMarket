@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import { obtenerCategoriasRequest, obtenerPublicacionesUsuario } from "../api/productos";
+import { obtenerCategoriasRequest, obtenerPublicacionesUsuario, obtenerDepartamentosRequest,
+        obtenerEstadosRequest, 
+        agregarPublicacionReques} from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -16,6 +18,8 @@ export const usarProductosContex= ()=>{
 export const ProductosProvider = ({children})=>{
     const [categorias, setCategorias]= useState([]);
     const [publicacionesUser, setPublicacionesUser]= useState([]);
+    const [departamentos, setDepartamentos]= useState([]);
+    const [estados, setEstados] = useState([]);
 
     const obtenerCategorias= async()=>{
         try {
@@ -37,6 +41,32 @@ export const ProductosProvider = ({children})=>{
         }
     }
 
+    const obtenerDepartamentos = async()=>{
+        try {
+            const response = await obtenerDepartamentosRequest();
+            setDepartamentos(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const obtenerEstados = async()=>{
+        try {
+            const response= await obtenerEstadosRequest();
+            setEstados(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const agregarPublicacion = async(values)=>{
+        try {
+            const response= await agregarPublicacionReques(values)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return(
         <ProductosContext.Provider value={{
@@ -44,6 +74,11 @@ export const ProductosProvider = ({children})=>{
           categorias,
           obtenerPublicaciones,
           publicacionesUser,
+          obtenerDepartamentos,
+          obtenerEstados,
+          estados,
+          departamentos,
+          agregarPublicacion
         }}>
             {children}
         </ProductosContext.Provider>

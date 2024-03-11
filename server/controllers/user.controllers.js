@@ -209,6 +209,7 @@ export const updateUser = async (req, res) => {
 
 // Subir Foto de Perfil
 export const  actualizarImagen = async(req,res)=>{
+
   try {
     // console.log("Req File:", req.file);
 
@@ -222,7 +223,7 @@ export const  actualizarImagen = async(req,res)=>{
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
       id_imagen= result.original_filename;
-      // console.log("Cloudinary Result:", result);
+      console.log("Cloudinary Result:", result);
     }
 
     //Ejecutar consulta para subir imagen
