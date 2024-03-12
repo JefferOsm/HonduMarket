@@ -9,6 +9,7 @@ import ProteccionRoute from './proteccionRoute';
 import NavBar from './components/navBar';
 import EditPerfilPage from './pages/editPerfilPage';
 import PublicarArticulo from './pages/PublicarArticulo';
+import Vista_del_articulo from './pages/VistaArticulo';
 
 
 function App(){
@@ -21,7 +22,8 @@ function App(){
               <Route path='/' element={<HomePage/>} />
               <Route path='/login' element={<LoginPage />} />
               <Route path='/registro' element={<RegistroPage />} />
-
+              <Route path='/Vista_del_articulo/:id' element={<Vista_del_articulo/>} />
+              
             <Route element={<ProteccionRoute/>}>
               <Route path='/perfil' element={<PerfilPage/>} />
               <Route path='/perfil/editar' element={<EditPerfilPage/>} />

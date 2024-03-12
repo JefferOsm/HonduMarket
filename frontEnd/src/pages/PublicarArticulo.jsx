@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react"
 import {useForm} from 'react-hook-form';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMap, faPhone, faEnvelope, faImage, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { usarAutenticacion } from "../context/autenticacion";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import ConditionsModel from "../components/conditionsModel";
-import ModalBody from "react-bootstrap/esm/ModalBody";
 import { usarProductosContex } from "../context/productosContext";
+
 function PublicarArticulo () {
 
   const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias, departamentos,estados,agregarPublicacion} = usarProductosContex();
