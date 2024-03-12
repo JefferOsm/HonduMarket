@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import DeleteProfileModal from '../components/deleteProfileModal';
 
+
+
 function PerfilPage() {
 //Estados para el Modal de elminar perfil
 const [show, setShow] = useState(false);
@@ -17,6 +19,9 @@ const handleShow = () => setShow(true);
 const {usuario,eliminarUsuario,fotoPerfil}= usarAutenticacion();
 const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
 const {register, handleSubmit, formState:{errors}} = useForm();
+const [idSeleccionado, setIdSeleccionado] = useState(null);
+
+ 
 
 useEffect(()=>{
   obtenerPublicaciones();
@@ -34,11 +39,15 @@ const onSubmit= async(data)=>{
   
 }
 
+//funcion para la pagina vista del producto
+function handleClick(id) {
+  setIdSeleccionado(id);
+}
 
 
   return (
     <>
-    <div className='container-md bg-primary-light mt-7 mb-4 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white',}}> 
+    <div className='container-md bg-primary-light mt-7 mb-4 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white'}}> 
       <div className="row ">
         {/* Imagen */}
         <Link to={usuario.url_imagen} target='_blank' className='foto-perfil rounded-circle mx-auto shadow' style={{width:'160px', 
@@ -96,19 +105,46 @@ const onSubmit= async(data)=>{
               <div>
                 <Link  className='btn btn-outline-danger mx-auto' onClick={(handleShow)}>Eliminar Perfil</Link>
               </div>
-            </div>     
+            </div>
+
       </div>
     </div>
-  <div className="container-fluid bg-primary-light p-2 shadow">
-        {publicacionesUser.map(publicacion => (
-          <div key={publicacion.id}>
-            <p>{publicacion.nombre}</p>
-          </div>
-        ))}
-    </div> 
+      {/*<div className="container-fluid bg-primary-light p-2 shadow">
+            {publicacionesUser.map(publicacion => (
+              <div key={publicacion.id}>
+                <p>{publicacion.nombre}</p>
+              </div>
+            ))}
+            </div>*/}
+
+    <div className='container-md rounded shadow mb-4' style={{ height:'24rem', backgroundColor:'white'}}>
+      <h3 className='py-3 px-3'>Productos Publicados</h3>
+      
+      <div className='px-3 d-flex flex-wrap'>
+        {publicacionesUser.slice(0,4).map(publicacion => (
+                <div className="card bg-primary-light shadow" style={{width: "18rem"}} key={publicacion.id}>
+                  <img src={imagen} className="card-img-top" alt="..."/>
+                  <div className="card-body">
+                    <h5 class="card-title">{publicacion.nombre}</h5>
+                    <p className="card-text">
+                      <a>{"Lps " + publicacion.precio}</a><br/>
+                      <a>{publicacion.descripcion + " "}</a>
+                      
+                      <a href={"/Vista_del_articulo/"+ publicacion.id} class="link-danger link-offset-3 link-underline-opacity-25 link-underline-opacity-100-hover"
+                      onClick={() => handleClick(publicacion.id)} >más</a></p>
+                  </div>
+                </div>
+              ))}
+              
+      </div>
+    </div>
+    
+    
     <DeleteProfileModal show={show} handleClose={handleClose}/>
     </>
   )
 }
 
 export default PerfilPage
+
+const imagen = 'https://img.freepik.com/foto-gratis/retrato-abstracto-ojo-elegancia-mujeres-jovenes-generado-ai_188544-9712.jpg?size=626&ext=jpg&ga=GA1.1.117944100.1710115200&semt=ais';
