@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados } from "../controllers/productos.controller.js";
+import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados, agregarVideo } from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
-import {productoParser} from '../middlewares/multer.js'
+import {productoParser, videoParser} from '../middlewares/multer.js'
 
 
 const router= Router();
@@ -10,7 +10,10 @@ const router= Router();
 router.get('/categorias', obtenerCategorias)
 
 //Agregar Producto
-router.post('/publicar',autenticacionUsuario,productoParser.array('imagenes', 6), agregarProducto)
+router.post('/publicar',autenticacionUsuario ,productoParser.array('imagenes', 6), agregarProducto)
+
+//Subir Video
+router.put('/video/:id',autenticacionUsuario,videoParser.single('video'),agregarVideo)
 
 //Obtener las publicaciones de un usuario
 router.get('/publicaciones', autenticacionUsuario, obtenerPublicacionesUsuario )

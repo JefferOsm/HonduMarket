@@ -24,3 +24,8 @@ export const agregarPublicacionReques = async(values)=>{
     const response = await axios.post(`/productos/publicar`, values);
     return response.data;
 }
+
+export const videoPublicacionRequest = async(id,values)=>{
+    const response= await axios.put(`/productos/video/${id}`,values)
+    return response.data;
+}

@@ -156,3 +156,14 @@ input[type=number] { -moz-appearance:textfield; }
     row-gap: 1rem;
   }
 }
+
+.contenedor-publicar{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .contenedor-publicar{
+      flex-direction: column;
+    }
+}

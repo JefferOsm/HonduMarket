@@ -10,7 +10,8 @@ import ModalBody from "react-bootstrap/esm/ModalBody";
 import { usarProductosContex } from "../context/productosContext";
 function PublicarArticulo () {
 
-  const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias, departamentos,estados,agregarPublicacion} = usarProductosContex();
+  const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias,
+        departamentos,estados,agregarPublicacion,subirVideoPublicacion} = usarProductosContex();
   const {register, handleSubmit, formState:{errors}} = useForm();
 
   //Vista Previa
@@ -39,6 +40,7 @@ function PublicarArticulo () {
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
+    //DATOS Y FOTOS
     const formData = new FormData();
     const imagenes = document.querySelector('input[type="file"]').files;
     formData.append('nombre', values.nombre);
@@ -48,16 +50,22 @@ function PublicarArticulo () {
     formData.append('estado', values.estado);
     formData.append('departamento', values.departamento);
     
-
     for (let i = 0; i < imagenes.length; i++) {
         formData.append('imagenes', imagenes[i]);
     }
 
-    console.log(formData)
+    //console.log(formData)
 
-    await agregarPublicacion(formData);
+   const idProdAct= await agregarPublicacion(formData);
+   console.log(idProdAct)
 
-    console.log(values)
+    if(values.video.length>0){
+      const dataVideo = new FormData();
+      dataVideo.append('video', values.video[0])
+
+      await subirVideoPublicacion(idProdAct, dataVideo);
+    }
+
   })
 
   //Vista Previa (Datos)
@@ -93,9 +101,9 @@ function PublicarArticulo () {
       };
 
   return (
-    <div style={{display: "flex", justifyContent: "space-between"}}>
-        <div className="card py-3 px-3">
-            <h2>Registra tu producto</h2>
+    <div className="contenedor-publicar">
+        <div className="card py-3 px-3 col-md-4">
+            <h3 className="fw-bold">Registra tu producto</h3>
             <form className="col py-2" onSubmit={onSubmit}>
               {/* Registro nombre */}
                 <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
@@ -191,27 +199,58 @@ function PublicarArticulo () {
 
                
                 
+                {/* Registro de imagenes Y video*/}
+                <div className="d-flex gap-5">
+                  {/* Fotos */}
 
-                <label className=" py-4 modal-center modal-lg  d-flex flex-column justify-content-center align-items-center" 
-                style={{background: "lightGray"}} htmlFor="imagenes">
-                    <p className="h5">Agregar Fotos</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" style={{ width: "35px", height: "30px" }} fill="currentColor" className="bi bi-images" viewBox="0 0 16 16">
-                        <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                        <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
-                    </svg>
-                    <img src={imgdemas} alt="Agregar Fotos" width="35" height="35" />
-                </label>
+                    <div className="col-md-5"> 
+                    <p>Fotos (Maximo 6)</p>
+                        <label className=" py-4 modal-center modal-lg  d-flex flex-column justify-content-center align-items-center " 
+                        style={{background: "lightGray"}} htmlFor="imagenes">
+                          <p className="h5">Agregar Fotos</p>
+                          <svg xmlns="http://www.w3.org/2000/svg" style={{ width: "35px", height: "30px" }} fill="currentColor" className="bi bi-images" viewBox="0 0 16 16">
+                              <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                              <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
+                          </svg>
+                          <img src={imgdemas} alt="Agregar Fotos" width="35" height="35" />
+                        </label>
 
-                <input 
-                type='file' className='form-control' accept='image/*'
-                {... register('imagenes',{ required: true })} id='imagenes' style={{ display: 'none' }}
-                  multiple />
+                    <input 
+                    type='file' className='form-control' accept='image/*'
+                    {... register('imagenes',{ required: true })} id='imagenes' style={{ display: 'none' }}
+                      multiple />
 
-                    {
-                      errors.imagenes && (
-                        <p className="ms-2 text-danger"> Seleccione minimo una imagen</p>
-                      )
-                    }
+                        {
+                          errors.imagenes && (
+                            <p className="ms-2 text-danger"> Seleccione minimo una imagen</p>
+                          )
+                        }
+
+                    </div>
+
+                        {/* Video */}
+
+                    <div className="col-md-5">
+                      <p> Video (Opcional)</p>
+                        <label className=" py-4 modal-center modal-lg  d-flex flex-column justify-content-center align-items-center" 
+                        style={{background: "lightGray"}} htmlFor="video">
+                          <p className="h5">Agregar Video</p>
+                          <svg xmlns="http://www.w3.org/2000/svg" style={{ width: "35px", height: "30px" }} fill="currentColor" className="bi bi-images" viewBox="0 0 16 16">
+                              <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                              <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
+                          </svg>
+                          <img src={imgdemas} alt="Agregar Fotos" width="35" height="35" />
+                        </label>
+
+                    <input 
+                    type='file' className='form-control' accept='video/*'
+                    {... register('video')} id='video' style={{ display: 'none' }}
+                    />
+
+                        
+                    </div>
+                </div>
+               
                
                <button type="submit" className="btn btn-primary mt-2">Publicar</button>
                 
