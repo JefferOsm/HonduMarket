@@ -117,10 +117,12 @@ function handleClick(id) {
             ))}
             </div>*/}
 
+    {/*Parte de los productos registrados por este perfil */}
     <div className='container-md rounded shadow mb-4' style={{ height:'24rem', backgroundColor:'white'}}>
       <h3 className='py-3 px-3'>Productos Publicados</h3>
-      
       <div className='px-3 d-flex flex-wrap'>
+
+        {/*aqui se imprimen los ultimos productos registrados*/}
         {publicacionesUser.slice(0,4).map(publicacion => (
                 <div className="card bg-primary-light shadow" style={{width: "18rem"}} key={publicacion.id}>
                   <img src={imagen} className="card-img-top" alt="..."/>
@@ -135,7 +137,6 @@ function handleClick(id) {
                   </div>
                 </div>
               ))}
-              
       </div>
     </div>
     

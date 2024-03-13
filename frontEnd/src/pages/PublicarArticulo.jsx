@@ -90,7 +90,10 @@ function PublicarArticulo () {
     <div style={{display: "flex", justifyContent: "space-between"}}>
         <div className="card py-3 px-3">
             <h2>Registra tu producto</h2>
+
+            {/*Formulario para el registro de los productos*/}
             <form className="col py-2" onSubmit={onSubmit}>
+
               {/* Registro nombre */}
                 <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
                 {... register ('nombre',{required:true, onChange:(e)=>{Titulo(e)}})} />
@@ -145,7 +148,8 @@ function PublicarArticulo () {
                       )
                     }
                 </div>
-                    {/* Registro de estado */}
+
+                {/* Registro de estado */}
                 <div className="input-group mb-3">
                     <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
                     <select className="form-select" id="inputGroupSelect01" onChange={Estado}
@@ -162,7 +166,8 @@ function PublicarArticulo () {
                       )
                     }
                 </div>
-                    {/* Registro de Departamento */}
+
+                {/* Registro de Departamento */}
                 <div className="input-group mb-3">
                     <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
@@ -184,8 +189,7 @@ function PublicarArticulo () {
                 </div>
 
                
-                
-
+                {/*Boton para seleccionar las imagenes*/}
                 <label className=" py-4 modal-center modal-lg  d-flex flex-column justify-content-center align-items-center" 
                 style={{background: "lightGray"}} htmlFor="imagenes">
                     <p className="h5">Agregar Fotos</p>
@@ -207,32 +211,34 @@ function PublicarArticulo () {
                       )
                     }
                
+               {/*Boton para guardar el producto en la BD */}
                <button type="submit" className="btn btn-primary mt-2">Publicar</button>
                 
 
             </form>
         </div>
 
+        {/*Card de la vista previa del producto ya registrado*/}
         <div className="card shadow-lg bg-white rounded" style={{margin: "6%", flexGrow: "100", display: "flex", flexDirection: "row"}}>
-        <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
-            <h6 className="card-title">Vista previa</h6>
-            
-        </div>
-        <div className="card-secction" style={{flex: "0.7", padding: "10px", border: "1px solid #ccc"}}>
-            <h1>{text === "" ? defaultTitulo : text}</h1>
-            <h5>{precio === "" ? defaultPrecio : precio}</h5>
-            <h6>{departamento === "" ? defaultDepartamento: departamento}</h6>
-            <h5>Detalle</h5>
-            <div style={{display: "flex"}}>
-                <h5>{categoria === "" ? defaultCategoria : categoria}</h5> 
-                <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
-            </div>
-            <h6>{descripcion === "" ? defaultDescripcion : descripcion}</h6>
-           
-        </div>
-        </div>
-
+          
+          {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
+          <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
+              <h6 className="card-title">Vista previa</h6>
+          </div>
         
+          {/*Informacion del Producto*/}
+          <div className="card-secction" style={{flex: "0.7", padding: "10px", border: "1px solid #ccc"}}>
+              <h1>{text === "" ? defaultTitulo : text}</h1>
+              <h5>{precio === "" ? defaultPrecio : precio}</h5>
+              <h6>{departamento === "" ? defaultDepartamento: departamento}</h6>
+              <h5>Detalle</h5>
+              <div style={{display: "flex"}}>
+                  <h5>{categoria === "" ? defaultCategoria : categoria}</h5> 
+                  <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
+              </div>
+              <h6>{descripcion === "" ? defaultDescripcion : descripcion}</h6>
+          </div>
+        </div>
     </div>
   )
 }
