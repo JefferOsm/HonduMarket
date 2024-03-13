@@ -98,3 +98,36 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
           });
     }
 }
+
+// Función para eliminar una imagen de un producto
+export const eliminarImagenProducto = async (req, res) => {
+    
+    const { nombreImagen } = req.params;
+
+    try {
+        
+        const [result] = await pool.query(
+            'DELETE FROM tbl_imagenesProductos WHERE id_imagen = ?',
+            [ nombreImagen]
+        );
+
+        // Verificar si se eliminó la imagen correctamente
+        if (result.affectedRows === 1) {
+            
+            res.json({
+                message: 'Imagen eliminada correctamente'
+            });
+        } else {
+            // Si hubo error
+            res.status(404).json({
+                message: 'No se encontró la imagen para eliminar'
+            });
+        }
+    } catch (error) {
+        // pa cualquier error ocurrido durante el proceso
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error al eliminar la imagen del producto'
+        });
+    }
+};
