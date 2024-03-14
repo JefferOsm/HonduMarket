@@ -5,6 +5,7 @@ import UsuarioModal from "../components/UsuarioModal";
 
 
 function VistaArticulo() {
+
   //funcionalidades para mostrar el modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -27,10 +28,14 @@ function VistaArticulo() {
   for (let i = 0; i < publicacionesUser.length; i++) {
     if (publicacionesUser[i].id == id){
       objetoVacio = publicacionesUser[i];
+      
     }
   }  
-  
-  
+
+  const comas = (value) => {
+    // Convertir el número a cadena y aplicar el formato con comas
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
 
   return (
     <>
@@ -48,7 +53,7 @@ function VistaArticulo() {
               {/*Informacion del producto*/}
               <div key={objetoVacio.id}>
                 <h1>{objetoVacio.nombre}</h1>
-                <h5>{"Lps " + objetoVacio.precio}</h5>
+                <h5>{"Lps " + comas(objetoVacio.precio)}</h5>
                 <h6>{"Publicado hace unos segundos en " + objetoVacio.departamento}</h6>
                 <h5>Detalles</h5>
                 <div style={{display: "flex"}}>
