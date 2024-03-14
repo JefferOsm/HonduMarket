@@ -75,6 +75,7 @@ export const ProductosProvider = ({children})=>{
         try {
             const response= await agregarPublicacionReques(values)
             console.log(response)
+            window.alert("Su Producto se Registro Exitosamente.")
         } catch (error) {
             console.log(error)
         }

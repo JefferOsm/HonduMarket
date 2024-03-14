@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import {useForm} from 'react-hook-form';
 import { usarProductosContex } from "../context/productosContext";
 
 function PublicarArticulo () {
 
   const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias, departamentos,estados,agregarPublicacion} = usarProductosContex();
-  const {register, handleSubmit, formState:{errors}} = useForm();
+  const {register, handleSubmit, formState:{errors}, reset} = useForm();
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -47,44 +47,58 @@ function PublicarArticulo () {
         formData.append('imagenes', imagenes[i]);
     }
 
-    console.log(formData)
+    console.log(formData);
 
     await agregarPublicacion(formData);
 
-    console.log(values)
+    console.log(values);
+
+    reset();
+    setText("");
+    setDescipcion("");
+    setprecio("");
+    setcategoria("");
+    setestado("");
+    setdepartamento("");
   })
+
+  //comas cada 3 digitos solo para mostrar
+  const comas = (value) => {
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
 
   //Vista Previa (Datos)
     const Titulo = (event) => {
       setText(event.target.value);
-
     };
 
     const Descripcion = (event) => {
         setDescipcion(event.target.value);
       };
 
-      const Precio = (event) => {
-        setprecio("Lps " + event.target.value);
-      };
+    const Precio = (event) => {
+      setprecio("Lps " + comas(event.target.value));
+    };
 
-      const Categoria = (event) => {
-        const id = event.target.value;
-        const categoriaSeleccionada = categorias.find(categoria => categoria.categoria_id === Number(id));
-        setcategoria(defaultCategoria +' : '+ categoriaSeleccionada.nombre_categoria);
-      };
+    const Categoria = (event) => {
+      const id = event.target.value;
+      const categoriaSeleccionada = categorias.find(categoria => categoria.categoria_id === Number(id));
+      setcategoria(defaultCategoria +' : '+ categoriaSeleccionada.nombre_categoria);
+    };
 
-      const Estado = (event) => {
-        const id = event.target.value;
-        const estadoSeleccionado = estados.find(estado => estado.id_estado === Number(id));
-        setestado(defaultEstado+' : '+estadoSeleccionado.nombre_estado);
-      };
+    const Estado = (event) => {
+      const id = event.target.value;
+      const estadoSeleccionado = estados.find(estado => estado.id_estado === Number(id));
+      setestado(defaultEstado+' : '+estadoSeleccionado.nombre_estado);
+    };
 
-      const Departamento = (event) => {
-        const id = event.target.value;
-        const departamentoSeleccionado = departamentos.find(departamento => departamento.id_departamento=== Number(id));
-        setdepartamento(defaultDepartamento +'  '+ departamentoSeleccionado.nombre_departamento);
-      };
+    const Departamento = (event) => {
+      const id = event.target.value;
+      const departamentoSeleccionado = departamentos.find(departamento => departamento.id_departamento=== Number(id));
+      setdepartamento(defaultDepartamento +'  '+ departamentoSeleccionado.nombre_departamento);
+    };
+
+    
 
   return (
     <div style={{display: "flex", justifyContent: "space-between"}}>
@@ -119,7 +133,7 @@ function PublicarArticulo () {
                 <div className="input-group py-2" style={{width:"15vw", borderRadius: "5px"}}>
                 <div className="input-group-text">Lps</div>
                     <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
-                    {... register('precio',{required:true,  onChange:(e)=>{Precio(e)}}) }/>
+                    {... register('precio',{required:true,  onChange:(e)=>{Precio(e)}})}/>
 
                     {
                       errors.precio && (
@@ -218,7 +232,7 @@ function PublicarArticulo () {
             </form>
         </div>
 
-        {/*Card de la vista previa del producto ya registrado*/}
+        {/*Card de la vista previa del producto a registrar*/}
         <div className="card shadow-lg bg-white rounded" style={{margin: "6%", flexGrow: "100", display: "flex", flexDirection: "row"}}>
           
           {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
@@ -236,7 +250,7 @@ function PublicarArticulo () {
                   <h5>{categoria === "" ? defaultCategoria : categoria}</h5> 
                   <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
               </div>
-              <h6>{descripcion === "" ? defaultDescripcion : descripcion}</h6>
+              <p>{descripcion === "" ? defaultDescripcion : descripcion}</p>
           </div>
         </div>
     </div>
