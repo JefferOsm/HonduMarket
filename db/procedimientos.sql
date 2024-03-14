@@ -37,21 +37,57 @@ BEGIN
 END //
 DELIMITER ;
 
--- OBTENER PRODUCTOS DE UN USUARIO
+-- OBTENER PRODUCTOS DEL USUARIO
 DELIMITER //
-create procedure sp_productosUsuario (
+
+CREATE PROCEDURE sp_productosUsuario (
     IN p_id INT(11)
 )
 BEGIN
-    SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
-	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion 
-	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
-	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
-	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
-	WHERE usuario_id= p_id;
+    SELECT 
+        p.producto_id AS id, 
+        p.nombre_producto AS nombre, 
+        p.descripcion_producto AS descripcion, 
+        p.precio_producto AS precio,
+        ep.nombre_estado AS estado, 
+        c.nombre_categoria AS categoria,
+        d.nombre_departamento AS departamento,
+        p.fecha_publicacion,
+        i.url_imagen AS url_imagen
+    FROM 
+        tbl_productos p
+    INNER JOIN 
+        tbl_estadoProducto ep ON ep.id_estado = p.estado_id
+    INNER JOIN 
+        tbl_categorias c ON c.categoria_id = p.categoria_id
+    INNER JOIN 
+        tbl_departamentos d ON d.id_departamento = p.departamento_id
+    LEFT JOIN 
+        tbl_imagenesProductos i ON p.producto_id = i.producto_id
+    WHERE 
+        p.usuario_id = p_id;
 
 END //
+
+DELIMITER ;
+
+-- TODAS LA PUBLICACIONES PARA EL HOME
+DELIMITER //
+
+CREATE PROCEDURE sp_todasPublicaciones()
+BEGIN
+    SELECT 
+        p.producto_id AS id,
+        p.nombre_producto AS nombre,
+        p.precio_producto AS precio,
+        p.descripcion_producto AS descripcion,
+        i.url_imagen AS url_imagen
+    FROM 
+        tbl_productos p
+    INNER JOIN 
+        tbl_imagenesProductos i ON p.producto_id = i.producto_id;
+END //
+
 DELIMITER ;
 
 
