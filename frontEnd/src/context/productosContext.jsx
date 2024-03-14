@@ -1,7 +1,8 @@
 import { createContext, useContext, useState } from "react";
-import { obtenerCategoriasRequest, obtenerPublicacionesUsuario, obtenerDepartamentosRequest,
+import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacionesHome, obtenerDepartamentosRequest,
         obtenerEstadosRequest, 
         agregarPublicacionReques} from "../api/productos";
+
 
 
 export const ProductosContext= createContext();
@@ -18,6 +19,7 @@ export const usarProductosContex= ()=>{
 export const ProductosProvider = ({children})=>{
     const [categorias, setCategorias]= useState([]);
     const [publicacionesUser, setPublicacionesUser]= useState([]);
+    const [publicacionesHome, setPublicacionesHome]= useState([]);
     const [departamentos, setDepartamentos]= useState([]);
     const [estados, setEstados] = useState([]);
 
@@ -36,6 +38,16 @@ export const ProductosProvider = ({children})=>{
             const response= await obtenerPublicacionesUsuario();
             console.log(response)
             setPublicacionesUser(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const obtenerPublicacionesInicio = async()=>{
+        try {
+            const response= await obtenerPublicacionesHome();
+            console.log(response)
+            setPublicacionesHome(response)
         } catch (error) {
             console.log(error)
         }
@@ -73,7 +85,9 @@ export const ProductosProvider = ({children})=>{
           obtenerCategorias,
           categorias,
           obtenerPublicaciones,
+          obtenerPublicacionesInicio,
           publicacionesUser,
+          publicacionesHome,
           obtenerDepartamentos,
           obtenerEstados,
           estados,

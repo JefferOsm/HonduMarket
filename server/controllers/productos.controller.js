@@ -99,6 +99,19 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
     }
 }
 
+//Obtener Publicaciones para el Home
+export const obtenerPublicacionesHome = async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_todasPublicaciones');
+        res.send(rows[0])
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error",
+          });
+    }
+}
+
 // Función para eliminar una imagen de un producto
 export const eliminarImagenProducto = async (req, res) => {
     
