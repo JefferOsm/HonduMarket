@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados } from "../controllers/productos.controller.js";
+import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario,obtenerPublicacionesHome , obtenerDepartamentos, obtenerEstados,} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser} from '../middlewares/multer.js'
 
@@ -13,7 +13,10 @@ router.get('/categorias', obtenerCategorias)
 router.post('/publicar',autenticacionUsuario,productoParser.array('imagenes', 6), agregarProducto)
 
 //Obtener las publicaciones de un usuario
-router.get('/publicaciones', autenticacionUsuario, obtenerPublicacionesUsuario )
+router.get('/publicaciones', autenticacionUsuario, obtenerPublicacionesUsuario)
+
+//Obtener las publicaciones para la pagina de inicio
+router.get('/publicacionesinicio', obtenerPublicacionesHome)
 
 //Obtener departamentos
 router.get('/departamentos',obtenerDepartamentos)
