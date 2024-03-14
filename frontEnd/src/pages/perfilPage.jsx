@@ -118,25 +118,27 @@ function handleClick(id) {
             </div>*/}
 
     {/*Parte de los productos registrados por este perfil */}
-    <div className='container-md rounded shadow mb-4' style={{ height:'24rem', backgroundColor:'white'}}>
+    <div className='container-md rounded shadow mb-4' style={{backgroundColor:'white'}}>
       <h3 className='py-3 px-3'>Productos Publicados</h3>
-      <div className='px-3 d-flex flex-wrap'>
+      <div className='px-3 d-flex flex-wrap justify-content-around'>
 
         {/*aqui se imprimen los ultimos productos registrados*/}
         {publicacionesUser.slice(0,4).map(publicacion => (
-                <div className="card bg-primary-light shadow" style={{width: "18rem"}} key={publicacion.id}>
-                  <img src={imagen} className="card-img-top" alt="..."/>
-                  <div className="card-body">
-                    <h5 class="card-title">{publicacion.nombre}</h5>
-                    <p className="card-text">
-                      <a>{"Lps " + publicacion.precio}</a><br/>
-                      <a>{publicacion.descripcion + " "}</a>
-                      
-                      <a href={"/Vista_del_articulo/"+ publicacion.id} class="link-danger link-offset-3 link-underline-opacity-25 link-underline-opacity-100-hover"
-                      onClick={() => handleClick(publicacion.id)} >más</a></p>
-                  </div>
-                </div>
-              ))}
+          <Link to={"/Vista_del_articulo/"+ publicacion.id} style={{ textDecoration: 'none', color: 'inherit', margin: '10px' }} key={publicacion.id}>
+            <div className="card bg-primary-light shadow" style={{width: "18rem"}}>
+              <div style={{overflow:'hidden', height:'200px'}}>
+                <img src={publicacion.url_imagen} className="card-img-top" alt="..." style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+              </div>
+              <div className="card-body">
+                <h5 class="card-title">{publicacion.nombre}</h5>
+                <p className="card-text">
+                  <a>{"Lps " + publicacion.precio}</a><br/>
+                  <a>{publicacion.descripcion + " "}</a>
+                </p>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
     
