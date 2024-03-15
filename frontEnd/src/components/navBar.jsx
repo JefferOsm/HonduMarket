@@ -8,6 +8,14 @@ function NavBar() {
 
 
   const{autenticado,logout,usuario}=  usarAutenticacion();
+// pa la busqueda
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Aquí puedes enviar el término de búsqueda al backend para buscar productos
+    console.log('Buscar productos con el término:', searchTerm);
+  };
 
 
   return (
@@ -23,10 +31,10 @@ function NavBar() {
             {/* Mostrar Cuando el Usuario esta Autenticado */}
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
 
-                <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
-                    <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                    <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
-                </form>
+              <form className="d-flex mx-auto me-5 my-2 w-340" onSubmit={handleSearch} role="search">
+                <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
+                <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              </form>
 
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
                     <li className="nav-item ">
@@ -51,10 +59,10 @@ function NavBar() {
             <>
             {/* Mostrar Cuando no hay Usuario Logueado */}
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
-              
-              <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
-                  <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                  <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
+
+              <form className="d-flex mx-auto me-5 my-2 w-340" onSubmit={handleSearch} role="search">
+                <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
+                <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
 
