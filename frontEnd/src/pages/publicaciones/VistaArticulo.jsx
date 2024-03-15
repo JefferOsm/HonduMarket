@@ -31,6 +31,10 @@ function VistaArticulo() {
   }, []);
 
   const comas = (value) => {
+    // Verificar si la variable value es undefined
+    if (typeof value === 'undefined') {
+      return 'No sirve esta chanchada'; // Devolver una cadena vacía en este caso
+    }
     // Convertir el número a cadena y aplicar el formato con comas
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
@@ -81,7 +85,7 @@ function VistaArticulo() {
             {/*Informacion del producto*/}
             <div key={detailProduct.id}className="w-50-flex">
               <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
-              <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + detailProduct.precio}</p>
+              <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + comas(detailProduct.precio)}</p>
               <p className="size-detalle">{`Publicado ${detailProduct.fecha} en ${detailProduct.departamento}`}</p>
               <p className="fs-4">Detalles</p>
               <table className="table table-hover">

@@ -11,6 +11,15 @@ function MisPublicaciones() {
     useEffect(()=>{
         obtenerPublicaciones();
       },[])
+
+    const comas = (value) => {
+    // Verificar si la variable value es undefined
+    if (typeof value === 'undefined') {
+        return 'No sirve esta chanchada'; // Devolver una cadena vacía en este caso
+    }
+    // Convertir el número a cadena y aplicar el formato con comas
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
       
   return (
     <div className='container-lg bg-primary-light shadow mt-4 contenedor-publicaciones mb-4'>
@@ -29,7 +38,7 @@ function MisPublicaciones() {
                             <div className='card-descripcion fw-light'>
                                 <p>{publicacion.descripcion }</p>
                             </div>
-                            <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + publicacion.precio}</p><br/>
+                            <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + comas(publicacion.precio)}</p><br/>
                         </div>
                     </div>
                     </Link>

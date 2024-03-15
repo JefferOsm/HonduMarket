@@ -6,7 +6,7 @@ function PublicarArticulo () {
 
   const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias,
         departamentos,estados,agregarPublicacion,subirVideoPublicacion} = usarProductosContex();
-  const {register, handleSubmit, formState:{errors}} = useForm();
+  const {register, handleSubmit, formState:{errors}, reset} = useForm();
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -64,6 +64,14 @@ function PublicarArticulo () {
 
       await subirVideoPublicacion(idProdAct, dataVideo);
     }
+
+    reset();
+    setText("");
+    setDescipcion("");
+    setprecio("");
+    setcategoria("");
+    setestado("");
+    setdepartamento("");
 
   })
 
@@ -279,7 +287,7 @@ function PublicarArticulo () {
                   <h5>{categoria === "" ? defaultCategoria : categoria}</h5> 
                   <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
               </div>
-              <h6>{descripcion === "" ? defaultDescripcion : descripcion}</h6>
+              <p>{descripcion === "" ? defaultDescripcion : descripcion}</p>
           </div>
         </div>
     </div>

@@ -96,9 +96,9 @@ function handleClick(id) {
 
           </div>  
           <div className="d-flex justify-content-end mb-3 perfil-btn">
-            <div className='me-3'>
+            {/*<div className='me-3'>
               <Link to={'/perfil/publicar'} className='btn btn-outline-success mx-auto'>Publicar</Link>
-            </div>
+  </div>*/}
               <div className='me-3'>
                 <Link to={'/perfil/editar'} className='btn btn-outline-success mx-auto'>Editar</Link>
               </div>
