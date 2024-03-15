@@ -1,4 +1,16 @@
--- Procedimiento para Eliminar Usuario 
+ 
+-- Obtener un usuario
+DELIMITER //
+create procedure sp_obtenerUsuario (
+	IN p_id INT
+)
+BEGIN
+    SELECT *FROM tbl_usuarios WHERE id= p_id;
+END //
+DELIMITER ;
+
+
+-- Eliminar una cuenta
 DELIMITER //
 create procedure sp_eliminarCuenta (
 	IN p_id INT
@@ -37,57 +49,21 @@ BEGIN
 END //
 DELIMITER ;
 
--- OBTENER PRODUCTOS DEL USUARIO
+-- OBTENER PRODUCTOS DE UN USUARIO
 DELIMITER //
-
-CREATE PROCEDURE sp_productosUsuario (
+create procedure sp_productosUsuario (
     IN p_id INT(11)
 )
 BEGIN
-    SELECT 
-        p.producto_id AS id, 
-        p.nombre_producto AS nombre, 
-        p.descripcion_producto AS descripcion, 
-        p.precio_producto AS precio,
-        ep.nombre_estado AS estado, 
-        c.nombre_categoria AS categoria,
-        d.nombre_departamento AS departamento,
-        p.fecha_publicacion,
-        i.url_imagen AS url_imagen
-    FROM 
-        tbl_productos p
-    INNER JOIN 
-        tbl_estadoProducto ep ON ep.id_estado = p.estado_id
-    INNER JOIN 
-        tbl_categorias c ON c.categoria_id = p.categoria_id
-    INNER JOIN 
-        tbl_departamentos d ON d.id_departamento = p.departamento_id
-    LEFT JOIN 
-        tbl_imagenesProductos i ON p.producto_id = i.producto_id
-    WHERE 
-        p.usuario_id = p_id;
+    SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
+	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
+	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion
+	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
+	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
+	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
+	WHERE usuario_id= p_id;
 
 END //
-
-DELIMITER ;
-
--- TODAS LA PUBLICACIONES PARA EL HOME
-DELIMITER //
-
-CREATE PROCEDURE sp_todasPublicaciones()
-BEGIN
-    SELECT 
-        p.producto_id AS id,
-        p.nombre_producto AS nombre,
-        p.precio_producto AS precio,
-        p.descripcion_producto AS descripcion,
-        i.url_imagen AS url_imagen
-    FROM 
-        tbl_productos p
-    INNER JOIN 
-        tbl_imagenesProductos i ON p.producto_id = i.producto_id;
-END //
-
 DELIMITER ;
 
 
@@ -118,8 +94,74 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Procedimiento para Subir Video
+DELIMITER //
+create procedure sp_subirVideoPublicacion (
+	IN p_id_video TEXT,
+    IN p_url_video TEXT,
+	IN p_id INT
+)
+BEGIN
+    UPDATE tbl_productos SET id_video= p_id_video, url_video= p_url_video WHERE producto_id = p_id;
+END //
+DELIMITER ;
+
+-- OBTENER Detalle de un producto
+DELIMITER //
+create procedure sp_detalleProductos (
+    IN p_id INT(11)
+)
+BEGIN
+    SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
+	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
+	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion,tbl_usuarios.nombre as usuario,
+    tbl_usuarios.url_imagen as fotoPerfil, tbl_usuarios.id as idUsuario
+	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
+	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
+	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
+    INNER JOIN tbl_usuarios ON tbl_usuarios.id = tbl_productos.usuario_id
+	WHERE producto_id= p_id;
+
+END //
+-- obtener imagenes de un producto
+DELIMITER //
+create procedure sp_imagenesProductos (
+    IN p_id INT(11)
+)
+BEGIN
+    SELECT *FROM tbl_imagenesProductos WHERE producto_id= p_id ;
+END //
+DELIMITER ;
+
+-- OBTENER TODOS LOS PRODUCTOS
+DELIMITER //
+CREATE PROCEDURE sp_todasPublicaciones()
+BEGIN
+    SELECT 
+        p.producto_id AS id,
+        p.nombre_producto AS nombre,
+        p.precio_producto AS precio,
+        p.descripcion_producto AS descripcion,
+        i.url_imagen AS url_imagen
+    FROM 
+        tbl_productos p
+    INNER JOIN 
+        tbl_imagenesProductos i ON p.producto_id = i.producto_id;
+END //
+DELIMITER ;
+
+
+
+
 -- Inhabilitar Productos
 CREATE EVENT inhabilitar_producto
 ON SCHEDULE EVERY 60 DAY
 DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 DAY) AND producto_inactivo = 0;
+
+
+
+
+
+
+

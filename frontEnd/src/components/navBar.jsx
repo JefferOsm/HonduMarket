@@ -4,7 +4,10 @@ import { usarAutenticacion } from '../context/autenticacion'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore} from '@fortawesome/free-solid-svg-icons'
 import Dropdown from 'react-bootstrap/Dropdown';
+
 import { useState } from 'react';
+
+
 
 function NavBar() {
 

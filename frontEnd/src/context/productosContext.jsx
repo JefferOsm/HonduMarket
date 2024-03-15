@@ -1,8 +1,11 @@
 import { createContext, useContext, useState } from "react";
 import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacionesHome, obtenerDepartamentosRequest,
         obtenerEstadosRequest, 
-        agregarPublicacionReques} from "../api/productos";
-
+        agregarPublicacionReques,
+        videoPublicacionRequest,
+        obtenerDetallePublicacion,
+        obtenerImagenesPublicacion,
+        detalleUsuarioRequest} from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -22,6 +25,10 @@ export const ProductosProvider = ({children})=>{
     const [publicacionesHome, setPublicacionesHome]= useState([]);
     const [departamentos, setDepartamentos]= useState([]);
     const [estados, setEstados] = useState([]);
+    const [detailProduct, setDetailProduct]= useState([])
+    const [imagenesProduct, setImagenesProduct]= useState([])
+    const [videoProduct, setVideoProduct]= useState([])
+    const [usuarioProduct, setUsuarioProduct]= useState([])
 
     const obtenerCategorias= async()=>{
         try {
@@ -33,10 +40,11 @@ export const ProductosProvider = ({children})=>{
         }
     }
 
+    //Publicaciones del usuario
     const obtenerPublicaciones = async()=>{
         try {
             const response= await obtenerPublicacionesUsuario();
-            console.log(response)
+            //console.log(response)
             setPublicacionesUser(response)
         } catch (error) {
             console.log(error)
@@ -71,16 +79,64 @@ export const ProductosProvider = ({children})=>{
         }
     }
 
+    // publicar algo
     const agregarPublicacion = async(values)=>{
         try {
             const response= await agregarPublicacionReques(values)
-            console.log(response)
+            //console.log(response)
             window.alert("Su Producto se Registro Exitosamente.")
+            return response
         } catch (error) {
             console.log(error)
         }
     }
 
+    //subir el video de la publicacion
+    const subirVideoPublicacion = async(id,values)=>{
+        try {
+            const response = await videoPublicacionRequest(id,values);
+            console.log(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //obtener los detalles de un producto(publicacion)
+    const obtenerDetalles = async(id)=>{
+        try {
+            const response = await obtenerDetallePublicacion(id);
+            //console.log(response)
+            setDetailProduct(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //obtener imagenes y videos de una publicacion
+    const obtenerImagenes = async(id)=>{
+        try {
+            const response = await obtenerImagenesPublicacion(id)
+            //console.log(response)
+            const imagenes =response.filter(item => item.id_imagen != null)
+            const video = response.filter(item => item.id_video != null)
+
+            setImagenesProduct(imagenes)
+            setVideoProduct(video)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //Obtener datos del usuario
+    const obtenerUsuario = async(id)=>{
+        try {
+            const response = await detalleUsuarioRequest(id)
+           // console.log(response)
+            setUsuarioProduct(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return(
         <ProductosContext.Provider value={{
           obtenerCategorias,
@@ -93,7 +149,15 @@ export const ProductosProvider = ({children})=>{
           obtenerEstados,
           estados,
           departamentos,
-          agregarPublicacion
+          agregarPublicacion,
+          subirVideoPublicacion,
+          obtenerDetalles,
+          detailProduct,
+          obtenerImagenes,
+          imagenesProduct,
+          videoProduct,
+          usuarioProduct,
+          obtenerUsuario,
         }}>
             {children}
         </ProductosContext.Provider>
