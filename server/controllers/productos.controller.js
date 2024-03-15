@@ -1,6 +1,7 @@
 import {pool} from '../db.js';
 import pkg from 'cloudinary';
 const { v2: cloudinary } = pkg;
+import helper from '../helpers/timeag.js'
 
 //Obtener Categorias
 export const obtenerCategorias= async(req,res)=>{
@@ -114,6 +115,10 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
     try {
         
         const [rows]= await pool.query('CALL sp_productosUsuario(?)', [req.user]);
+        const resultados = await Promise.all(rows[0].map(async (producto) => {
+            const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+            producto.imagen=imagen[0].url_imagen
+        }));
 
         res.send(rows[0])
 
@@ -122,5 +127,74 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
         return res.status(500).json({
             message: "Ha Ocurrido un Error",
           });
+    }
+}
+
+// Función para eliminar una imagen de un producto
+export const eliminarImagenProducto = async (req, res) => {
+    
+    const { nombreImagen } = req.params;
+
+    try {
+        
+        const [result] = await pool.query(
+            'DELETE FROM tbl_imagenesProductos WHERE id_imagen = ?',
+            [ nombreImagen]
+        );
+
+        // Verificar si se eliminó la imagen correctamente
+        if (result.affectedRows === 1) {
+            
+            res.json({
+                message: 'Imagen eliminada correctamente'
+            });
+        } else {
+            // Si hubo error
+            res.status(404).json({
+                message: 'No se encontró la imagen para eliminar'
+            });
+        }
+    } catch (error) {
+        // pa cualquier error ocurrido durante el proceso
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error al eliminar la imagen del producto'
+        });
+    }
+};
+
+export const obtenerDetallePublicacion = async(req,res)=>{
+    try {
+        const [rows] = await pool.query('CALL sp_detalleProductos(?)' , [req.params.id])
+        //console.log(rows[0][0].usuario)
+        const fecha= helper(rows[0][0].fecha_publicacion)
+        rows[0][0].fecha=fecha
+
+        res.send(rows[0][0])
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error al eliminar la imagen del producto'
+        });
+    }
+}
+
+export const obtenerImagenesPublicacion = async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_imagenesProductos(?)', [req.params.id])
+
+        const[video]= await pool.query ('Select id_video, url_video FROM tbl_productos WHERE producto_id=?',[req.params.id])
+
+        console.log(video[0])
+        rows.imagenes=rows[0]
+        rows.video=video[0]
+        rows[0].push(video[0])
+
+        res.send(rows[0])
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error'
+        });
     }
 }

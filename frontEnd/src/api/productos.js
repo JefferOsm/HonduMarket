@@ -29,3 +29,13 @@ export const videoPublicacionRequest = async(id,values)=>{
     const response= await axios.put(`/productos/video/${id}`,values)
     return response.data;
 }
+
+export const obtenerDetallePublicacion = async(id)=>{
+    const response = await axios.get(`/productos/publicaciones/detalle/${id}`)
+    return response.data
+}
+
+export const obtenerImagenesPublicacion = async(id)=>{
+    const response= await axios.get(`/productos/publicaciones/detalle/imagenes/${id}`)
+    return response.data
+}

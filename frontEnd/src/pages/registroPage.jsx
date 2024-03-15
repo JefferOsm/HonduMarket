@@ -99,7 +99,7 @@ function RegistroPage() {
                         <div className="input-group">
                           <div className="input-group-text">@</div>
                           <input type="text" className="form-control text-dark" 
-                          placeholder="Username" {... register('username', {required:true})} />
+                          placeholder="Nombre de Usuario" {... register('username', {required:true})} />
                         </div>
                       </div>
 
@@ -115,14 +115,14 @@ function RegistroPage() {
                       {/* Correo */}
                       <div className="w-100 ">
                         <label className="form-label">Correo Electrónico</label>
-                        <input type="email" className="form-control"
+                        <input type="email" className="form-control" placeholder="Correo@example.com"
                         {...register('correo',{required:true})} />
                       </div>
 
                       {/* Contraseña */}
                       <div className="w-100 ms-5 ">
                         <label className="form-label">Contraseña</label>
-                        <input type="password" minLength={5} className="form-control text-dark" 
+                        <input type="password" minLength={5} className="form-control text-dark" placeholder="Ej fsdqn"
                         {... register('pass', {required:true,minLength:5})}/>
                         <p className="text-info mt-1">Debe ser de mínimo de 5 Caracteres</p>
                       </div>
@@ -146,7 +146,7 @@ function RegistroPage() {
                           onChange={comprobarCheck}
                         />
                         <label className="form-check-label"  htmlFor="dropdownCheck">
-                          Acepta los<a href="#" className="link-info" onClick={handleShow}> terminos y condiciones</a>  
+                          Acepta los <a href="#" className="link-info" onClick={handleShow}>terminos y condiciones</a>  
                         </label>
                     </div>
                     

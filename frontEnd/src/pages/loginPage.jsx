@@ -41,7 +41,7 @@ function LoginPage() {
                 <div className="mb-3">
                     <label  className="form-label">Correo</label>
                     <input type="email" className="form-control" id="correo" 
-                    placeholder="email@example.com" {...register('correo',{required:true})} />
+                    placeholder="Correo@example.com" {...register('correo',{required:true})} />
                 </div>
 
                 {
@@ -53,7 +53,7 @@ function LoginPage() {
                 <div className="mb-3">
                     <label className="form-label">Contraseña</label>
                     <input type="password" className="form-control" id="pass" 
-                    placeholder="Password" {... register('pass', {required:true})} />
+                    placeholder="Contraseña" {... register('pass', {required:true})} />
                 </div>
 
                 {
