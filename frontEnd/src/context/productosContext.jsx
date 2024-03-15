@@ -4,7 +4,8 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         agregarPublicacionReques,
         videoPublicacionRequest,
         obtenerDetallePublicacion,
-        obtenerImagenesPublicacion} from "../api/productos";
+        obtenerImagenesPublicacion,
+        detalleUsuarioRequest} from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -27,7 +28,7 @@ export const ProductosProvider = ({children})=>{
     const [detailProduct, setDetailProduct]= useState([])
     const [imagenesProduct, setImagenesProduct]= useState([])
     const [videoProduct, setVideoProduct]= useState([])
-
+    const [usuarioProduct, setUsuarioProduct]= useState([])
 
     const obtenerCategorias= async()=>{
         try {
@@ -124,6 +125,17 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
         }
     }
+
+    //Obtener datos del usuario
+    const obtenerUsuario = async(id)=>{
+        try {
+            const response = await detalleUsuarioRequest(id)
+           // console.log(response)
+            setUsuarioProduct(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return(
         <ProductosContext.Provider value={{
           obtenerCategorias,
@@ -143,6 +155,8 @@ export const ProductosProvider = ({children})=>{
           obtenerImagenes,
           imagenesProduct,
           videoProduct,
+          usuarioProduct,
+          obtenerUsuario,
         }}>
             {children}
         </ProductosContext.Provider>

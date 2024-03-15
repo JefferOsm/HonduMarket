@@ -13,18 +13,29 @@ function VistaArticulo() {
     //funcionalidades para el modal de Usuario
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+      obtenerUsuario(detailProduct.idUsuario)
+      setShow(true)
+    };
+
 
   // funcion para obtener el id de la url
     const {id} = useParams();
   //constante que recibe todas las publicaciones que existen
-  const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct, videoProduct} = usarProductosContex();
+  const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct, videoProduct, obtenerUsuario} = usarProductosContex();
   const {autenticado} = usarAutenticacion();
   
   useEffect(() => {
-    obtenerDetalles(id)
-    obtenerImagenes(id)
+     obtenerDetalles(id)
+     obtenerImagenes(id)
   }, []);
+
+  const comas = (value) => {
+    // Convertir el número a cadena y aplicar el formato con comas
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+
 
   return (
     <>
@@ -121,7 +132,7 @@ function VistaArticulo() {
         </div>
       </div>
     </div>
-    <UsuarioModal show={show} handleClose={handleClose} usuario={detailProduct.idUsuario} />
+    <UsuarioModal show={show} handleClose={handleClose} />
     </>
   )
 }

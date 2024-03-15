@@ -16,6 +16,11 @@ function PublicarArticulo () {
   const [estado, setestado] = useState("");
   const [departamento, setdepartamento] = useState("");
 
+  const comas = (value) => {
+    // Convertir el número a cadena y aplicar el formato con comas
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   
   const defaultTitulo = "Titulo";
   const defaultDescripcion = "La descripcion aparecera aqui";
@@ -73,7 +78,7 @@ function PublicarArticulo () {
       };
 
       const Precio = (event) => {
-        setprecio("Lps " + event.target.value);
+        setprecio("Lps " + comas(event.target.value));
       };
 
       const Categoria = (event) => {

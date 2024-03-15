@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
-        verificarToken,actualizarImagen,actualizarPassword} from '../controllers/user.controllers.js'
+        verificarToken,actualizarImagen,actualizarPassword, obtenerUsuario} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import {parserUsuarios} from '../middlewares/multer.js';
 
@@ -12,6 +12,9 @@ router.get("/", getUsers);
 
 //Ver perfil
 router.get("/perfil", autenticacionUsuario, getUser);
+
+//Ver ususario
+router.get("/detalle/:id", obtenerUsuario);
 
 //Registrarse
 router.post("/crear", createUser);

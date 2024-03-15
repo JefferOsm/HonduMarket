@@ -48,6 +48,31 @@ export const getUser = async (req, res) => {
 };
 
 
+//Obtener un Usuario para el perfil
+export const obtenerUsuario = async (req, res) => {
+  try {
+    const [rows] = await pool.query("CALL sp_obtenerUsuario(?)", [
+      req.params.id
+    ]);
+
+    if (rows.length <= 0) {
+      return res.status(404).json({
+        message: "No se encontro el usuarios",
+      });
+    }
+
+    res.send(rows[0][0]);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+};
+
+
+
 // Crear Usuarios
 export const createUser = async (req, res) => {
 
