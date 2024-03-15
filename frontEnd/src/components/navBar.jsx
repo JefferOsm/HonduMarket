@@ -2,21 +2,23 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { usarAutenticacion } from '../context/autenticacion'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faRightFromBracket, faCircleUser, faBars} from '@fortawesome/free-solid-svg-icons'
+import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore} from '@fortawesome/free-solid-svg-icons'
+import Dropdown from 'react-bootstrap/Dropdown';
+import { useState } from 'react';
 
 function NavBar() {
 
 
   const{autenticado,logout,usuario}=  usarAutenticacion();
 // pa la busqueda
-  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Aquí puedes enviar el término de búsqueda al backend para buscar productos
-    console.log('Buscar productos con el término:', searchTerm);
-  };
+const [searchTerm, setSearchTerm] = useState('');
 
+const handleSearch = (e) => {
+  e.preventDefault();
+  // Aquí puedes enviar el término de búsqueda al backend para buscar productos
+  console.log('Buscar productos con el término:', searchTerm);
+};
 
   return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top py-2 bc-primary  ">
@@ -32,9 +34,9 @@ function NavBar() {
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
 
               <form className="d-flex mx-auto me-5 my-2 w-340" onSubmit={handleSearch} role="search">
-                <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-              </form>
+                    <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
+                    <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                </form>
 
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
                     <li className="nav-item ">
@@ -42,9 +44,26 @@ function NavBar() {
                     </li>
 
                     <li className="nav-item me-2">
-                      <Link className="nav-link text-light fs-5" to={'/perfil'} title='Ver Perfil'>
+
+                    <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic" className='text-light fs-5 bc-drop-home'>
                         <FontAwesomeIcon icon={faCircleUser} />
-                      </Link>
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu className='bc-primary'>
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil">
+                          <FontAwesomeIcon icon={faCircleUser} /> Mi Perfil
+                        </Dropdown.Item>
+
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicar">
+                           <FontAwesomeIcon icon={faFileArrowUp} /> Publicar Producto
+                        </Dropdown.Item>
+
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicaciones">
+                          <FontAwesomeIcon icon={faStore} /> Mis Publicaciones
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                     </li>
 
                     <li className="nav-item">
@@ -59,10 +78,10 @@ function NavBar() {
             <>
             {/* Mostrar Cuando no hay Usuario Logueado */}
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
-
+              
               <form className="d-flex mx-auto me-5 my-2 w-340" onSubmit={handleSearch} role="search">
-                <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                  <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
+                  <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
 
