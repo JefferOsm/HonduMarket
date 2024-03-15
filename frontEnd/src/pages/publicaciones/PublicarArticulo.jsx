@@ -3,10 +3,131 @@ import {useForm} from 'react-hook-form';
 import { usarProductosContex } from "../../context/productosContext";
 
 function PublicarArticulo () {
-
   const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias,
         departamentos,estados,agregarPublicacion,subirVideoPublicacion} = usarProductosContex();
   const {register, handleSubmit, formState:{errors}, reset} = useForm();
+
+
+   //Funcion para agregar imagenes al carrucel
+   function Agregarimagen() {
+    const inputArchivo = document.getElementById("imagenes");
+    const contenedorImagenes = document.getElementById("contenedor-imagenes");
+    const archivos = inputArchivo.files;
+
+    // Iterar sobre cada archivo seleccionado
+  for (let i = 0; i < archivos.length; i++) {
+    const archivo = archivos[i];
+
+    // Contar las imágenes existentes
+    const numeroImagenes = contenedorImagenes.querySelectorAll("img").length;
+    const numeroVideos = contenedorImagenes.querySelectorAll("video").length;
+    // Verificar selección de archivo y límite
+    if (!archivos || numeroImagenes >= 6) {
+      return alert("Solo se pueden escoger 6 Imagenes");
+    }
+
+    if (numeroImagenes == 0 && numeroVideos == 0){
+
+      const div = document.createElement("div");
+      div.className = "carousel-item active";
+      // Crear la primera imagen
+      const imagen = document.createElement("img");
+      imagen.src = URL.createObjectURL(archivo);
+      imagen.className = "d-block w-100";
+      div.appendChild(imagen);
+
+      // Agregar la primera imagen al contenedor
+      contenedorImagenes.appendChild(div);
+
+    }else{
+
+    const div = document.createElement("div");
+    div.className = "carousel-item";
+    // Crear una nueva imagen
+    const imagen = document.createElement("img");
+    imagen.src = URL.createObjectURL(archivo);
+    imagen.className = "d-block w-100";
+    div.appendChild(imagen);
+
+    // Agregar la imagen al contenedor
+    contenedorImagenes.appendChild(div);
+    }
+  }
+}
+
+
+  //Funcion para agregar el video al carrucel
+  function AgregarVideo() {
+    const inputArchivo = document.getElementById("video");
+    const archivo = inputArchivo.files[0];
+    const contenedorVideos = document.getElementById("contenedor-imagenes");
+    // Contar los videos existentes
+    const numeroVideos = contenedorVideos.querySelectorAll("video").length;
+    const numeroImagenes = contenedorVideos.querySelectorAll("img").length;
+
+  
+    // Verificar selección de archivo y límite
+    if (!archivo || numeroVideos >= 1) {
+      return alert("Solo se pueden escoger 1 video");
+    }
+  
+    if(numeroImagenes == 0 && numeroVideos == 0){
+    const div = document.createElement("div");
+    div.className = "carousel-item active";
+  
+    // Crear un elemento de video
+    const video = document.createElement("video");
+    video.className = "d-block w-100"
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+
+  
+    // Crear un source para el video
+    const source = document.createElement("source");
+    source.src = URL.createObjectURL(archivo);
+    source.type = "video/mp4"; // Cambia el tipo de video según sea necesario
+  
+    // Agregar el source al video
+    video.appendChild(source);
+  
+    // Agregar el video al div
+    div.appendChild(video);
+  
+    // Agregar el div al contenedor de videos
+    contenedorVideos.appendChild(div);
+    alert("se agrego el video");
+    }else{
+      const div = document.createElement("div");
+    div.className = "carousel-item";
+  
+    // Crear un elemento de video
+    const video = document.createElement("video");
+    video.className = "d-block w-100"
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+
+  
+    // Crear un source para el video
+    const source = document.createElement("source");
+    source.src = URL.createObjectURL(archivo);
+    source.type = "video/mp4"; // Cambia el tipo de video según sea necesario
+  
+    // Agregar el source al video
+    video.appendChild(source);
+  
+    // Agregar el video al div
+    div.appendChild(video);
+  
+    // Agregar el div al contenedor de videos
+    contenedorVideos.appendChild(div);
+    alert("se agrego el video");
+    }
+  }
+  
+
+  
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -72,6 +193,8 @@ function PublicarArticulo () {
     setcategoria("");
     setestado("");
     setdepartamento("");
+    const contenedorImagenes = document.getElementById("contenedor-imagenes");
+    contenedorImagenes.innerHTML = "";
 
   })
 
@@ -109,8 +232,8 @@ function PublicarArticulo () {
 
   return (
     <div className="contenedor-publicar">
-        <div className="card py-3 px-3 col-md-4">
-            <h3 className="fw-bold">Registra tu producto</h3>
+        <div className="card py-3 px-3 col-auto">
+            <h3 className="fw-bold text-center">Registra tu producto</h3>
             <form className="col py-2" onSubmit={onSubmit}>
 
               {/* Registro nombre */}
@@ -135,7 +258,7 @@ function PublicarArticulo () {
                 }
                 
                 {/* Registro Precio */}
-                <div className="input-group py-2" style={{width:"15vw", borderRadius: "5px"}}>
+                <div className="input-group py-2" style={{width:"20vw", borderRadius: "5px"}}>
                 <div className="input-group-text">Lps</div>
                     <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
                     {... register('precio',{required:true,  onChange:(e)=>{Precio(e)}}) }/>
@@ -228,7 +351,7 @@ function PublicarArticulo () {
                     <input 
                     type='file' className='form-control' accept='image/*'
                     {... register('imagenes',{ required: true })} id='imagenes' style={{ display: 'none' }}
-                      multiple />
+                      multiple onChange={Agregarimagen}/>
 
                         {
                           errors.imagenes && (
@@ -254,7 +377,7 @@ function PublicarArticulo () {
 
                     <input 
                     type='file' className='form-control' accept='video/*'
-                    {... register('video')} id='video' style={{ display: 'none' }}
+                    {... register('video')} id='video' style={{ display: 'none' }} onChange={AgregarVideo}
                     />
 
                         
@@ -263,18 +386,42 @@ function PublicarArticulo () {
                
                
                {/*Boton para guardar el producto en la BD */}
-               <button type="submit" className="btn btn-primary mt-2">Publicar</button>
-                
+               
+               <button type="submit" className="btn btn-primary mt-2 col-6">Publicar</button>
+                        
 
             </form>
         </div>
 
-        {/*Card de la vista previa del producto ya registrado*/}
-        <div className="card shadow-lg bg-white rounded" style={{margin: "6%", flexGrow: "100", display: "flex", flexDirection: "row"}}>
-          
-          {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
-          <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
+        {/*Card de la vista previa del producto a registrar*/}
+        <div className="card shadow-lg bg-white rounded" style={{margin: "3%", flexGrow: "100", display: "flex", flexDirection: "row"}}>
+        <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
               <h6 className="card-title">Vista previa</h6>
+          {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
+          <div id="carouselExampleIndicators" className="carousel slide">
+                <div className="carousel-indicators" id="contenedor-botones">
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
+                
+                </div>
+                <div className="carousel-inner" id="contenedor-imagenes">
+                  
+
+                </div>
+                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span className="visually-hidden">Previous</span>
+                </button>
+                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span className="visually-hidden">Next</span>
+                </button>
+              </div>
           </div>
         
           {/*Informacion del Producto*/}
@@ -297,3 +444,5 @@ function PublicarArticulo () {
 export default PublicarArticulo
 
 const imgdemas = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6ElEQVR4nO2ZUQrCMAyGexB99iKNegNZ9iI2l9sQdrFp7S5QqS8OcUgrtIX9H+R5/7+kKU2UAgCAatmfzltic9WNTMTic4ZuZNIsw6G97JLFa5ZbbuH0aYTNPWiJNhD+fGnx9I4+2kCJsqHlcnIJGSgvnGYBA7SmDIzWfQ0YiAEZsCghj0NM6EKuzjY6LvT5f4NgYAYyYFFCHoeYcA+4Ou8BwntAkIGfoIQsHjQecyGqYCJHq53M6YqGu8TmEW+AZajIQBdtIGxGwnKhuPhGxmMrG5W+YpI+zOdzC9evb5ouWTwAAKgcPAF1HK9L/+dO1QAAAABJRU5ErkJggg==';
+
+const video = 'https://ia600208.us.archive.org/9/items/video-de-whats-app-2024-03-15-a-las-11.23.51-c-6e-81cde/Video%20de%20WhatsApp%202024-03-15%20a%20las%2011.23.51_c6e81cde.mp4';
