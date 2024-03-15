@@ -10,6 +10,11 @@ export const obtenerPublicacionesUsuario = async()=>{
     return response.data;
 }
 
+export const obtenerPublicacionesHome = async()=>{
+    const response= await axios.get(`/productos/publicacionesinicio`);
+    return response.data;
+}
+
 export const obtenerDepartamentosRequest = async()=>{
     const response = await axios.get(`/productos/departamentos`);
     return response.data;

@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react"
 import { useParams } from 'react-router-dom';
 import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
+import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMap, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 
 
 function VistaArticulo() {
+
+    //funcionalidades para el modal de Usuario
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
   // funcion para obtener el id de la url
     const {id} = useParams();
@@ -20,8 +26,8 @@ function VistaArticulo() {
     obtenerImagenes(id)
   }, []);
 
-console.log(imagenesProduct)
   return (
+    <>
     <div >
       {/*card dinamica para que el tamano se ajuste a la pantalla y se divide en 2*/}
       <div className="container-md mt-2 shadow-lg bg-white rounded" >
@@ -95,7 +101,7 @@ console.log(imagenesProduct)
                           height:'65px', backgroundImage:`url(${detailProduct.fotoPerfil})`, backgroundRepeat:'no-repeat', backgroundSize:'cover'}}></div>
                           <div className="ms-3 fw-bold">{detailProduct.usuario}</div>
                     </div>
-                    <div className="btn bc-primary text-light">Información</div>
+                    <div className="btn bc-primary text-light" onClick={handleShow}>Información</div>
                   </div>
                   {autenticado ? (
                     <>
@@ -115,6 +121,8 @@ console.log(imagenesProduct)
         </div>
       </div>
     </div>
+    <UsuarioModal show={show} handleClose={handleClose} usuario={detailProduct.idUsuario} />
+    </>
   )
 }
 

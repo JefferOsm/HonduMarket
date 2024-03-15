@@ -12,7 +12,6 @@ function MisPublicaciones() {
         obtenerPublicaciones();
       },[])
       
-
   return (
     <div className='container-lg bg-primary-light shadow mt-4 contenedor-publicaciones mb-4'>
         <h3 className='py-3 px-3'>Productos Publicados</h3>
