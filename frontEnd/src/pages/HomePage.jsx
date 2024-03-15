@@ -11,7 +11,6 @@ function HomePage() {
   useEffect(()=>{
     obtenerCategorias();
     obtenerPublicacionesInicio();
-    obtenerPublicaciones();
     console.log(categorias)
   },[])
 
@@ -52,7 +51,7 @@ function HomePage() {
           </button>
       </div>
 
-      <div className="container-mb rounded shadow mb-4" style={{background:'white'}}>
+      {/* <div className="container-mb rounded shadow mb-4" style={{background:'white'}}>
         <h3 className="py-3 px-3">Productos a la venta</h3>
         <div className="px-3 d-flex flex-wrap justify-content-around">
           {publicacionesHome.map(publicacion => (
@@ -72,8 +71,7 @@ function HomePage() {
             </Link>
           ))}
         </div>
-    </div>
-  )
+    </div> */}
 
       {categorias.map((categoria) => (
         <div key={categoria.categoria_id}>

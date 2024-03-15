@@ -2,7 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { usarAutenticacion } from '../context/autenticacion'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faRightFromBracket, faCircleUser, faBars} from '@fortawesome/free-solid-svg-icons'
+import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore} from '@fortawesome/free-solid-svg-icons'
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function NavBar() {
 
@@ -42,9 +43,26 @@ function NavBar() {
                     </li>
 
                     <li className="nav-item me-2">
-                      <Link className="nav-link text-light fs-5" to={'/perfil'} title='Ver Perfil'>
+
+                    <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic" className='text-light fs-5 bc-drop-home'>
                         <FontAwesomeIcon icon={faCircleUser} />
-                      </Link>
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu className='bc-primary'>
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil">
+                          <FontAwesomeIcon icon={faCircleUser} /> Mi Perfil
+                        </Dropdown.Item>
+
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicar">
+                           <FontAwesomeIcon icon={faFileArrowUp} /> Publicar Producto
+                        </Dropdown.Item>
+
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicaciones">
+                          <FontAwesomeIcon icon={faStore} /> Mis Publicaciones
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                     </li>
 
                     <li className="nav-item">

@@ -32,3 +32,17 @@ const productoStorage = new CloudinaryStorage({
 });
 
 export const productoParser = multer({ storage: productoStorage });
+
+
+// imágenes de productos
+const videoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'Videos_Productos',
+    resource_type:'video',
+    allowed_formats: ['mp4', 'mov', 'avi'], 
+    public_id: (req, file) => `${req.user}_${Date.now()}`,
+  },
+});
+
+export const videoParser = multer({ storage: videoStorage });
