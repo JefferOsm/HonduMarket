@@ -1,4 +1,16 @@
--- Procedimiento para Eliminar Usuario 
+ 
+-- Obtener un usuario
+DELIMITER //
+create procedure sp_obtenerUsuario (
+	IN p_id INT
+)
+BEGIN
+    SELECT *FROM tbl_usuarios WHERE id= p_id;
+END //
+DELIMITER ;
+
+
+-- Eliminar una cuenta
 DELIMITER //
 create procedure sp_eliminarCuenta (
 	IN p_id INT
@@ -137,3 +149,19 @@ BEGIN
         tbl_imagenesProductos i ON p.producto_id = i.producto_id;
 END //
 DELIMITER ;
+
+
+
+
+-- Inhabilitar Productos
+CREATE EVENT inhabilitar_producto
+ON SCHEDULE EVERY 60 DAY
+DO
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 DAY) AND producto_inactivo = 0;
+
+
+
+
+
+
+
