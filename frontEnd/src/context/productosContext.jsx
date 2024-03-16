@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacionesHome, obtenerDepartamentosRequest,
+import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,buscarProductos, obtenerDepartamentosRequest,
         obtenerEstadosRequest, 
         agregarPublicacionReques,
         videoPublicacionRequest,
@@ -22,7 +22,7 @@ export const usarProductosContex= ()=>{
 export const ProductosProvider = ({children})=>{
     const [categorias, setCategorias]= useState([]);
     const [publicacionesUser, setPublicacionesUser]= useState([]);
-    const [publicacionesHome, setPublicacionesHome]= useState([]);
+    const [publicacionesBusqueda, setPublicacionesBusqueda]= useState([]);
     const [departamentos, setDepartamentos]= useState([]);
     const [estados, setEstados] = useState([]);
     const [detailProduct, setDetailProduct]= useState([])
@@ -51,11 +51,11 @@ export const ProductosProvider = ({children})=>{
         }
     }
 
-    const obtenerPublicacionesInicio = async()=>{
+    const obtenerPublicacionesBusqueda = async()=>{
         try {
-            const response= await obtenerPublicacionesHome();
+            const response= await buscarProductos();
             console.log(response)
-            setPublicacionesHome(response)
+            setPublicacionesBusqueda(response)
         } catch (error) {
             console.log(error)
         }
@@ -142,9 +142,9 @@ export const ProductosProvider = ({children})=>{
           obtenerCategorias,
           categorias,
           obtenerPublicaciones,
-          obtenerPublicacionesInicio,
+          obtenerPublicacionesBusqueda,
           publicacionesUser,
-          publicacionesHome,
+          publicacionesBusqueda,
           obtenerDepartamentos,
           obtenerEstados,
           estados,

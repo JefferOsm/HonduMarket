@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router,Routes, Route} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/loginPage';
 import RegistroPage from './pages/registroPage';
@@ -11,19 +11,21 @@ import EditPerfilPage from './pages/editPerfilPage';
 import PublicarArticulo from './pages/publicaciones/PublicarArticulo';
 import Vista_del_articulo from './pages/publicaciones/VistaArticulo';
 import MisPublicaciones from './pages/publicaciones/MisPublicaciones';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 
 function App(){
   return (
     <AutenticacionProvider>
       <ProductosProvider>
-          <BrowserRouter>
+          <Router>
           <NavBar />
             <Routes>
               <Route path='/' element={<HomePage/>} />
               <Route path='/login' element={<LoginPage />} />
               <Route path='/registro' element={<RegistroPage />} />
               <Route path='/Vista_del_articulo/:nombre/:id' element={<Vista_del_articulo/>} />
+              <Route path='/search' element={<SearchResultsPage />} />
               
             <Route element={<ProteccionRoute/>}>
               <Route path='/perfil' element={<PerfilPage/>} />
@@ -32,7 +34,7 @@ function App(){
               <Route path='/perfil/publicaciones' element={<MisPublicaciones/>} />
             </Route>
           </Routes>
-        </BrowserRouter>
+        </Router>
       </ProductosProvider>
     </AutenticacionProvider>
   );

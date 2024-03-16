@@ -1,9 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { usarAutenticacion } from '../context/autenticacion'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore} from '@fortawesome/free-solid-svg-icons'
 import Dropdown from 'react-bootstrap/Dropdown';
+
 
 import { useState } from 'react';
 
@@ -13,15 +14,15 @@ function NavBar() {
 
 
   const{autenticado,logout,usuario}=  usarAutenticacion();
+  const [searchTerm, setSearchTerm] = useState('');
 // pa la busqueda
 
-const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
-const handleSearch = (e) => {
-  e.preventDefault();
-  // Aquí puedes enviar el término de búsqueda al backend para buscar productos
-  console.log('Buscar productos con el término:', searchTerm);
-};
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`/search?query=${searchTerm}`);
+  };
 
   return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top py-2 bc-primary  ">

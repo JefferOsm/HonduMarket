@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados, 
-    agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome } from "../controllers/productos.controller.js";
+    agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerResultadosBusqueda } from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -13,8 +13,8 @@ router.get('/categorias', obtenerCategorias)
 //Obtener departamentos
 router.get('/departamentos',obtenerDepartamentos)
 
-//Obtener las publicaciones para la pagina de inicio
-router.get('/publicacionesinicio', obtenerPublicacionesHome)
+//Obtener las publicaciones en la busqueda
+router.get('/buscar', obtenerResultadosBusqueda)
 
 //Obtener Estados
 router.get('/estados', obtenerEstados)
