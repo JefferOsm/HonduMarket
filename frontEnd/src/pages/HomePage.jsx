@@ -5,12 +5,11 @@ import Card from 'react-bootstrap/Card';
 
 
 function HomePage() {
-  const {obtenerCategorias,categorias,publicacionesHome,obtenerPublicacionesInicio} = usarProductosContex();
+  const {obtenerCategorias,categorias} = usarProductosContex();
   const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
 
   useEffect(()=>{
     obtenerCategorias();
-    obtenerPublicacionesInicio();
     console.log(categorias)
   },[])
 
@@ -71,7 +70,7 @@ function HomePage() {
             </Link>
           ))}
         </div>
-    </div> */}
+          </div> */}
 
       {categorias.map((categoria) => (
         <div key={categoria.categoria_id}>
