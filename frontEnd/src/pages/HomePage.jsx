@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react"
 import { usarProductosContex } from "../context/productosContext";
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
-import uearparaverModal from "../components/avisoModel";
+import LoguearparaverModal from "../components/avisoModel";
+
 
 
 function HomePage() {
