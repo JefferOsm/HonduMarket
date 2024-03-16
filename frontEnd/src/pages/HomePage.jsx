@@ -3,6 +3,7 @@ import { usarProductosContex } from "../context/productosContext";
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import LoguearparaverModal from "../components/avisoModel";
+import { usarAutenticacion } from '../context/autenticacion'
 
 
 
@@ -10,6 +11,7 @@ function HomePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const {obtenerCategorias,categorias} = usarProductosContex();
   const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
+  const{autenticado}=  usarAutenticacion();
 
    // Función para manejar el cierre del modal
    const handleCloseLoginModal = () => setShowLoginModal(false);
@@ -19,11 +21,8 @@ function HomePage() {
  
    // Función para manejar el clic en una tarjeta
    const handleCardClick = () => {
-     // Verificar si el usuario está autenticado
-     const isAuthenticated = false; // Aquí debes colocar la lógica para verificar si el usuario está autenticado
- 
      // Si el usuario no está autenticado, mostrar el modal
-     if (!isAuthenticated) {
+     if (!autenticado) {
        handleShowLoginModal();
      }
    };
@@ -70,7 +69,7 @@ function HomePage() {
           </button>
       </div>
 
-      {/* <div className="container-mb rounded shadow mb-4" style={{ background: 'white' }}>
+      {<div className="container-mb rounded shadow mb-4" style={{ background: 'white' }}>
           <h3 className="py-3 px-3">Productos a la venta</h3>
           <div className="px-3 d-flex flex-wrap justify-content-around">
             {publicacionesHome.map(publicacion => (
@@ -90,7 +89,7 @@ function HomePage() {
               </Link>
             ))}
           </div>
-        </div> */}
+        </div> }
 
       {categorias.map((categoria) => (
         <div key={categoria.categoria_id}>
