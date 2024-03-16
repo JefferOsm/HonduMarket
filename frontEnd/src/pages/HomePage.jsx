@@ -1,12 +1,31 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { usarProductosContex } from "../context/productosContext";
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
+import uearparaverModal from "../components/avisoModel";
 
 
 function HomePage() {
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const {obtenerCategorias,categorias} = usarProductosContex();
   const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
+
+   // Función para manejar el cierre del modal
+   const handleCloseLoginModal = () => setShowLoginModal(false);
+
+   // Función para abrir el modal
+   const handleShowLoginModal = () => setShowLoginModal(true);
+ 
+   // Función para manejar el clic en una tarjeta
+   const handleCardClick = () => {
+     // Verificar si el usuario está autenticado
+     const isAuthenticated = false; // Aquí debes colocar la lógica para verificar si el usuario está autenticado
+ 
+     // Si el usuario no está autenticado, mostrar el modal
+     if (!isAuthenticated) {
+       handleShowLoginModal();
+     }
+   };
 
   useEffect(()=>{
     obtenerCategorias();
@@ -50,27 +69,27 @@ function HomePage() {
           </button>
       </div>
 
-      {/* <div className="container-mb rounded shadow mb-4" style={{background:'white'}}>
-        <h3 className="py-3 px-3">Productos a la venta</h3>
-        <div className="px-3 d-flex flex-wrap justify-content-around">
-          {publicacionesHome.map(publicacion => (
-            <Link to={"/Vista_del_articulo/"+ publicacion.id} style={{ textDecoration: 'none', color: 'inherit', margin: '10px' }} key={publicacion.id}>
-              <div className="card bg-primary-light shadow" style={{width: "18rem"}}>
-                <div style={{overflow:'hidden', height:'200px'}}>
-                  <img src={publicacion.url_imagen} className="card-img-top" alt="..." style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+      {/* <div className="container-mb rounded shadow mb-4" style={{ background: 'white' }}>
+          <h3 className="py-3 px-3">Productos a la venta</h3>
+          <div className="px-3 d-flex flex-wrap justify-content-around">
+            {publicacionesHome.map(publicacion => (
+              <Link to={"/Vista_del_articulo/" + publicacion.id} onClick={handleCardClick} style={{ textDecoration: 'none', color: 'inherit', margin: '10px' }} key={publicacion.id}>
+                <div className="card bg-primary-light shadow" style={{ width: "18rem" }}>
+                  <div style={{ overflow: 'hidden', height: '200px' }}>
+                    <img src={publicacion.url_imagen} className="card-img-top" alt="..." style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div className="card-body">
+                    <h5 className="card-title">{publicacion.nombre}</h5>
+                    <p className="card-text">
+                      <a>{"Lps " + publicacion.precio}</a><br />
+                      <a>{publicacion.descripcion + " "}</a>
+                    </p>
+                  </div>
                 </div>
-                <div className="card-body">
-                  <h5 class="card-title">{publicacion.nombre}</h5>
-                  <p className="card-text">
-                    <a>{"Lps " + publicacion.precio}</a><br/>
-                    <a>{publicacion.descripcion + " "}</a>
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-          </div> */}
+              </Link>
+            ))}
+          </div>
+        </div> */}
 
       {categorias.map((categoria) => (
         <div key={categoria.categoria_id}>
@@ -84,6 +103,9 @@ function HomePage() {
           
         </div>
       ))}
+      {/* Modal para iniciar sesión */}
+      <LoguearparaverModal show={showLoginModal} handleClose={handleCloseLoginModal} />
+    
     </div>
   );
 }
