@@ -134,8 +134,7 @@ END //
 DELIMITER ;
 
 -- OBTENER TODOS LOS PRODUCTOS
-DELIMITER //
-CREATE PROCEDURE sp_todasPublicaciones()
+CREATE PROCEDURE sp_todasPublicaciones(IN searchTerm VARCHAR(255))
 BEGIN
     SELECT 
         p.producto_id AS id,
@@ -146,8 +145,11 @@ BEGIN
     FROM 
         tbl_productos p
     INNER JOIN 
-        tbl_imagenesProductos i ON p.producto_id = i.producto_id;
+        tbl_imagenesProductos i ON p.producto_id = i.producto_id
+    WHERE 
+        p.nombre_producto LIKE CONCAT('%', searchTerm, '%');
 END //
+
 DELIMITER ;
 
 
