@@ -134,6 +134,10 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
 export const obtenerPublicacionesHome = async(req,res)=>{
     try {
         const [rows]= await pool.query('CALL sp_todasPublicaciones');
+        const resultados = await Promise.all(rows[0].map(async (producto) => {
+            const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+            producto.imagen=imagen[0].url_imagen
+        }));
         res.send(rows[0])
     } catch (error) {
         console.log(error)
@@ -142,6 +146,55 @@ export const obtenerPublicacionesHome = async(req,res)=>{
           });
     }
 }
+
+//Obtener Publicaciones para el Home del usuario logeado
+export const obtenerPublicacionesHomeAuth = async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_todasPublicacionesAuth(?)',[req.user]);
+        const resultados = await Promise.all(rows[0].map(async (producto) => {
+            const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+            producto.imagen=imagen[0].url_imagen
+        }));
+        res.send(rows[0])
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error",
+          });
+    }
+}
+
+//Obtener Publicaciones para sugerir en la busqueda
+export const obtenerPublicacionesBusqueda = async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_nombrePublicaciones');
+        res.send(rows[0])
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error",
+          });
+    }
+}
+
+
+//Obtener Publicaciones segun la busqueda
+export const obtenerResultadosBusqueda = async (req, res) => {
+    try {
+      const searchTerm = req.query.searchTerm || '';
+      const [rows] = await pool.query('CALL sp_todasPublicacionesSearch(?)', [searchTerm]);
+      const resultados = await Promise.all(rows[0].map(async (producto) => {
+        const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+        producto.url_imagen=imagen[0].url_imagen
+    }));
+      res.send(rows[0]);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: 'Ha Ocurrido un Error',
+      });
+    }
+  };
 
 // Función para eliminar una imagen de un producto
 export const eliminarImagenProducto = async (req, res) => {
@@ -210,4 +263,55 @@ export const obtenerImagenesPublicacion = async(req,res)=>{
             message: 'Ha ocurrido un error'
         });
     }
+}
+
+// Lista de deseos
+//agreagar a la lista
+
+export const agregarListaDeseos = async(req,res)=>{
+    try {
+        const [rows] = await pool.query('INSERT INTO tbl_listaDeseos(producto_id,usuario_id) VALUES(?,?)',[req.params.id,req.user]);
+        console.log(rows);
+        res.json(['Agregado a lista de deseos']);
+    } catch (error) {
+        if(error.code === 'ER_DUP_ENTRY'){
+            await pool.query('CALL sp_borrarDeseo(?,?)',[req.user,req.params.id]);
+            res.status(200).json(['Se borro de lista de deseos'])
+        }else{
+            res.status(500).json({
+                message: 'Ha ocurrido un error al agregar a lista de productos'
+            });
+            console.log(error);
+        }
+    }
+}
+
+export const obtenerListaDeseos = async(req,res)=>{
+    try {
+        const[rows]= await pool.query('CALL sp_listaDeseosUsuario(?)',[req.user]);
+        const resultados = await Promise.all(rows[0].map(async (producto) => {
+            const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+            producto.imagen=imagen[0].url_imagen
+        }));
+        res.send(rows[0]);
+    } catch (error) {
+        res.status(500).json({
+            message: 'Ha ocurrido un error al agregar a lista de productos'
+        });
+        console.log(error);
+    }
+}
+
+//validar para color de boton de lista de deseos
+export const validarListaDeseo = async(req,res)=>{
+    try {
+        const [rows] = await pool.query('CALL sp_listaValidacion(?,?)',[req.user,req.params.id]);
+        res.send(rows[0])
+    } catch (error) {
+
+            res.status(500).json({
+                message: 'Ha ocurrido un error al agregar a lista de productos'
+            });
+            console.log(error);
+        }
 }

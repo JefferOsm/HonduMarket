@@ -1,33 +1,54 @@
-import React, { useEffect } from "react"
+import React, { useEffect,useState } from "react"
 import { usarProductosContex } from "../context/productosContext";
+import { usarAutenticacion } from "../context/autenticacion";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
+import ModalBusqueda from "../components/modalBusqueda";
 
 
 function HomePage() {
-  const {obtenerCategorias,categorias,publicacionesHome,obtenerPublicacionesInicio} = usarProductosContex();
-  const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
+
+  const {obtenerCategorias,categorias,publicacionesHome,obtenerPublicacionesInicio,obtenerPublicacionesInicioAuth} = usarProductosContex();
+  const {autenticado} = usarAutenticacion();
+  // Carousel
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 1024 },
+      items: 4
+    },
+    desktop: {
+      breakpoint: { max: 1024, min: 800 },
+      items: 3
+    },
+    tablet: {
+      breakpoint: { max: 800, min: 464 },
+      items: 2
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1
+    }
+  };
+
 
   useEffect(()=>{
     obtenerCategorias();
-    obtenerPublicacionesInicio();
+    if (autenticado){
+      obtenerPublicacionesInicioAuth()
+    }else{
+      obtenerPublicacionesInicio();
+    }
     console.log(categorias)
   },[])
 
+
+
   return (
+    <>
     <div className="container-md my-4 ">
-{/*       
-      <div className="contenedor-categorias mb-4">
-        {categorias.map(categoria=>(
-          <Link className="p-2 bc-secondary-body text-light text-center rounded" style={{textDecoration:'none'}}
-          key={categoria.categoria_id}>
-            {categoria.nombre_categoria}
-          </Link>
-
-        ))}
-
-      </div> */}
-
       
       <div id="carouselExampleInterval" className="carousel slide" data-bs-ride="carousel">
         <div className="carousel-inner">
@@ -51,28 +72,32 @@ function HomePage() {
           </button>
       </div>
 
-      {/* <div className="container-mb rounded shadow mb-4" style={{background:'white'}}>
-        <h3 className="py-3 px-3">Productos a la venta</h3>
-        <div className="px-3 d-flex flex-wrap justify-content-around">
-          {publicacionesHome.map(publicacion => (
-            <Link to={"/Vista_del_articulo/"+ publicacion.id} style={{ textDecoration: 'none', color: 'inherit', margin: '10px' }} key={publicacion.id}>
-              <div className="card bg-primary-light shadow" style={{width: "18rem"}}>
-                <div style={{overflow:'hidden', height:'200px'}}>
-                  <img src={publicacion.url_imagen} className="card-img-top" alt="..." style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
-                </div>
-                <div className="card-body">
-                  <h5 class="card-title">{publicacion.nombre}</h5>
-                  <p className="card-text">
-                    <a>{"Lps " + publicacion.precio}</a><br/>
-                    <a>{publicacion.descripcion + " "}</a>
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-    </div> */}
+    <p className="fs-3 text-dark fw-bold p-2 my-3">Podría Interesarte</p>
+    {/* Prueba carusel-react */}
+    <Carousel responsive={responsive} showDots={true} infinite={true}
+    autoPlay={true}  autoPlaySpeed={3000} >
+      {publicacionesHome.map(publicacion=>(
 
+        <Link to={`/Vista_del_articulo/${publicacion.nombre}/${publicacion.id}`} 
+        className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2"  key={publicacion.id}>
+        <img src={publicacion.imagen} className="card-img-top" alt="..."
+        style={{ width: '100%', height: '10rem', objectFit: 'cover' }}/>
+        <div className="card-body"  style={{ height: '10rem'}}>
+            <h5 className="card-title fw-semibold">{publicacion.nombre}</h5>
+            <div className="card-text">
+                <div className='card-descripcion fw-light'>
+                    <p>{publicacion.descripcion }</p>
+                </div>
+                <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + publicacion.precio}</p><br/>
+            </div>
+        </div>
+        </Link>
+
+      ))}
+
+    </Carousel>
+
+{/* 
       {categorias.map((categoria) => (
         <div key={categoria.categoria_id}>
           <div className="bg-primary-dark my-4  p-3">
@@ -84,8 +109,9 @@ function HomePage() {
           </div>
           
         </div>
-      ))}
+      ))} */}
     </div>
+    </>
   );
 }
 

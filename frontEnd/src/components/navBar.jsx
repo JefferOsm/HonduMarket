@@ -1,17 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React,{useState} from 'react'
+import { Link,Navigate, useNavigate } from 'react-router-dom'
 import { usarAutenticacion } from '../context/autenticacion'
+import { usarProductosContex } from '../context/productosContext'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore} from '@fortawesome/free-solid-svg-icons'
+import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore,faSearch, faBookmark} from '@fortawesome/free-solid-svg-icons'
 import Dropdown from 'react-bootstrap/Dropdown';
+import ModalBusqueda from './modalBusqueda'
 
 function NavBar() {
 
-
+  const{ obtenerPublicacionesSearch}= usarProductosContex();
   const{autenticado,logout,usuario}=  usarAutenticacion();
+        //funcionalidades para el modal de Busqueda
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const handleShow = () => {
+          setShow(true);
+          obtenerPublicacionesSearch();
+        };
 
+ 
 
   return (
+    <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top py-2 bc-primary  ">
         <div className="container-fluid">
           <Link className="navbar-brand text-light me-3 px-3" to={'/'}>HonduMarket</Link>
@@ -25,8 +36,8 @@ function NavBar() {
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
 
                 <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
-                    <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                    <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
+                    <div className="btn bc-secondary-body text-light me-2" onClick={handleShow}><FontAwesomeIcon icon={faSearch}/></div>
+                    <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" onClick={handleShow} />
                 </form>
 
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
@@ -43,15 +54,19 @@ function NavBar() {
 
                       <Dropdown.Menu className='bc-primary'>
                         <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil">
-                          <FontAwesomeIcon icon={faCircleUser} /> Mi Perfil
+                          <FontAwesomeIcon icon={faCircleUser} />  Perfil
                         </Dropdown.Item>
 
                         <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicar">
-                           <FontAwesomeIcon icon={faFileArrowUp} /> Publicar Producto
+                           <FontAwesomeIcon icon={faFileArrowUp} />  Publicar Producto
                         </Dropdown.Item>
 
                         <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicaciones">
-                          <FontAwesomeIcon icon={faStore} /> Mis Publicaciones
+                          <FontAwesomeIcon icon={faStore} />  Mis Publicaciones
+                        </Dropdown.Item>
+                        
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/lista_deseos">
+                          <FontAwesomeIcon icon={faBookmark} />  Lista de Deseos
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -71,8 +86,8 @@ function NavBar() {
               <div className="collapse navbar-collapse w-340" id="navbarSupportedContent">
               
               <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
-                  <button className="btn bc-secondary-body text-light me-2" type="submit">Buscar</button>
-                  <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" />
+                  <div className="btn bc-secondary-body text-light me-2" onClick={handleShow}><FontAwesomeIcon icon={faSearch}/></div>
+                  <input className="form-control me-2 w-340" type="search" placeholder="Search" aria-label="Search" onClick={handleShow} />
               </form>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
 
@@ -91,6 +106,8 @@ function NavBar() {
           )}
         </div>
       </nav>
+      <ModalBusqueda show={show} handleClose={handleClose} />
+      </>
   )
 }
 

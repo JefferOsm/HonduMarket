@@ -8,6 +8,7 @@ function PublicarArticulo () {
         departamentos,estados,agregarPublicacion,subirVideoPublicacion} = usarProductosContex();
   const {register, handleSubmit, formState:{errors}} = useForm();
 
+
   //Vista Previa
   const [text, setText] = useState("");
   const [descripcion, setDescipcion] = useState("");
@@ -219,12 +220,12 @@ function PublicarArticulo () {
 
                     <input 
                     type='file' className='form-control' accept='image/*'
-                    {... register('imagenes',{ required: true })} id='imagenes' style={{ display: 'none' }}
+                    {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6} })} id='imagenes' style={{ display: 'none' }}
                       multiple />
 
                         {
                           errors.imagenes && (
-                            <p className="ms-2 text-danger"> Seleccione minimo una imagen</p>
+                            <p className="ms-2 text-danger"> Seleccione una imagen minimo y 6 maximo</p>
                           )
                         }
 

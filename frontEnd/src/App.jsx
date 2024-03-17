@@ -11,6 +11,8 @@ import EditPerfilPage from './pages/editPerfilPage';
 import PublicarArticulo from './pages/publicaciones/PublicarArticulo';
 import Vista_del_articulo from './pages/publicaciones/VistaArticulo';
 import MisPublicaciones from './pages/publicaciones/MisPublicaciones';
+import SearchResultsPage from './pages/publicaciones/searchPage';
+import ListaDeseosPage from './pages/publicaciones/ListaDeseosPage';
 
 
 function App(){
@@ -24,12 +26,14 @@ function App(){
               <Route path='/login' element={<LoginPage />} />
               <Route path='/registro' element={<RegistroPage />} />
               <Route path='/Vista_del_articulo/:nombre/:id' element={<Vista_del_articulo/>} />
+              <Route path='/search' element={<SearchResultsPage/>}/>
               
             <Route element={<ProteccionRoute/>}>
               <Route path='/perfil' element={<PerfilPage/>} />
               <Route path='/perfil/editar' element={<EditPerfilPage/>} />
               <Route path='/perfil/publicar' element={<PublicarArticulo/>} />
               <Route path='/perfil/publicaciones' element={<MisPublicaciones/>} />
+              <Route path='/perfil/lista_deseos' element={<ListaDeseosPage/>} />
             </Route>
           </Routes>
         </BrowserRouter>

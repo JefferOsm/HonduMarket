@@ -4,7 +4,7 @@ import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMap, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faHeart } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 
 
@@ -18,22 +18,28 @@ function VistaArticulo() {
       setShow(true)
     };
 
-
+//Mostrar detalles
   // funcion para obtener el id de la url
     const {id} = useParams();
   //constante que recibe todas las publicaciones que existen
-  const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct, videoProduct, obtenerUsuario} = usarProductosContex();
+  const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
+    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista} = usarProductosContex();
   const {autenticado} = usarAutenticacion();
-  
+
+
+  //Lista de deseos
+  const agregarDeseos = async(id)=>{
+     await agregarListaDeseos(id)
+     await validarListaDeseo(id)
+  }
+
+  //al cargar la pantalla
   useEffect(() => {
-     obtenerDetalles(id)
-     obtenerImagenes(id)
+     obtenerDetalles(id);
+     obtenerImagenes(id);
+     validarListaDeseo(id);
   }, []);
 
-  const comas = (value) => {
-    // Convertir el número a cadena y aplicar el formato con comas
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
 
 
 
@@ -64,11 +70,11 @@ function VistaArticulo() {
 
               
             </div>
-            <button className="carousel-control-prev" style={{height:'90%'}} type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
               <span className="carousel-control-prev-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Previous</span>
             </button>
-            <button className="carousel-control-next" style={{height:'90%'}} type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
               <span className="carousel-control-next-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Next</span>
             </button>
@@ -79,8 +85,35 @@ function VistaArticulo() {
         <div className="contenedor-detalle mx-auto mt-3  contenedor-detalle-info mb-3" >
             
             {/*Informacion del producto*/}
-            <div key={detailProduct.id}className="w-50-flex">
-              <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
+            <div key={detailProduct.id}className="w-50-flex mb-3">
+              <div className="d-flex ">
+                <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
+                <div className=" w-30 text-center ms-4">
+                {autenticado ? (
+                    <>
+                      {validarLista.length>0 ? (
+                        <>
+                          <button className='btn fw-bold fs-2 rounded-circle btn-deseo-true py-0'
+                          onClick={()=> agregarDeseos(detailProduct.id)}>
+                            <FontAwesomeIcon icon={faHeart}/>
+                          </button>   
+                        </>
+                      ):(
+                        <>
+                          <button className='btn fw-bold fs-2 rounded-circle btn-deseo-false py-0'
+                          onClick={()=> agregarDeseos(detailProduct.id)}>
+                            <FontAwesomeIcon icon={faHeart}/>
+                          </button>   
+                        </>
+                      )}
+                    </>
+                  ):(
+                  <>
+                       
+                  </>
+                  )}
+                </div>
+              </div>
               <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + detailProduct.precio}</p>
               <p className="size-detalle">{`Publicado ${detailProduct.fecha} en ${detailProduct.departamento}`}</p>
               <p className="fs-4">Detalles</p>
@@ -125,6 +158,16 @@ function VistaArticulo() {
                   )}
 
                 </div>  
+
+
+
+            {
+                mensajeDeseo.map((mensaje, i)=>(
+                  <div className="alert mensaje-deseo p-2 text-light my-2 text-center custom-fade mx-auto w-50" key={i} >
+                    <FontAwesomeIcon icon={faCheckCircle}/> {mensaje}
+                  </div>
+                ))
+            }
 
             </div>
              
