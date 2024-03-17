@@ -8,14 +8,24 @@ function PublicarArticulo() {
     departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-  const botonSiguiente = document.querySelector('.carousel-control-next');
- 
+  
   function eliminarImagen() {
-    const carruselItem = this.parentNode; // Obtener el elemento padre del botón (que es el elemento div del carrusel)
-    carruselItem.remove(); // Eliminar el div del carrusel que contiene la imagen
-    botonSiguiente.click();
-
+    const carruselItem = this.parentNode;
+    carruselItem.remove();
+  
+    // Obtener la lista de todos los elementos del carrusel
+    const carruselItems = document.querySelectorAll('.carousel-item');
+  
+    // Verificar si el elemento eliminado era el activo
+    if (carruselItem.classList.contains('active')) {
+      // Activar el siguiente elemento en la lista o el último si no hay más elementos siguientes
+      const nextIndex = Array.from(carruselItems).indexOf(carruselItem) + 1;
+      const nextItem = nextIndex < carruselItems.length ? carruselItems[nextIndex] : carruselItems[carruselItems.length - 1];
+      nextItem.classList.add('active');
+    }
   }
+  
+  
 
 
   //Funcion para agregar imagenes al carrucel
@@ -51,6 +61,14 @@ function PublicarArticulo() {
         // Se agrega la imagen y el boton al div 
         div.appendChild(imagen);
 
+        // Crear un botón de eliminar
+        const botonEliminar = document.createElement("button");
+        botonEliminar.className = "btn-delete border";
+        botonEliminar.textContent = "X";
+        botonEliminar.addEventListener("click", eliminarImagen.bind(botonEliminar));
+        // Se agrega el botón de eliminar al div
+        div.appendChild(botonEliminar);
+
         // Agregar la primera imagen al contenedor
         contenedorImagenes.appendChild(div);
 
@@ -71,10 +89,9 @@ function PublicarArticulo() {
 
         // Crear un botón de eliminar
         const botonEliminar = document.createElement("button");
-        botonEliminar.className = "btn-delete";
+        botonEliminar.className = "btn-delete border";
         botonEliminar.textContent = "X";
-        botonEliminar.onclick = eliminarImagen;
-
+        botonEliminar.addEventListener("click", eliminarImagen.bind(botonEliminar));
         // Se agrega el botón de eliminar al div
         div.appendChild(botonEliminar);
 
@@ -123,6 +140,14 @@ function PublicarArticulo() {
       // Agregar el video al div
       div.appendChild(video);
 
+      // Crear un botón de eliminar
+      const botonEliminar = document.createElement("button");
+      botonEliminar.className = "btn-delete border";
+      botonEliminar.textContent = "X";
+      botonEliminar.addEventListener("click", eliminarImagen.bind(botonEliminar));
+      // Se agrega el botón de eliminar al div
+      div.appendChild(botonEliminar);
+
       // Agregar el div al contenedor de videos
       contenedorVideos.appendChild(div);
       alert("se agrego el video");
@@ -148,6 +173,14 @@ function PublicarArticulo() {
 
       // Agregar el video al div
       div.appendChild(video);
+
+      // Crear un botón de eliminar
+      const botonEliminar = document.createElement("button");
+      botonEliminar.className = "btn-delete border";
+      botonEliminar.textContent = "X";
+      botonEliminar.addEventListener("click", eliminarImagen.bind(botonEliminar));
+      // Se agrega el botón de eliminar al div
+      div.appendChild(botonEliminar);
 
       // Agregar el div al contenedor de videos
       contenedorVideos.appendChild(div);
@@ -435,7 +468,6 @@ function PublicarArticulo() {
                 </div>
 
               {/*Segunda opcion para subir la publicacion se cra un acordion*/}
-              
                 <div className="accordion-item">
                   <li className="list-group-item bg-dark-subtle">
                     <div className="form-check">
@@ -454,8 +486,9 @@ function PublicarArticulo() {
           </div>
 
           {/*Boton para guardar el producto en la BD */}
-          <button type="submit" className="btn btn-primary mt-2 col-6">Publicar</button>
-
+          <div className="vstack gap-2 col-md-5 mx-auto">
+          <button type="submit" className="btn btn-primary">Publicar</button>
+          </div>
 
         </form>
       </div>
