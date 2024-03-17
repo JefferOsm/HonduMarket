@@ -269,3 +269,18 @@ input[type=number] { -moz-appearance:textfield; }
       width: 100%;
     }
 }
+
+.position-relative {
+  position: relative;
+}
+
+.btn-delete {
+  position: absolute;
+  top: 5px; 
+  right: 50%; 
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: #ccc;
+  background-color: #ad5389;
+  cursor: pointer;
+}
