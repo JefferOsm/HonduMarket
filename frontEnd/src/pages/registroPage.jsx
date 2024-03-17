@@ -47,7 +47,7 @@ function RegistroPage() {
             <div className="card text-light bc-degrate shadow">
               <div className="card-body">
                 {
-                  erroresAut.map((error, i)=>(
+                  Array.isArray(erroresAut) && erroresAut.map((error, i) =>(
                     <div className="bg-danger p-2 text-light" key={i}>
                       {error}
                     </div>
