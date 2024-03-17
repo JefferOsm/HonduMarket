@@ -1,7 +1,33 @@
 import {pool} from '../db.js';
 import pkg from 'cloudinary';
 const { v2: cloudinary } = pkg;
-import helper from '../helpers/timeag.js'
+import helper from '../helpers/timeag.js';
+import cron from 'node-cron';
+
+// Esta función se ejecutará en segundo plano y verificará los productos programados para subir
+const verificarProductosProgramados = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM tbl_productos WHERE fecha_programada IS NOT NULL');
+
+        rows.forEach(async (producto) => {
+            const fechaProgramada = new Date(producto.fecha_programada);
+
+            // Si la fecha programada es igual o anterior a la fecha actual, subir el producto
+            if (fechaProgramada <= new Date()) {
+                await subirProducto(producto);
+            }
+        });
+    } catch (error) {
+        console.error('Error al verificar productos programados:', error);
+    }
+}
+
+
+// Programar la verificación de productos programados para que se ejecute cada minuto
+cron.schedule('* * * * *', () => {
+    console.log('Verificando productos programados...');
+    verificarProductosProgramados();
+});
 
 //Obtener Categorias
 export const obtenerCategorias= async(req,res)=>{
@@ -42,19 +68,18 @@ export const obtenerEstados = async(req,res)=>{
 
 //Agregar Producto
 export const agregarProducto = async(req,res)=>{
-    const {nombre,descripcion,precio,estado,categoria,departamento} = req.body
-    const imagenes= req.files;
+    const {nombre, descripcion, precio, estado, categoria, departamento, fechaProgramada} = req.body;
+    const imagenes = req.files;
 
     try {
-
-
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'No se subieron imágenes' });
-          }
+        }
 
         const [rows] = await pool.query(
-            'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id) VALUES (?,?,?,?,?,?,?) ',
-            [nombre,descripcion,precio,estado,categoria,req.user,departamento]);
+            'INSERT INTO tbl_productos(nombre_producto, descripcion_producto, precio_producto, estado_id, categoria_id, usuario_id, departamento_id, fecha_programada) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [nombre, descripcion, precio, estado, categoria, req.user, departamento, fechaProgramada]
+        );
 
         //variables para subir imagenes
         const productoId= rows.insertId;
@@ -72,7 +97,7 @@ export const agregarProducto = async(req,res)=>{
                 [id_imagen, imageUrl, productoId]
             );
 
-        })
+        });
 
         res.json(productoId);     
 
@@ -80,7 +105,7 @@ export const agregarProducto = async(req,res)=>{
         console.log(error);
         return res.status(500).json({
             message: "Ha Ocurrido un Error",
-          });
+        });
     }
 }
 

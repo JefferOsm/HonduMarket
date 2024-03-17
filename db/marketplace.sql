@@ -106,3 +106,5 @@ VALUES
 ('Lempira'),
 ('Gracias a Dios');
 
+ALTER TABLE tbl_productos
+ADD COLUMN fecha_programada TIMESTAMP NULL DEFAULT NULL;
