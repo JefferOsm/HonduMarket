@@ -35,9 +35,12 @@ function VistaArticulo() {
 
   //al cargar la pantalla
   useEffect(() => {
-     obtenerDetalles(id);
-     obtenerImagenes(id);
-     validarListaDeseo(id);
+    obtenerDetalles(id);
+    obtenerImagenes(id);
+    if(autenticado){
+      validarListaDeseo(id);
+    }
+
   }, []);
 
 

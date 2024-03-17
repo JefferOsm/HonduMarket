@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { usarProductosContex } from "../../context/productosContext";
+import SeleccionFechaHora from "../../components/SeleccionFechaHora";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import ReactPlayer from 'react-player'
 
-function PublicarArticulo () {
-
-  const {obtenerCategorias,obtenerDepartamentos,obtenerEstados,categorias,
-        departamentos,estados,agregarPublicacion,subirVideoPublicacion} = usarProductosContex();
-  const {register, handleSubmit, formState:{errors}} = useForm();
-
+function PublicarArticulo() {
+  const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
+    departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -17,12 +19,15 @@ function PublicarArticulo () {
   const [estado, setestado] = useState("");
   const [departamento, setdepartamento] = useState("");
 
+    //imagenes que se enviaran al backend
+    const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
+
   const comas = (value) => {
     // Convertir el número a cadena y aplicar el formato con comas
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
-  
+
   const defaultTitulo = "Titulo";
   const defaultDescripcion = "La descripcion aparecera aqui";
   const defaultPrecio = "Precio";
@@ -30,13 +35,13 @@ function PublicarArticulo () {
   const defaultEstado = "Estado";
   const defaultDepartamento = "Publicado hace unos segundos en";
 
-  
-//Traer datos de dep,cat,est
-  useEffect(()=>{
+
+  //Traer datos de dep,cat,est
+  useEffect(() => {
     obtenerCategorias()
     obtenerDepartamentos()
     obtenerEstados()
-  },[])
+  }, [])
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
@@ -50,8 +55,8 @@ function PublicarArticulo () {
     formData.append('estado', values.estado);
     formData.append('departamento', values.departamento);
     
-    for (let i = 0; i < imagenes.length; i++) {
-        formData.append('imagenes', imagenes[i]);
+    for (let i = 0; i < imagenesSeleccionadas.length; i++) {
+        formData.append('imagenes', imagenesSeleccionadas[i]);
     }
 
     //console.log(formData)
@@ -65,6 +70,17 @@ function PublicarArticulo () {
 
       await subirVideoPublicacion(idProdAct, dataVideo);
     }
+
+    reset();
+    setText("");
+    setDescipcion("");
+    setprecio("");
+    setcategoria("");
+    setestado("");
+    setdepartamento("");
+    const contenedorImagenes = document.getElementById("contenedor-imagenes");
+    setImagenesPreview([])
+    setVideoPreview('')
 
   })
 
@@ -100,105 +116,172 @@ function PublicarArticulo () {
         setdepartamento(defaultDepartamento +'  '+ departamentoSeleccionado.nombre_departamento);
       };
 
+       // urls de las imagenes que se usaran en vista previa
+      const [imagenesPreview, setImagenesPreview] = useState([]);
+      // urls que se usaran para vista previa de videos
+      const [videoPreview, setVideoPreview] = useState('');
+
+        // Función para generar la vista previa de las imágenes seleccionadas y para enviarlas al backend
+      const generarVistaPreviaImagenes = (event) => {
+        const files = event.target.files;
+        const nuevasImagenesPreview = [...imagenesPreview]; 
+        const imagenesForm= [];
+        const limite= 6
+
+        if(imagenesSeleccionadas.length + files.length > limite){
+          window.alert('Solo se Permiten 6 imagenes Maximo');
+          return
+        }
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
+          imagenesForm.push(files[i])
+          reader.onload = function (e) {
+            nuevasImagenesPreview.push(e.target.result); 
+            setImagenesPreview([...nuevasImagenesPreview]);
+          };
+          reader.readAsDataURL(file); 
+        }
+        setImagenesSeleccionadas([...imagenesSeleccionadas, ...imagenesForm]);
+        console.log(imagenesSeleccionadas)
+      };
+      
+        // Función para generar la vista previa del video seleccionado
+      const generarVistaPreviaVideo = (event) => {
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+        setVideoPreview(url);
+      };
+
+
+      // variable de imagenes con el objeto a renderizar
+      const vistaPreviaImagenes = imagenesPreview.map((url, index) => (
+        <div className={`carousel-item ${index === 0 ? 'active' : ''} text-center`} key={index}>
+           <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
+           <button type="button" className="btn-delete p-2 rounded mx-auto"  onClick={() => eliminarImagen(index)}><FontAwesomeIcon icon={faTrash}/></button>
+        </div>
+      ));
+
+      // variable de imagenes con el objeto a renderizar
+      const vistaPreviaVideo = videoPreview && (
+        <div className="carousel-item text-center">
+                  <ReactPlayer className='d-block w-100' url={videoPreview} controls/>
+        </div>
+
+      );
+
+            //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
+            const eliminarImagen = (index) => {
+              const nuevasImagenesPreview = imagenesPreview.filter((_, i) => i !== index);
+              setImagenesPreview(nuevasImagenesPreview);
+
+              const nuevasImagenesSeleccionadas = [...imagenesSeleccionadas.slice(0, index), ...imagenesSeleccionadas.slice(index + 1)];
+              setImagenesSeleccionadas(nuevasImagenesSeleccionadas);
+            };
+      
+
+
   return (
     <div className="contenedor-publicar">
-        <div className="card py-3 px-3 col-md-4">
-            <h3 className="fw-bold">Registra tu producto</h3>
-            <form className="col py-2" onSubmit={onSubmit}>
+      <div className="card py-3 px-3 col-auto">
+        <h3 className="fw-bold text-center">Registra tu producto</h3>
+        <form className="col py-2" onSubmit={onSubmit}>
 
-              {/* Registro nombre */}
-                <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
-                {... register ('nombre',{required:true, onChange:(e)=>{Titulo(e)}})} />
+          {/* Registro nombre */}
+          <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
+            {...register('nombre', { required: true, onChange: (e) => { Titulo(e) } })} />
 
-                {
-                  errors.nombre && (
-                    <p className="text-danger">El Campo es Obligatorio</p>
-                  )
-                }
+          {
+            errors.nombre && (
+              <p className="text-danger">El Campo es Obligatorio</p>
+            )
+          }
 
-                {/* Registro Descripcion */}
-                <label className="form-label py-2">Descripción</label>
-                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"
-                {... register('descripcion',{required:true, onChange:(e)=>{Descripcion(e)}})}></textarea>
+          {/* Registro Descripcion */}
+          <label className="form-label py-2">Descripción</label>
+          <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"
+            {...register('descripcion', { required: true, onChange: (e) => { Descripcion(e) } })}></textarea>
 
-                {
-                  errors.descripcion && (
-                    <p className="text-danger"> El Campo es Obligatorio</p>
-                  )
-                }
-                
-                {/* Registro Precio */}
-                <div className="input-group py-2" style={{width:"15vw", borderRadius: "5px"}}>
-                <div className="input-group-text">Lps</div>
-                    <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
-                    {... register('precio',{required:true,  onChange:(e)=>{Precio(e)}}) }/>
+          {
+            errors.descripcion && (
+              <p className="text-danger"> El Campo es Obligatorio</p>
+            )
+          }
 
-                    {
-                      errors.precio && (
-                        <p className="text-danger"> El Campo es Obligatorio y Debe ser un número</p>
-                      )
-                    }                    
-                </div>
-                
-                {/* Registro Categoria */}
-                <div className="input-group mb-3">
-                    <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
-                    <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
-                    {... register('categoria', {required:true,  onChange:(e)=>{Categoria(e)}})}>
+          {/* Registro Precio */}
+          <div className="input-group py-2" style={{ width: "20vw", borderRadius: "5px" }}>
+            <div className="input-group-text">Lps</div>
+            <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
+              {...register('precio', { required: true, onChange: (e) => { Precio(e) } })} />
 
-                        <option  value="">Selecciona una opcion</option>
-                        {categorias.map(categoria=>(
-                           <option  value={categoria.categoria_id} key={categoria.categoria_id}>{categoria.nombre_categoria} </option>
-                        ))}
+            {
+              errors.precio && (
+                <p className="text-danger"> El Campo es Obligatorio y Debe ser un número</p>
+              )
+            }
+          </div>
 
-                    </select>
+          {/* Registro Categoria */}
+          <div className="input-group mb-3">
+            <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
+            <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
+              {...register('categoria', { required: true, onChange: (e) => { Categoria(e) } })}>
 
-                    
-                    {
-                      errors.categoria && (
-                        <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-                      )
-                    }
-                </div>
+              <option value="">Selecciona una opcion</option>
+              {categorias.map(categoria => (
+                <option value={categoria.categoria_id} key={categoria.categoria_id}>{categoria.nombre_categoria} </option>
+              ))}
 
-                {/* Registro de estado */}
-                <div className="input-group mb-3">
-                    <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
-                    <select className="form-select" id="inputGroupSelect01" onChange={Estado}
-                    {... register('estado',{required:true,onChange:(e)=>{Estado(e)} })}>
-                    <option  value="">Selecciona una opcion</option>
-                        {estados.map(estado=>(
-                           <option  value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
-                        ))}
-                    </select>
-                    
-                    {
-                      errors.estado && (
-                        <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-                      )
-                    }
-                </div>
+            </select>
 
-                {/* Registro de Departamento */}
-                <div className="input-group mb-3">
-                    <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
-                    <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
-                    {... register('departamento', {required:true,  onChange:(e)=>{Departamento(e)}})}>
-                    <option  value="">Selecciona una opcion</option>
-                    {departamentos.map(departamento=>(
-                           <option  value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
-                        ))}
+            {
+              errors.categoria && (
+                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
+              )
+            }
+          </div>
 
-                    </select>
+          {/* Registro de estado */}
+          <div className="input-group mb-3">
+            <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
+            <select className="form-select" id="inputGroupSelect01" onChange={Estado}
+              {...register('estado', { required: true, onChange: (e) => { Estado(e) } })}>
+              <option value="">Selecciona una opcion</option>
+              {estados.map(estado => (
+                <option value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
+              ))}
+            </select>
 
-                    
-                    {
-                      errors.departamento && (
-                        <p className="text-danger ms-2"> El Campo es Obligatorio</p>
-                      )
-                    }
-                </div>
+            {
+              errors.estado && (
+                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
+              )
+            }
+          </div>
+
+          {/* Registro de Departamento */}
+          <div className="input-group mb-3">
+            <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
+
+            <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
+              {...register('departamento', { required: true, onChange: (e) => { Departamento(e) } })}>
+              <option value="">Selecciona una opcion</option>
+              {departamentos.map(departamento => (
+                <option value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
+              ))}
+
+            </select>
+
+
+            {
+              errors.departamento && (
+                <p className="text-danger ms-2"> El Campo es Obligatorio</p>
+              )      
+            }
+          </div>
+
 
                
                 
@@ -220,7 +303,8 @@ function PublicarArticulo () {
 
                     <input 
                     type='file' className='form-control' accept='image/*'
-                    {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6} })} id='imagenes' style={{ display: 'none' }}
+                    {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6}, onChange:(e)=>{generarVistaPreviaImagenes(e)}
+                     })} id='imagenes' style={{ display: 'none' }}
                       multiple />
 
                         {
@@ -247,42 +331,104 @@ function PublicarArticulo () {
 
                     <input 
                     type='file' className='form-control' accept='video/*'
-                    {... register('video')} id='video' style={{ display: 'none' }}
+                    {... register('video',{onChange:(e)=>{generarVistaPreviaVideo(e)}})} id='video' style={{ display: 'none' }}
                     />
 
                         
                     </div>
                 </div>
-               
-               
-               {/*Boton para guardar el producto en la BD */}
-               <button type="submit" className="btn btn-primary mt-2">Publicar</button>
-                
 
-            </form>
-        </div>
+          {/*Boton para decidir si se programa el registro o se publica de un solo */}
+          <div className="py-3">
+            <ul className="list-group">
+              <div className="accordion accordion-flush" id="accordionFlushExample">
+                {/*Primera opcion para subir la publicacion */}
+                <div className="accordion-item">
+                  <li className="list-group-item bg-dark-subtle">
+                    <div className="form-check">
+                      <input className="form-check-input bg-secondary collapsed" type="radio" name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" />
+                      <label className="form-check-label" htmlFor="flexRadioDefault1">
+                        Subir al instante
+                      </label>
+                    </div>
+                    <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      
+                    </div>
+                  </li>
+                </div>
 
-        {/*Card de la vista previa del producto ya registrado*/}
-        <div className="card shadow-lg bg-white rounded" style={{margin: "6%", flexGrow: "100", display: "flex", flexDirection: "row"}}>
-          
+              {/*Segunda opcion para subir la publicacion se cra un acordion*/}
+                <div className="accordion-item">
+                  <li className="list-group-item bg-dark-subtle">
+                    <div className="form-check">
+                      <input className="form-check-input bg-secondary collapsed" type="radio" name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" />
+                      <label className="form-check-label" htmlFor="flexRadioDefault1">
+                        Programar fecha de subida
+                      </label>
+                    </div>
+                    <div id="flush-collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                      <SeleccionFechaHora/>
+                    </div>
+                  </li>
+                </div>
+              </div>
+            </ul>
+          </div>
+
+          {/*Boton para guardar el producto en la BD */}
+          <div className="vstack gap-2 col-md-5 mx-auto">
+          <button type="submit" className="btn btn-primary">Publicar</button>
+          </div>
+
+        </form>
+      </div>
+
+      {/*Card de la vista previa del producto a registrar*/}
+      <div className="card shadow-lg bg-white rounded" style={{ margin: "3%", flexGrow: "100", display: "flex", flexDirection: "row" }}>
           {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
           <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
               <h6 className="card-title">Vista previa</h6>
+                  {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
+                  <div id="carouselExampleIndicators" className="carousel slide">
+                    <div className="carousel-indicators" id="contenedor-botones">
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
+
+                    </div>
+                    <div className="carousel-inner" id="contenedor-imagenes">
+                      
+                        {vistaPreviaImagenes}
+                        {vistaPreviaVideo}
+                    </div> 
+                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span className="visually-hidden">Next</span>
+                    </button>
+                  </div>
+            </div>
+
+        {/*Informacion del Producto*/}
+        <div className="card-secction" style={{ flex: "0.7", padding: "10px", border: "1px solid #ccc" }}>
+          <h1>{text === "" ? defaultTitulo : text}</h1>
+          <h5>{precio === "" ? defaultPrecio : precio}</h5>
+          <h6>{departamento === "" ? defaultDepartamento : departamento}</h6>
+          <h5>Detalle</h5>
+          <div style={{ display: "flex" }}>
+            <h5>{categoria === "" ? defaultCategoria : categoria}</h5>
+            <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
           </div>
-        
-          {/*Informacion del Producto*/}
-          <div className="card-secction" style={{flex: "0.7", padding: "10px", border: "1px solid #ccc"}}>
-              <h1>{text === "" ? defaultTitulo : text}</h1>
-              <h5>{precio === "" ? defaultPrecio : precio}</h5>
-              <h6>{departamento === "" ? defaultDepartamento: departamento}</h6>
-              <h5>Detalle</h5>
-              <div style={{display: "flex"}}>
-                  <h5>{categoria === "" ? defaultCategoria : categoria}</h5> 
-                  <h5 className="px-3">{estado === "" ? defaultEstado : estado}</h5>
-              </div>
-              <h6>{descripcion === "" ? defaultDescripcion : descripcion}</h6>
-          </div>
+          <p>{descripcion === "" ? defaultDescripcion : descripcion}</p>
         </div>
+      </div>
     </div>
   )
 }
@@ -290,3 +436,5 @@ function PublicarArticulo () {
 export default PublicarArticulo
 
 const imgdemas = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6ElEQVR4nO2ZUQrCMAyGexB99iKNegNZ9iI2l9sQdrFp7S5QqS8OcUgrtIX9H+R5/7+kKU2UAgCAatmfzltic9WNTMTic4ZuZNIsw6G97JLFa5ZbbuH0aYTNPWiJNhD+fGnx9I4+2kCJsqHlcnIJGSgvnGYBA7SmDIzWfQ0YiAEZsCghj0NM6EKuzjY6LvT5f4NgYAYyYFFCHoeYcA+4Ou8BwntAkIGfoIQsHjQecyGqYCJHq53M6YqGu8TmEW+AZajIQBdtIGxGwnKhuPhGxmMrG5W+YpI+zOdzC9evb5ouWTwAAKgcPAF1HK9L/+dO1QAAAABJRU5ErkJggg==';
+
+const video = 'https://ia600208.us.archive.org/9/items/video-de-whats-app-2024-03-15-a-las-11.23.51-c-6e-81cde/Video%20de%20WhatsApp%202024-03-15%20a%20las%2011.23.51_c6e81cde.mp4';
