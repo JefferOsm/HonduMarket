@@ -14,7 +14,8 @@ function RegistroPage() {
   
   
   //Funcionalidades para el Registro
-  const {register, handleSubmit, formState:{errors}} = useForm();
+  const {register, handleSubmit,watch, formState:{errors}} = useForm();
+  const password = watch('pass');
   const {registro,autenticado,erroresAut} = usarAutenticacion();
   const navegacion = useNavigate();
 
@@ -46,7 +47,7 @@ function RegistroPage() {
             <div className="card text-light bc-degrate shadow">
               <div className="card-body">
                 {
-                  erroresAut.map((error, i)=>(
+                  Array.isArray(erroresAut) && erroresAut.map((error, i) =>(
                     <div className="bg-danger p-2 text-light" key={i}>
                       {error}
                     </div>
@@ -108,7 +109,6 @@ function RegistroPage() {
                           <p className="text-danger">El Nombre de Usuario es Obligatorio</p>
                         )
                       }
-
                       </div>
 
                     <div className="d-flex justify-content-between  direct-flex-row">
@@ -118,16 +118,31 @@ function RegistroPage() {
                         <input type="email" className="form-control" placeholder="Correo@example.com"
                         {...register('correo',{required:true})} />
                       </div>
+                    </div>
 
-                      {/* Contraseña */}
-                      <div className="w-100 ms-5 ">
+                    <div className="d-flex justify-content-between  direct-flex-row">
+                    {/* Contraseña */}
+                    <div className="w-50 ">
                         <label className="form-label">Contraseña</label>
                         <input type="password" minLength={5} className="form-control text-dark" placeholder="Ej fsdqn"
                         {... register('pass', {required:true,minLength:5})}/>
-                        <p className="text-info mt-1">Debe ser de mínimo de 5 Caracteres</p>
                       </div>
-
+                      </div>
+                    {/* Confirmación de contraseña */}
+                    <div className="d-flex justify-content-between  direct-flex-row">
+                    <div className="w-50 ">
+                      <label className="form-label">Confirmar contraseña</label>
+                      <input type="password" className="form-control text-dark" placeholder="Confirmar contraseña"
+                      {...register('confirmPass', {
+                        required: 'Debes confirmar tu contraseña',
+                        validate: value =>
+                          value === password || 'Las contraseñas no coinciden'
+                      })}/>
+                      <p className="text-info mt-1">Debe ser de mínimo de 5 Caracteres</p>
+                      {errors.confirmPass && <p className="text-danger mt-1">{errors.confirmPass.message}</p>}
                     </div>
+                    </div>
+
                     {
                         errors.correo && (
                           <p className="text-danger">El Correo es Obligatorio</p>
