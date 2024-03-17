@@ -61,7 +61,8 @@ BEGIN
 	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
 	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
-	WHERE usuario_id= p_id;
+	WHERE usuario_id= p_id
+    ORDER BY tbl_productos.fecha_publicacion DESC;
 
 END //
 DELIMITER ;
@@ -133,21 +134,106 @@ BEGIN
 END //
 DELIMITER ;
 
--- OBTENER TODOS LOS PRODUCTOS
-CREATE PROCEDURE sp_todasPublicaciones(IN searchTerm VARCHAR(255))
+-- OBTENER LAS PUBLICACIONES DEL CAROUSEL DEL INICIO
+DELIMITER //
+CREATE PROCEDURE sp_todasPublicaciones()
 BEGIN
     SELECT 
         p.producto_id AS id,
         p.nombre_producto AS nombre,
         p.precio_producto AS precio,
         p.descripcion_producto AS descripcion,
-        i.url_imagen AS url_imagen
+        p.usuario_id AS usuario
     FROM 
         tbl_productos p
-    INNER JOIN 
-        tbl_imagenesProductos i ON p.producto_id = i.producto_id
+	ORDER BY RAND()
+    LIMIT 10;
+END //
+DELIMITER ;
+
+-- OBTENER LAS PUBLICACIONES DEL CAROUSEL DE INICIO DISTINTAS AL USUARIO LOGEADO
+DELIMITER //
+CREATE PROCEDURE sp_todasPublicacionesAuth(IN p_user_id INT)
+BEGIN
+    SELECT 
+        p.producto_id AS id,
+        p.nombre_producto AS nombre,
+        p.precio_producto AS precio,
+        p.descripcion_producto AS descripcion,
+        p.usuario_id AS usuario
+    FROM 
+        tbl_productos p
+	WHERE p.usuario_id <> p_user_id
+	ORDER BY RAND()
+    LIMIT 10;
+END //
+DELIMITER ;
+
+-- OBTENER TODOS LOS NOMBRES DE PRODUCTOS PARA SUGERENCIA
+DELIMITER //
+CREATE PROCEDURE sp_nombrePublicaciones()
+BEGIN
+    SELECT 
+        p.producto_id AS id,
+        p.nombre_producto AS nombre
+    FROM 
+        tbl_productos p;
+END //
+DELIMITER ;
+
+-- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
+DELIMITER //
+CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255))
+BEGIN
+    SELECT DISTINCT 
+		p.producto_id AS id,
+        p.nombre_producto AS nombre,
+        p.precio_producto AS precio,
+        p.descripcion_producto AS descripcion
+    FROM 
+        tbl_productos p
     WHERE 
         p.nombre_producto LIKE CONCAT('%', searchTerm, '%');
+END //
+DELIMITER ;
+
+
+-- Eliminar de la lista de deseos
+DELIMITER //
+CREATE PROCEDURE sp_borrarDeseo(
+IN p_usuario_id INT,
+IN p_producto_id INT
+)
+BEGIN
+    DELETE FROM tbl_listaDeseos WHERE producto_id = p_producto_id AND usuario_id= p_usuario_id;
+END //
+DELIMITER ;
+
+
+-- OBTENER LISTA DE DESEOS
+DELIMITER //
+create procedure sp_listaDeseosUsuario (
+    IN p_usuario_id INT(11)
+)
+BEGIN
+    SELECT p.producto_id as id, p.nombre_producto as nombre, p.descripcion_producto as descripcion, p.precio_producto as precio,
+	p.fecha_publicacion
+	FROM tbl_listaDeseos d
+    INNER JOIN tbl_productos p ON p.producto_id = d.producto_id
+	WHERE d.usuario_id= p_usuario_id;
+END //
+DELIMITER ;
+
+-- Procedimiento para ayudar a colorear boton de lista de deseo
+DELIMITER //
+create procedure sp_listaValidacion (
+    IN p_usuario_id INT(11),
+    IN p_producto_id INT(11)
+)
+BEGIN
+    SELECT usuario_id, producto_id 
+	FROM tbl_listaDeseos 
+	WHERE usuario_id= p_usuario_id AND producto_id=p_producto_id ;
 END //
 
 DELIMITER ;
@@ -155,14 +241,14 @@ DELIMITER ;
 
 
 
+
+
+
 -- Inhabilitar Productos
 CREATE EVENT inhabilitar_producto
-ON SCHEDULE EVERY 60 DAY
+ON SCHEDULE EVERY 1 MINUTE
 DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 DAY) AND producto_inactivo = 0;
-
-
-
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 4 DAY) AND producto_inactivo = 0;
 
 
 

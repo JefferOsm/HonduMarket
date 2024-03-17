@@ -1,11 +1,17 @@
-import { createContext, useContext, useState } from "react";
-import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,buscarProductos, obtenerDepartamentosRequest,
+import { createContext, useContext, useState, useEffect } from "react";
+import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacionesHome, obtenerDepartamentosRequest,
         obtenerEstadosRequest, 
         agregarPublicacionReques,
         videoPublicacionRequest,
         obtenerDetallePublicacion,
         obtenerImagenesPublicacion,
-        detalleUsuarioRequest} from "../api/productos";
+        detalleUsuarioRequest,
+        obtenerPublicacionesBusqueda,
+        buscarProductos,
+        obtenerPublicacionesHomeAuth,
+        agregarListaDeseo,
+        obtenerListaDeseosRequest,
+        validarListaDeseoRequest} from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -20,15 +26,32 @@ export const usarProductosContex= ()=>{
 }
 
 export const ProductosProvider = ({children})=>{
+    //total de categorias
     const [categorias, setCategorias]= useState([]);
+    //publicaciones del usuario logeado
     const [publicacionesUser, setPublicacionesUser]= useState([]);
-    const [publicacionesBusqueda, setPublicacionesBusqueda]= useState([]);
+    //publicaciones usadas para el carousel de Home
+    const [publicacionesHome, setPublicacionesHome]= useState([]);
+    //total de departamentos
     const [departamentos, setDepartamentos]= useState([]);
+    //info de estados
     const [estados, setEstados] = useState([]);
-    const [detailProduct, setDetailProduct]= useState([])
-    const [imagenesProduct, setImagenesProduct]= useState([])
-    const [videoProduct, setVideoProduct]= useState([])
-    const [usuarioProduct, setUsuarioProduct]= useState([])
+    //detalles del producto
+    const [detailProduct, setDetailProduct]= useState([]);
+    //imagenes del producto
+    const [imagenesProduct, setImagenesProduct]= useState([]);
+    //video del producto(si hay)
+    const [videoProduct, setVideoProduct]= useState([]);
+    //informacion del usuario que subiio el producto
+    const [usuarioProduct, setUsuarioProduct]= useState([]);
+    //Productos totales para Sugerencia
+    const [productosBusqueda, setProductosBusqueda]=useState([]);
+    //Publicaciones encontradas
+    const [publicacionesBusqueda, setPublicacionesBusqueda]= useState([]);
+    //mensajes de lista de deseo
+    const[mensajeDeseo,setMensajeDeseo]= useState([]);
+    //validacion de lista de deseo
+    const[validarLista,setValidarLista]= useState([]);
 
     const obtenerCategorias= async()=>{
         try {
@@ -50,12 +73,22 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
         }
     }
-
-    const obtenerPublicacionesBusqueda = async()=>{
+    //publicaciones de sugerencia en la pagina home
+    const obtenerPublicacionesInicio = async()=>{
         try {
-            const response= await buscarProductos();
+            const response= await obtenerPublicacionesHome();
             console.log(response)
-            setPublicacionesBusqueda(response)
+            setPublicacionesHome(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    //publicaciones de sugerencia en la pagina home distintas a mis publicaciones
+    const obtenerPublicacionesInicioAuth = async()=>{
+        try {
+            const response= await obtenerPublicacionesHomeAuth();
+            console.log(response)
+            setPublicacionesHome(response)
         } catch (error) {
             console.log(error)
         }
@@ -95,7 +128,8 @@ export const ProductosProvider = ({children})=>{
     const subirVideoPublicacion = async(id,values)=>{
         try {
             const response = await videoPublicacionRequest(id,values);
-            console.log(response);
+            //console.log(response);
+            window.alert('Video subido')
         } catch (error) {
             console.log(error)
         }
@@ -137,6 +171,74 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
         }
     }
+// Publicaciones para sugerencias
+    const obtenerPublicacionesSearch= async()=>{
+        try {
+            const response= await obtenerPublicacionesBusqueda();
+            //console.log(response)
+            setProductosBusqueda(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //Publicaciones de la busqueda
+    const obtenerPublicacionesResult = async()=>{
+        try {
+            const response= await buscarProductos();
+            console.log(response)
+            setPublicacionesBusqueda(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    //Agregar a lista de deseos
+    const agregarListaDeseos = async(id)=>{
+        try {
+            const response = await agregarListaDeseo(id);
+            //console.log(response)
+            setMensajeDeseo(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    //traer las publicaciones de mi lista de deseos
+    const obtenerListaDeseos= async()=>{
+        try {
+            const response= await obtenerListaDeseosRequest();
+            setPublicacionesUser(response);
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }
+    //validar mi lista de deseos
+    const validarListaDeseo= async(id)=>{
+        try {
+            const response= await validarListaDeseoRequest(id);
+            console.log(response)
+            setValidarLista(response)
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }
+
+        //Eliminar los mensajes despues de 3 segundos
+        useEffect(()=>{
+            if (mensajeDeseo.length > 0){
+                const timer = setTimeout(() => {
+                    setMensajeDeseo([])
+                }, 3000);
+    
+                return () => clearTimeout(timer)
+            }
+        },[mensajeDeseo])
+
+
+
     return(
         <ProductosContext.Provider value={{
           obtenerCategorias,
@@ -151,6 +253,7 @@ export const ProductosProvider = ({children})=>{
           departamentos,
           agregarPublicacion,
           subirVideoPublicacion,
+          obtenerPublicacionesInicioAuth,
           obtenerDetalles,
           detailProduct,
           obtenerImagenes,
@@ -158,6 +261,15 @@ export const ProductosProvider = ({children})=>{
           videoProduct,
           usuarioProduct,
           obtenerUsuario,
+          obtenerPublicacionesSearch,
+          productosBusqueda,
+          obtenerPublicacionesResult,
+          publicacionesBusqueda,
+          agregarListaDeseos,
+          mensajeDeseo,
+          obtenerListaDeseos,
+          validarListaDeseo,
+          validarLista,
         }}>
             {children}
         </ProductosContext.Provider>

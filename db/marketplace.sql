@@ -66,6 +66,15 @@ CREATE TABLE tbl_imagenesProductos(
     CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id)
 );
 
+CREATE TABLE tbl_listaDeseos(
+	producto_id INT(11) NOT NULL,
+    usuario_id INT(11) NOT NULL,
+	CONSTRAINT FKdeseosProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id),
+    CONSTRAINT FKdeseosUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id),
+    CONSTRAINT PK_ListaDeseos PRIMARY KEY (producto_id, usuario_id)
+);
+
+
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
 ('Vehiculos'),

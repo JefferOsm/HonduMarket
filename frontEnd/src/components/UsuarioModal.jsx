@@ -31,13 +31,13 @@ function UsuarioModal ({show,handleClose}) {
 
               <div className='d-flex mt-4 justify-content-center'>
                 <div>
-                  <p className='fs-4 fw-semibold'><FontAwesomeIcon icon={faEnvelope}/> Correo</p>
-                  <p className='text-secondary fw-bold'>{usuarioProduct.correo}</p>
+                  <p className='fs-5 fw-semibold'><FontAwesomeIcon icon={faEnvelope}/> Correo</p>
+                  <p className='text-secondary fw-bold fs-6'>{usuarioProduct.correo}</p>
                 </div>
 
                 <div className='ms-4'>
-                  <p className='fs-4 fw-semibold'><FontAwesomeIcon icon={faPhone}/> Telefóno</p>
-                  <p className='text-secondary fw-bold'>+504 {usuarioProduct.telefono}</p>
+                  <p className='fs-5 fw-semibold'><FontAwesomeIcon icon={faPhone}/> Telefóno</p>
+                  <p className='text-secondary fw-bold fs-6'>+504 {usuarioProduct.telefono}</p>
                 </div>
               </div>
 

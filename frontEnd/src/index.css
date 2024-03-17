@@ -193,7 +193,7 @@ input[type=number] { -moz-appearance:textfield; }
 }
 .contenedor-card-publicacion{
   display: grid;
-  grid-template-columns: repeat(4,1fr);
+  grid-template-columns: repeat(5,1fr);
   gap: 1rem;
 }
 
@@ -270,6 +270,86 @@ input[type=number] { -moz-appearance:textfield; }
     }
 }
 
+/* HOMEPAGE CAROUSEL */
+
+/* General */
+.carousel-control-prev, .carousel-control-next{
+  width: 6vh;
+  height: 6vh;
+  background-color: #8e8b8b;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .7;
+  margin: 0 .5rem ;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover{
+  opacity: 1;
+  width: 6.5vh;
+  height: 6.5vh;
+}
+
+
+/* Barra de busqueda */
+.input-busqueda{
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .input-busqueda{
+    width: 50%;
+  }    
+}
+
+.resultados-busqueda-card{
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+}
+
+@media (max-width: 768px) {
+  .resultados-busqueda-card{
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+  }
+}
+.busqueda-error{
+  grid-column-start: 2;
+  grid-column-end: 4;
+}
+
+/* Lista de deseos */
+
+.mensaje-deseo{
+  background-color: rgba(26, 111, 26, 0.684);
+}
+
+.custom-fade {
+  animation: fadeIn .7s ease-in-out; /* Duración de 1 segundo con efecto ease-in-out */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.btn-deseo-true{
+  color: var(--secundario) !important;
+  transition: font-size 0.3s ease;
+}
+
+.btn-deseo-false{
+  color: var(--primario)!important;
+  transition: font-size 0.3s ease;
+}
+
+.btn-deseo-true:hover,.btn-deseo-false:hover{
+  font-size: 2.2rem !important;
+}
 .position-relative {
   position: relative;
 }
