@@ -13,13 +13,6 @@ function PublicarArticulo() {
     departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-  //para programar publicacion
-  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
-
-  const handleDateSelected = (date)=>{
-    setFechaSeleccionada(date)
-    
-  }
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -32,7 +25,18 @@ function PublicarArticulo() {
 
     //imagenes que se enviaran al backend
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
-    const[botonActive, setBotonActive]=useState(null)
+    const[botonActive, setBotonActive]=useState(true)
+    const[botonText, setBotonText]=useState('Publicar')
+
+  //para programar publicacion
+  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
+
+  const handleDateSelected = (date)=>{
+    setFechaSeleccionada(date);
+    setBotonActive(false)
+    
+  }
+
 
   const comas = (value) => {
     // Convertir el número a cadena y aplicar el formato con comas
@@ -58,6 +62,7 @@ function PublicarArticulo() {
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
     setBotonActive(true)
+    setBotonText('Publicando ...')
     try {
        //DATOS Y FOTOS
     const formData = new FormData();
@@ -67,7 +72,6 @@ function PublicarArticulo() {
     formData.append('categoria', values.categoria);
     formData.append('estado', values.estado);
     formData.append('departamento', values.departamento);
-    formData.append('fecha_programada', values.fecha_programada);
     
     for (let i = 0; i < imagenesSeleccionadas.length; i++) {
         formData.append('imagenes', imagenesSeleccionadas[i]);
@@ -76,6 +80,7 @@ function PublicarArticulo() {
     if(fechaSeleccionada){
       console.log(fechaSeleccionada)
       formData.append('fechaSubida', fechaSeleccionada)
+      setBotonText('Programar')
     }
 
     console.log(formData)
@@ -104,7 +109,11 @@ function PublicarArticulo() {
       console.log(error)
     } finally{
       setBotonActive(false)
-      window.alert('Se realizo tu Publicacion')
+      if(fechaSeleccionada){
+        window.alert('Tu publicacion Ha sido Programada')
+      }else{
+        window.alert('Se realizo tu Publicacion')
+      }
     }
 
   })
@@ -317,20 +326,6 @@ function PublicarArticulo() {
               )      
             }
           </div>
-
-          {/* Registro de fecha y hora */}
-          <div className="input-group mb-3">
-            <label className="input-group-text" htmlFor="inputGroupSelect01">Fecha y Hora</label>
-            <input 
-              type="datetime-local" 
-              className="form-control" 
-              id="inputGroupSelect01" 
-              {...register('fecha_programada', { required: false })}
-            />
-          </div>
-
-
-               
                 
                 {/* Registro de imagenes Y video*/}
                 <div className="d-flex gap-5">
@@ -395,7 +390,7 @@ function PublicarArticulo() {
                     <div className="form-check">
                       <input className="form-check-input bg-secondary collapsed" type="radio" name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" />
                       <label className="form-check-label" htmlFor="flexRadioDefault1">
-                        Subir al instante
+                        Publicar Ahora
                       </label>
                     </div>
                     <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -408,9 +403,12 @@ function PublicarArticulo() {
                 <div className="accordion-item">
                   <li className="list-group-item bg-dark-subtle">
                     <div className="form-check">
-                      <input className="form-check-input bg-secondary collapsed" type="radio" name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" />
+                      <input className="form-check-input bg-secondary collapsed"
+                       type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                        data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" 
+                        aria-expanded="false" aria-controls="flush-collapseTwo" />
                       <label className="form-check-label" htmlFor="flexRadioDefault1">
-                        Programar fecha de subida
+                        Programar Publicación
                       </label>
                     </div>
                     <div id="flush-collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -424,7 +422,7 @@ function PublicarArticulo() {
 
           {/*Boton para guardar el producto en la BD */}
           <div className="vstack gap-2 col-md-5 mx-auto">
-          <button type="submit" className="btn btn-primary" disabled={botonActive}>{botonActive ? 'Publicando' : 'Publicar'}</button>
+          <button type="submit" className="btn btn-primary" disabled={botonActive}>{botonText}</button>
           </div>
 
         </form>

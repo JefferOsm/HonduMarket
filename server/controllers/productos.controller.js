@@ -43,22 +43,33 @@ export const obtenerEstados = async(req,res)=>{
 
 //Agregar Producto
 export const agregarProducto = async(req,res)=>{
-    const {nombre,descripcion,precio,estado,categoria,departamento,fecha_programada} = req.body
+    const {nombre,descripcion,precio,estado,categoria,departamento,fechaSubida} = req.body
     const imagenes= req.files;
-
+    const fechaProgramada = new Date(fechaSubida)
+    let productoId
 
     try {
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'No se subieron imágenes' });
           }
+        if(fechaSubida){
+            console.log(fechaSubida)
+            const [rows] = await pool.query(
+                'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id,fecha_programada) VALUES (?,?,?,?,?,?,?,?) ',
+                [nombre,descripcion,precio,estado,categoria,req.user,departamento, fechaProgramada]);
 
-        const [rows] = await pool.query(
-            'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id,fecha_programada) VALUES (?,?,?,?,?,?,?,?) ',
-            [nombre,descripcion,precio,estado,categoria,req.user,departamento, fecha_programada]);
+            productoId= rows.insertId;
+        }else{
+            const [rows] = await pool.query(
+                'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id) VALUES (?,?,?,?,?,?,?) ',
+                [nombre,descripcion,precio,estado,categoria,req.user,departamento]);
+            productoId= rows.insertId;
+        }
+
 
         //variables para subir imagenes
-        const productoId= rows.insertId;
+         
         let imageUrl;
         let id_imagen;
 
@@ -116,9 +127,12 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
     try {
         
         const [rows]= await pool.query('CALL sp_productosUsuario(?)', [req.user]);
+        console.log(rows[0])
         const resultados = await Promise.all(rows[0].map(async (producto) => {
             const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
-            producto.imagen=imagen[0].url_imagen
+            if(imagen[0]){
+            console.log(imagen[0])
+            producto.imagen=imagen[0].url_imagen}
         }));
 
         res.send(rows[0])
@@ -137,6 +151,7 @@ export const obtenerPublicacionesHome = async(req,res)=>{
         const [rows]= await pool.query('CALL sp_todasPublicaciones');
         const resultados = await Promise.all(rows[0].map(async (producto) => {
             const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+            console.log(imagen[0].url_imagen)
             producto.imagen=imagen[0].url_imagen
         }));
         res.send(rows[0])
