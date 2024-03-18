@@ -146,7 +146,9 @@ BEGIN
         p.usuario_id AS usuario
     FROM 
         tbl_productos p
-	ORDER BY RAND()
+    WHERE
+        p.fecha_programada IS NULL OR p.fecha_programada <= NOW() -- Condición agregada aquí
+    ORDER BY RAND()
     LIMIT 10;
 END //
 DELIMITER ;
@@ -193,7 +195,8 @@ BEGIN
     FROM 
         tbl_productos p
     WHERE 
-        p.nombre_producto LIKE CONCAT('%', searchTerm, '%');
+        p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
+        AND p.fecha_programada <= NOW();-- Agregar la condición de fecha programada aquí
 END //
 DELIMITER ;
 
