@@ -364,3 +364,10 @@ input[type=number] { -moz-appearance:textfield; }
   background-color: #ad5389;
   cursor: pointer;
 }
+
+
+/* Mis productos */
+.producto-inactivo {
+  background-color: rgba(128, 128, 128, 0.5);
+  filter: grayscale(100%);
+}

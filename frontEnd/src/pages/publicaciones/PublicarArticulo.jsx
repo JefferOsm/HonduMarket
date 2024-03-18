@@ -4,7 +4,9 @@ import { usarProductosContex } from "../../context/productosContext";
 import SeleccionFechaHora from "../../components/SeleccionFechaHora";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 function PublicarArticulo() {
   const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
@@ -18,9 +20,11 @@ function PublicarArticulo() {
   const [categoria, setcategoria] = useState("");
   const [estado, setestado] = useState("");
   const [departamento, setdepartamento] = useState("");
+  
 
     //imagenes que se enviaran al backend
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
+    const[botonActive, setBotonActive]=useState(null)
 
   const comas = (value) => {
     // Convertir el número a cadena y aplicar el formato con comas
@@ -45,7 +49,9 @@ function PublicarArticulo() {
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
-    //DATOS Y FOTOS
+    setBotonActive(true)
+    try {
+       //DATOS Y FOTOS
     const formData = new FormData();
     const imagenes = document.querySelector('input[type="file"]').files;
     formData.append('nombre', values.nombre);
@@ -78,9 +84,13 @@ function PublicarArticulo() {
     setcategoria("");
     setestado("");
     setdepartamento("");
-    const contenedorImagenes = document.getElementById("contenedor-imagenes");
     setImagenesPreview([])
     setVideoPreview('')
+    } catch (error) {
+      console.log(error)
+    } finally{
+      setBotonActive(false)
+    }
 
   })
 
@@ -156,7 +166,7 @@ function PublicarArticulo() {
 
 
       // variable de imagenes con el objeto a renderizar
-      const vistaPreviaImagenes = imagenesPreview.map((url, index) => (
+      let vistaPreviaImagenes = imagenesPreview.map((url, index) => (
         <div className={`carousel-item ${index === 0 ? 'active' : ''} text-center`} key={index}>
            <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
            <button type="button" className="btn-delete p-2 rounded mx-auto"  onClick={() => eliminarImagen(index)}><FontAwesomeIcon icon={faTrash}/></button>
@@ -164,7 +174,7 @@ function PublicarArticulo() {
       ));
 
       // variable de imagenes con el objeto a renderizar
-      const vistaPreviaVideo = videoPreview && (
+      let vistaPreviaVideo = videoPreview && (
         <div className="carousel-item text-center">
                   <ReactPlayer className='d-block w-100' url={videoPreview} controls/>
         </div>
@@ -172,14 +182,25 @@ function PublicarArticulo() {
       );
 
             //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
-            const eliminarImagen = (index) => {
-              const nuevasImagenesPreview = imagenesPreview.filter((_, i) => i !== index);
-              setImagenesPreview(nuevasImagenesPreview);
+      const eliminarImagen = (index) => {
+          const nuevasImagenesPreview = [...imagenesPreview.slice(0, index), ...imagenesPreview.slice(index + 1)];
+          setImagenesPreview(nuevasImagenesPreview);
+          // Verificar si se eliminó la última imagen y no hay otras imágenes
+          if (index === imagenesPreview.length - 1) {
+            // Establecer el primer elemento como activo
+            document.querySelector('.carousel-item:first-child').classList.add('active');
+          }
+          vistaPreviaImagenes = imagenesPreview.map((url, index) => (
+          <div className={`carousel-item text-center`} key={index}>
+            <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
+            <button type="button" className="btn-delete p-2 rounded mx-auto"  onClick={() => eliminarImagen(index)}><FontAwesomeIcon icon={faTrash}/></button>
+          </div>
+        ));
 
-              const nuevasImagenesSeleccionadas = [...imagenesSeleccionadas.slice(0, index), ...imagenesSeleccionadas.slice(index + 1)];
-              setImagenesSeleccionadas(nuevasImagenesSeleccionadas);
-            };
-      
+        const nuevasImagenesSeleccionadas = [...imagenesSeleccionadas.slice(0, index), ...imagenesSeleccionadas.slice(index + 1)];
+        setImagenesSeleccionadas(nuevasImagenesSeleccionadas);
+      };
+    
 
 
   return (
@@ -377,7 +398,7 @@ function PublicarArticulo() {
 
           {/*Boton para guardar el producto en la BD */}
           <div className="vstack gap-2 col-md-5 mx-auto">
-          <button type="submit" className="btn btn-primary">Publicar</button>
+          <button type="submit" className="btn btn-primary" disabled={botonActive}>{botonActive ? 'Publicando' : 'Publicar'}</button>
           </div>
 
         </form>
@@ -401,9 +422,16 @@ function PublicarArticulo() {
 
                     </div>
                     <div className="carousel-inner" id="contenedor-imagenes">
-                      
-                        {vistaPreviaImagenes}
-                        {vistaPreviaVideo}
+                    {imagenesPreview.length > 0 ? (
+                        <React.Fragment>
+                          {vistaPreviaImagenes}
+                          {vistaPreviaVideo}
+                        </React.Fragment>
+                      ) : (
+                        <div className='carousel-item text-center active'>
+                          <img className="d-block w-100" src='../../../public/images/preview.jpg' alt='...' />
+                        </div>
+                      )}
                     </div> 
                     <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                       <span className="carousel-control-prev-icon" aria-hidden="true"></span>

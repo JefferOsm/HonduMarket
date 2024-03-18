@@ -28,6 +28,9 @@ function MisPublicaciones() {
 
             {/*aqui se imprimen los ultimos productos registrados*/}
             {publicacionesUser.map(publicacion => (
+            <div key={publicacion.id}>
+                {publicacion.producto_inactivo ==0 ? (
+                    <>
                     <Link to={`/Vista_del_articulo/${publicacion.nombre}/${publicacion.id}`} 
                     className="card bg-primary-light shadow text-decoration-none mb-4 "  key={publicacion.id}>
                     <img src={publicacion.imagen} className="card-img-top" alt="..."
@@ -42,7 +45,27 @@ function MisPublicaciones() {
                         </div>
                     </div>
                     </Link>
-                ))}
+                    </>
+                ):(
+                    <>
+
+                        <Link to={`/Vista_del_articulo/${publicacion.nombre}/${publicacion.id}`} className="card bg-primary-light shadow text-decoration-none mb-4 producto-inactivo" key={publicacion.id}>
+                            <img src={publicacion.imagen} className="card-img-top" alt="..." style={{ width: '100%', height: '10rem', objectFit: 'cover' }} />
+                            <div className="card-body" style={{ height: '10rem' }}>
+                            <h5 className="card-title fw-semibold">{publicacion.nombre}</h5>
+                            <div className="card-text">
+                                <div className='card-descripcion fw-light'>
+                                <p>{publicacion.descripcion}</p>
+                                </div>
+                                <p className='fw-semibold' style={{ position: 'absolute', bottom: '0' }}>{"Lps " + comas(publicacion.precio)}</p><br />
+                            </div>
+                            </div>
+                        </Link>
+                    </>
+                )}
+            </div>
+            
+            ))}
         </div>
     </div>
   )

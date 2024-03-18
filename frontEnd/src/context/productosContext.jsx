@@ -67,7 +67,7 @@ export const ProductosProvider = ({children})=>{
     const obtenerPublicaciones = async()=>{
         try {
             const response= await obtenerPublicacionesUsuario();
-            //console.log(response)
+            console.log(response)
             setPublicacionesUser(response)
         } catch (error) {
             console.log(error)
