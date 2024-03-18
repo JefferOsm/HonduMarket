@@ -56,12 +56,13 @@ create procedure sp_productosUsuario (
 )
 BEGIN
     SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
-	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion
-	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
-	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
-	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
-	WHERE usuario_id= p_id
+    producto_inactivo,
+    tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
+    tbl_departamentos.nombre_departamento as departamento,fecha_publicacion
+    FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
+    INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
+    INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
+    WHERE usuario_id= p_id
     ORDER BY tbl_productos.fecha_publicacion DESC;
 
 END //
