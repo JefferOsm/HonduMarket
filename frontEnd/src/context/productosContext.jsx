@@ -249,7 +249,7 @@ export const ProductosProvider = ({children})=>{
             }
         },[mensajeDeseo])
 
-
+        
 
     return(
         <ProductosContext.Provider value={{
@@ -282,7 +282,7 @@ export const ProductosProvider = ({children})=>{
           mensajeDeseo,
           obtenerListaDeseos,
           validarListaDeseo,
-          validarLista,
+          validarLista
         }}>
             {children}
         </ProductosContext.Provider>
