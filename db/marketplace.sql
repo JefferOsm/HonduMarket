@@ -51,7 +51,7 @@ CREATE TABLE tbl_productos(
     usuario_id INT(11) NOT NULL,
     departamento_id INT(11) NOT NULL,
     fecha_publicacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fecha_programada TIMESTAMP,
+    fecha_programada DATETIME NULL,
 	CONSTRAINT PKproducto PRIMARY KEY(producto_id),
     CONSTRAINT FKproductoEstado FOREIGN KEY(estado_id) REFERENCES tbl_estadoProducto(id_estado) ON DELETE CASCADE,
     CONSTRAINT FKproductoCategoria FOREIGN KEY(categoria_id) REFERENCES tbl_categorias(categoria_id) ON DELETE CASCADE,
