@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados, 
-    agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda, obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo } from "../controllers/productos.controller.js";
+    agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda, obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion } from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -38,14 +38,17 @@ router.put('/video/:id',autenticacionUsuario,videoParser.single('video'),agregar
 router.get('/publicaciones', autenticacionUsuario, obtenerPublicacionesUsuario )
 
 //Obtener el detalle de un producto
-router.get('/publicaciones/detalle/:id', obtenerDetallePublicacion)
+router.get('/publicaciones/detalle/:id', obtenerDetallePublicacion);
 
 //obtener imagenes del producto
-router.get('/publicaciones/detalle/imagenes/:id', obtenerImagenesPublicacion)
+router.get('/publicaciones/detalle/imagenes/:id', obtenerImagenesPublicacion);
+
+//eliminar publicacion
+router.delete('/publicacion/eliminar/:id', autenticacionUsuario, eliminarPublicacion);
 
 
 //AGREGAR A LISTA DE DESEOS
-router.post('/lista_deseos/insertar/:id', autenticacionUsuario, agregarListaDeseos)
+router.post('/lista_deseos/insertar/:id', autenticacionUsuario, agregarListaDeseos);
 
 //Obtener lista de deseos
 router.get('/lista_deseos',autenticacionUsuario, obtenerListaDeseos)

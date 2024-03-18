@@ -57,7 +57,7 @@ create procedure sp_productosUsuario (
 BEGIN
     SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
 	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion
+	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion, producto_inactivo
 	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
 	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
@@ -237,10 +237,16 @@ BEGIN
 END //
 DELIMITER ;
 
-
-
-
-
+-- Procedimiento para Eliminar una Publicacion
+DELIMITER //
+create procedure sp_borrarPublicacion (
+    IN p_producto_id INT(11)
+)
+BEGIN
+    DELETE FROM tbl_productos 
+	WHERE producto_id= p_producto_id ;
+END //
+DELIMITER ;
 
 
 -- Inhabilitar Productos

@@ -264,6 +264,23 @@ export const obtenerImagenesPublicacion = async(req,res)=>{
         });
     }
 }
+//Elminar Publicacion
+
+export const eliminarPublicacion= async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_borrarPublicacion(?)',[req.params.id])
+        res.send(rows)
+        console.log(rows)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error'
+        });
+    }
+}
+
+
+
 
 // Lista de deseos
 //agreagar a la lista

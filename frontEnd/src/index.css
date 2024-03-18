@@ -371,3 +371,9 @@ input[type=number] { -moz-appearance:textfield; }
   background-color: rgba(128, 128, 128, 0.5);
   filter: grayscale(100%);
 }
+
+.btn-eliminar-publicacion{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}

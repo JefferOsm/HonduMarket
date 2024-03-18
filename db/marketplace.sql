@@ -35,6 +35,8 @@ CREATE TABLE tbl_departamentos(
     CONSTRAINT PKdepartamento PRIMARY KEY(id_departamento)
 );
 
+DROP TABLE tbl_productos
+
 CREATE TABLE tbl_productos(
 	producto_id INT(11) NOT NULL AUTO_INCREMENT,
     nombre_producto VARCHAR(50) NOT NULL,
@@ -50,10 +52,10 @@ CREATE TABLE tbl_productos(
     departamento_id INT(11) NOT NULL,
     fecha_publicacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT PKproducto PRIMARY KEY(producto_id),
-    CONSTRAINT FKproductoEstado FOREIGN KEY(estado_id) REFERENCES tbl_estadoProducto(id_estado),
-    CONSTRAINT FKproductoCategoria FOREIGN KEY(categoria_id) REFERENCES tbl_categorias(categoria_id),
-    CONSTRAINT FKproductoUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id),
-    CONSTRAINT FKproductoDepartamento FOREIGN KEY(departamento_id) REFERENCES tbl_departamentos(id_departamento)
+    CONSTRAINT FKproductoEstado FOREIGN KEY(estado_id) REFERENCES tbl_estadoProducto(id_estado) ON DELETE CASCADE,
+    CONSTRAINT FKproductoCategoria FOREIGN KEY(categoria_id) REFERENCES tbl_categorias(categoria_id) ON DELETE CASCADE,
+    CONSTRAINT FKproductoUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT FKproductoDepartamento FOREIGN KEY(departamento_id) REFERENCES tbl_departamentos(id_departamento) ON DELETE CASCADE
 );
 
 
@@ -63,15 +65,15 @@ CREATE TABLE tbl_imagenesProductos(
     url_imagen TEXT NOT NULL,
     producto_id INT(11) NOT NULL,
     CONSTRAINT PKimagenProd PRIMARY KEY (id_imagenesProd),
-    CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id)
+    CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE
 );
 
 CREATE TABLE tbl_listaDeseos(
 	producto_id INT(11) NOT NULL,
     usuario_id INT(11) NOT NULL,
-	CONSTRAINT FKdeseosProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id),
-    CONSTRAINT FKdeseosUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id),
-    CONSTRAINT PK_ListaDeseos PRIMARY KEY (producto_id, usuario_id)
+	CONSTRAINT FKdeseosProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE,
+    CONSTRAINT FKdeseosUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT PK_ListaDeseos PRIMARY KEY (producto_id, usuario_id) 
 );
 
 
@@ -114,4 +116,3 @@ VALUES
 ('Cortes'),
 ('Lempira'),
 ('Gracias a Dios');
-

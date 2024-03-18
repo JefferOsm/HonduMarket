@@ -4,8 +4,9 @@ import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
+import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 
 
 function VistaArticulo() {
@@ -18,13 +19,22 @@ function VistaArticulo() {
       setShow(true)
     };
 
+    //funcionalidades para el modal de Eliminar Publicacion
+    const [showDelete, setShowDelete] = useState(false);
+    const handleCloseDelete = () => setShowDelete(false);
+    const handleShowDelete = () => {
+        setShowDelete(true)
+    };
+    
+
 //Mostrar detalles
   // funcion para obtener el id de la url
     const {id} = useParams();
   //constante que recibe todas las publicaciones que existen
+  const {autenticado,usuario} = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
     videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista} = usarProductosContex();
-  const {autenticado} = usarAutenticacion();
+
 
 
   //Lista de deseos
@@ -32,6 +42,9 @@ function VistaArticulo() {
      await agregarListaDeseos(id)
      await validarListaDeseo(id)
   }
+
+  //para ocultar boton si es mi producto el que visualizo
+  const [botonListaUsuario,setBotonListaUsuario]=useState(null)
 
   //al cargar la pantalla
   useEffect(() => {
@@ -44,13 +57,11 @@ function VistaArticulo() {
   }, []);
 
 
-
-
   return (
     <>
-    <div >
+    <div style={{overflow:'auto'}}>
       {/*card dinamica para que el tamano se ajuste a la pantalla y se divide en 2*/}
-      <div className="container-md mt-2 shadow-lg bg-white rounded" >
+      <div className="container-md mt-2 shadow-lg bg-white rounded" style={{position:'relative'}}>
         
         {/*parte del card para presentar la imagen y videos si tiene*/}
           <div id="carouselExample" className="carousel slide mx-auto shadow contenedor-detalle" >
@@ -160,9 +171,8 @@ function VistaArticulo() {
                   </>
                   )}
 
+
                 </div>  
-
-
 
             {
                 mensajeDeseo.map((mensaje, i)=>(
@@ -173,12 +183,14 @@ function VistaArticulo() {
             }
 
             </div>
-             
-           
         </div>
+        <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
+                  <FontAwesomeIcon icon={faTrash}/> Eliminar
+        </button>
       </div>
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
+    <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id}  />
     </>
   )
 }

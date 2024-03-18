@@ -11,7 +11,8 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         obtenerPublicacionesHomeAuth,
         agregarListaDeseo,
         obtenerListaDeseosRequest,
-        validarListaDeseoRequest} from "../api/productos";
+        validarListaDeseoRequest,
+        eliminarPublicacionRequest} from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -26,6 +27,8 @@ export const usarProductosContex= ()=>{
 }
 
 export const ProductosProvider = ({children})=>{
+
+
     //total de categorias
     const [categorias, setCategorias]= useState([]);
     //publicaciones del usuario logeado
@@ -117,8 +120,18 @@ export const ProductosProvider = ({children})=>{
         try {
             const response= await agregarPublicacionReques(values)
             //console.log(response)
-            window.alert("Su Producto se Registro Exitosamente.")
             return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //Eliminar Publicacion
+    const eliminarPublicacion = async(id)=>{
+        try {
+            const response= await eliminarPublicacionRequest(id);
+            console.log(response)
+            window.location.href= '/perfil/publicaciones'
         } catch (error) {
             console.log(error)
         }
@@ -129,7 +142,6 @@ export const ProductosProvider = ({children})=>{
         try {
             const response = await videoPublicacionRequest(id,values);
             //console.log(response);
-            window.alert('Video subido')
         } catch (error) {
             console.log(error)
         }
@@ -252,6 +264,7 @@ export const ProductosProvider = ({children})=>{
           estados,
           departamentos,
           agregarPublicacion,
+          eliminarPublicacion,
           subirVideoPublicacion,
           obtenerPublicacionesInicioAuth,
           obtenerDetalles,

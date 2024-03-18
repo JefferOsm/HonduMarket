@@ -53,7 +53,6 @@ function PublicarArticulo() {
     try {
        //DATOS Y FOTOS
     const formData = new FormData();
-    const imagenes = document.querySelector('input[type="file"]').files;
     formData.append('nombre', values.nombre);
     formData.append('descripcion', values.descripcion);
     formData.append('precio', values.precio);
@@ -90,6 +89,7 @@ function PublicarArticulo() {
       console.log(error)
     } finally{
       setBotonActive(false)
+      window.alert('Se realizo tu Publicacion')
     }
 
   })
@@ -181,7 +181,7 @@ function PublicarArticulo() {
 
       );
 
-            //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
+      //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
       const eliminarImagen = (index) => {
           const nuevasImagenesPreview = [...imagenesPreview.slice(0, index), ...imagenesPreview.slice(index + 1)];
           setImagenesPreview(nuevasImagenesPreview);

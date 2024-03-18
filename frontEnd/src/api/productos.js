@@ -81,3 +81,8 @@ export const validarListaDeseoRequest= async(id)=>{
   const response= await axios.get(`/productos/lista_deseo/validar/${id}`);
   return response.data
 }
+
+export const eliminarPublicacionRequest = async(id)=>{
+  const response= await axios.delete(`/productos/publicacion/eliminar/${id}`);
+  return response.data
+}
