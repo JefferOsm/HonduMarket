@@ -67,6 +67,7 @@ function PublicarArticulo() {
     formData.append('categoria', values.categoria);
     formData.append('estado', values.estado);
     formData.append('departamento', values.departamento);
+    formData.append('fecha_programada', values.fecha_programada);
     
     for (let i = 0; i < imagenesSeleccionadas.length; i++) {
         formData.append('imagenes', imagenesSeleccionadas[i]);
@@ -315,6 +316,17 @@ function PublicarArticulo() {
                 <p className="text-danger ms-2"> El Campo es Obligatorio</p>
               )      
             }
+          </div>
+
+          {/* Registro de fecha y hora */}
+          <div className="input-group mb-3">
+            <label className="input-group-text" htmlFor="inputGroupSelect01">Fecha y Hora</label>
+            <input 
+              type="datetime-local" 
+              className="form-control" 
+              id="inputGroupSelect01" 
+              {...register('fecha_programada', { required: false })}
+            />
           </div>
 
 

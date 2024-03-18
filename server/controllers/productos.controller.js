@@ -43,7 +43,7 @@ export const obtenerEstados = async(req,res)=>{
 
 //Agregar Producto
 export const agregarProducto = async(req,res)=>{
-    const {nombre,descripcion,precio,estado,categoria,departamento} = req.body
+    const {nombre,descripcion,precio,estado,categoria,departamento,fecha_programada} = req.body
     const imagenes= req.files;
 
 
@@ -54,8 +54,8 @@ export const agregarProducto = async(req,res)=>{
           }
 
         const [rows] = await pool.query(
-            'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id) VALUES (?,?,?,?,?,?,?) ',
-            [nombre,descripcion,precio,estado,categoria,req.user,departamento]);
+            'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id,fecha_programada) VALUES (?,?,?,?,?,?,?,?) ',
+            [nombre,descripcion,precio,estado,categoria,req.user,departamento, fecha_programada]);
 
         //variables para subir imagenes
         const productoId= rows.insertId;
