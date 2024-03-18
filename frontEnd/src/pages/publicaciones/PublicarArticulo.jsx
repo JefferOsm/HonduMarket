@@ -13,6 +13,14 @@ function PublicarArticulo() {
     departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+  //para programar publicacion
+  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
+
+  const handleDateSelected = (date)=>{
+    setFechaSeleccionada(date)
+    
+  }
+
   //Vista Previa
   const [text, setText] = useState("");
   const [descripcion, setDescipcion] = useState("");
@@ -64,7 +72,12 @@ function PublicarArticulo() {
         formData.append('imagenes', imagenesSeleccionadas[i]);
     }
 
-    //console.log(formData)
+    if(fechaSeleccionada){
+      console.log(fechaSeleccionada)
+      formData.append('fechaSubida', fechaSeleccionada)
+    }
+
+    console.log(formData)
 
    const idProdAct= await agregarPublicacion(formData);
    console.log(idProdAct)
@@ -85,6 +98,7 @@ function PublicarArticulo() {
     setdepartamento("");
     setImagenesPreview([])
     setVideoPreview('')
+    setImagenesSeleccionadas([])
     } catch (error) {
       console.log(error)
     } finally{
@@ -388,7 +402,7 @@ function PublicarArticulo() {
                       </label>
                     </div>
                     <div id="flush-collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <SeleccionFechaHora/>
+                      <SeleccionFechaHora onDateSelected={handleDateSelected}/>
                     </div>
                   </li>
                 </div>

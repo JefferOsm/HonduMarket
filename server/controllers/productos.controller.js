@@ -3,6 +3,7 @@ import pkg from 'cloudinary';
 const { v2: cloudinary } = pkg;
 import helper from '../helpers/timeag.js'
 
+
 //Obtener Categorias
 export const obtenerCategorias= async(req,res)=>{
     try {
@@ -45,8 +46,8 @@ export const agregarProducto = async(req,res)=>{
     const {nombre,descripcion,precio,estado,categoria,departamento} = req.body
     const imagenes= req.files;
 
-    try {
 
+    try {
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: 'No se subieron imágenes' });

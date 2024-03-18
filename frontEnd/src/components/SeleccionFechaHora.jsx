@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const SeleccionFechaHora = () => {
+const SeleccionFechaHora = ({ onDateSelected}) => {
   const [selectedDate, setSelectedDate] = useState(null);
+
+  useEffect(()=>{
+    onDateSelected(selectedDate)
+  },[selectedDate,onDateSelected])
 
   return (
     <div className="container">
@@ -13,7 +17,7 @@ const SeleccionFechaHora = () => {
         onChange={(date) => setSelectedDate(date)}
         showTimeSelect
         timeFormat="HH:mm"
-        timeIntervals={20}
+        timeIntervals={1}
         timeCaption="Hora"
         dateFormat="dd/MM/yyyy h:mm aa"
         className="form-control"
