@@ -20,7 +20,7 @@ CREATE TABLE tbl_categorias (
     nombre_categoria varchar(20) NOT NULL,
     CONSTRAINT Pk_categorias PRIMARY KEY (categoria_id)
 );
-
+select *from tbl_productos
 
 -- TABLA PARA SABER SI EL PRODUCTO ES USADO, NUEVO, DAÑADO, REPARADO...
 CREATE TABLE tbl_estadoProducto(
@@ -51,16 +51,14 @@ CREATE TABLE tbl_productos(
     usuario_id INT(11) NOT NULL,
     departamento_id INT(11) NOT NULL,
     fecha_publicacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fecha_programada TIMESTAMP, -- Aquí agregamos la nueva columna
+    fecha_programada TIMESTAMP,
 	CONSTRAINT PKproducto PRIMARY KEY(producto_id),
-    CONSTRAINT FKproductoEstado FOREIGN KEY(estado_id) REFERENCES tbl_estadoProducto(id_estado),
-    CONSTRAINT FKproductoCategoria FOREIGN KEY(categoria_id) REFERENCES tbl_categorias(categoria_id),
-    CONSTRAINT FKproductoUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id),
-    CONSTRAINT FKproductoDepartamento FOREIGN KEY(departamento_id) REFERENCES tbl_departamentos(id_departamento)
+    CONSTRAINT FKproductoEstado FOREIGN KEY(estado_id) REFERENCES tbl_estadoProducto(id_estado) ON DELETE CASCADE,
+    CONSTRAINT FKproductoCategoria FOREIGN KEY(categoria_id) REFERENCES tbl_categorias(categoria_id) ON DELETE CASCADE,
+    CONSTRAINT FKproductoUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT FKproductoDepartamento FOREIGN KEY(departamento_id) REFERENCES tbl_departamentos(id_departamento) ON DELETE CASCADE
 );
 
-ALTER TABLE tbl_productos
-ADD fecha_programada TIMESTAMP;
 
 CREATE TABLE tbl_imagenesProductos(
 	id_imagenesProd INT(11) NOT NULL auto_increment,

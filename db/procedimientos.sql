@@ -57,15 +57,16 @@ create procedure sp_productosUsuario (
 BEGIN
     SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
 	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion, producto_inactivo
+	tbl_departamentos.nombre_departamento as departamento, producto_inactivo
 	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
 	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
-	WHERE usuario_id= p_id
+	WHERE usuario_id= p_id AND tbl_productos.fecha_programada IS NULL OR tbl_productos.fecha_programada <= NOW() 
     ORDER BY tbl_productos.fecha_publicacion DESC;
 
 END //
 DELIMITER ;
+
 
 
 -- OBTENER CATEGORIAS
@@ -146,12 +147,14 @@ BEGIN
         p.usuario_id AS usuario
     FROM 
         tbl_productos p
-    WHERE
-        p.fecha_programada IS NULL OR p.fecha_programada <= NOW() -- Condición agregada aquí
-    ORDER BY RAND()
+	WHERE
+        p.fecha_programada IS NULL OR p.fecha_programada <= NOW() 
+	ORDER BY RAND()
     LIMIT 10;
 END //
 DELIMITER ;
+
+
 
 -- OBTENER LAS PUBLICACIONES DEL CAROUSEL DE INICIO DISTINTAS AL USUARIO LOGEADO
 DELIMITER //
@@ -165,7 +168,7 @@ BEGIN
         p.usuario_id AS usuario
     FROM 
         tbl_productos p
-	WHERE p.usuario_id <> p_user_id
+	WHERE p.usuario_id <> p_user_id AND p.fecha_programada IS NULL OR p.fecha_programada <= NOW() 
 	ORDER BY RAND()
     LIMIT 10;
 END //
@@ -179,7 +182,8 @@ BEGIN
         p.producto_id AS id,
         p.nombre_producto AS nombre
     FROM 
-        tbl_productos p;
+        tbl_productos p
+	WHERE p.fecha_programada IS NULL OR p.fecha_programada <= NOW();
 END //
 DELIMITER ;
 
@@ -196,7 +200,7 @@ BEGIN
         tbl_productos p
     WHERE 
         p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
-        AND p.fecha_programada <= NOW();-- Agregar la condición de fecha programada aquí
+       AND p.fecha_programada IS NULL OR p.fecha_programada <= NOW();
 END //
 DELIMITER ;
 
@@ -252,12 +256,24 @@ END //
 DELIMITER ;
 
 
+-- Procedimiento para Eliminar una Publicacion
+DELIMITER //
+create procedure sp_comprobarPublicacion (
+    IN p_producto_id INT(11),
+    IN p_usuario_id INT(11)
+)
+BEGIN
+	SELECT producto_id
+	FROM tbl_productos
+	WHERE usuario_id = p_usuario_id AND p_producto_id;
+END //
+DELIMITER ;
+
+
 -- Inhabilitar Productos
 CREATE EVENT inhabilitar_producto
 ON SCHEDULE EVERY 1 MINUTE
 DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 4 DAY) AND producto_inactivo = 0;
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND producto_inactivo = 0;
 
-
-
-
+DROP EVENT inhabilitar_producto
