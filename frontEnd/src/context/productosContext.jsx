@@ -177,7 +177,7 @@ export const ProductosProvider = ({children})=>{
     const obtenerUsuario = async(id)=>{
         try {
             const response = await detalleUsuarioRequest(id)
-           // console.log(response)
+           console.log(response)
             setUsuarioProduct(response)
         } catch (error) {
             console.log(error)

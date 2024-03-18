@@ -48,13 +48,27 @@ function VistaArticulo() {
 
   //al cargar la pantalla
   useEffect(() => {
-    obtenerDetalles(id);
-    obtenerImagenes(id);
-    if(autenticado){
-      validarListaDeseo(id);
-    }
+    const cargarDatos = async () => {
+      await obtenerDetalles(id);
+      await obtenerImagenes(id);
+      if(autenticado){
+        await validarListaDeseo(id);
+  
+        if(usuario.id === detailProduct.idUsuario){
+          setBotonListaUsuario(true);
+          console.log(usuario);
+        } else {
+          setBotonListaUsuario(false);
+          console.log(botonListaUsuario);
+        }
+      }
+    };
+  
+    cargarDatos();
+  }, [autenticado, detailProduct.idUsuario, id, usuario]);
 
-  }, []);
+
+
 
 
   return (
@@ -103,7 +117,7 @@ function VistaArticulo() {
               <div className="d-flex ">
                 <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
                 <div className=" w-30 text-center ms-4">
-                {autenticado ? (
+                {autenticado && !botonListaUsuario ? (
                     <>
                       {validarLista.length>0 ? (
                         <>
@@ -184,9 +198,17 @@ function VistaArticulo() {
 
             </div>
         </div>
-        <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
-                  <FontAwesomeIcon icon={faTrash}/> Eliminar
-        </button>
+
+        {botonListaUsuario ? (
+          <>
+            <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
+                      <FontAwesomeIcon icon={faTrash}/> Eliminar
+            </button>
+          </>
+        ):(
+          <></>
+        )}
+
       </div>
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
