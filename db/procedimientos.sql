@@ -61,11 +61,13 @@ BEGIN
 	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
 	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
-	WHERE usuario_id= p_id AND tbl_productos.fecha_programada IS NULL OR tbl_productos.fecha_programada <= NOW() 
+	WHERE usuario_id= p_id AND (tbl_productos.fecha_programada IS NULL OR tbl_productos.fecha_programada <= NOW()) 
     ORDER BY tbl_productos.fecha_publicacion DESC;
 
 END //
 DELIMITER ;
+drop procedure sp_productosUsuario
+call sp_productosUsuario(8)
 
 
 
@@ -168,11 +170,12 @@ BEGIN
         p.usuario_id AS usuario
     FROM 
         tbl_productos p
-	WHERE p.usuario_id <> p_user_id AND p.fecha_programada IS NULL OR p.fecha_programada <= NOW() 
+	WHERE p.usuario_id <> p_user_id AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
 	ORDER BY RAND()
     LIMIT 10;
 END //
 DELIMITER ;
+
 
 -- OBTENER TODOS LOS NOMBRES DE PRODUCTOS PARA SUGERENCIA
 DELIMITER //
@@ -200,9 +203,10 @@ BEGIN
         tbl_productos p
     WHERE 
         p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
-       AND p.fecha_programada IS NULL OR p.fecha_programada <= NOW();
+       AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW());
 END //
 DELIMITER ;
+
 
 
 -- Eliminar de la lista de deseos
@@ -274,6 +278,6 @@ DELIMITER ;
 CREATE EVENT inhabilitar_producto
 ON SCHEDULE EVERY 1 MINUTE
 DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND producto_inactivo = 0;
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 0;
 
 DROP EVENT inhabilitar_producto

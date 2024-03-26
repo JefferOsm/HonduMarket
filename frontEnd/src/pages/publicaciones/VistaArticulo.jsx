@@ -116,6 +116,7 @@ function VistaArticulo() {
             <div key={detailProduct.id}className="w-50-flex mb-3">
               <div className="d-flex ">
                 <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
+
                 <div className=" w-30 text-center ms-4">
                 {autenticado && !botonListaUsuario ? (
                     <>
@@ -141,6 +142,14 @@ function VistaArticulo() {
                   </>
                   )}
                 </div>
+                                
+            {
+                mensajeDeseo.map((mensaje, i)=>(
+                  <div className="alert mensaje-deseo p-2 text-light my-2 text-center custom-fade mx-auto" key={i} >
+                    <FontAwesomeIcon icon={faCheckCircle}/> {mensaje}
+                  </div>
+                ))
+            }
               </div>
               <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + detailProduct.precio}</p>
               <p className="size-detalle">{`Publicado ${detailProduct.fecha} en ${detailProduct.departamento}`}</p>
@@ -187,14 +196,6 @@ function VistaArticulo() {
 
 
                 </div>  
-
-            {
-                mensajeDeseo.map((mensaje, i)=>(
-                  <div className="alert mensaje-deseo p-2 text-light my-2 text-center custom-fade mx-auto w-50" key={i} >
-                    <FontAwesomeIcon icon={faCheckCircle}/> {mensaje}
-                  </div>
-                ))
-            }
 
             </div>
         </div>

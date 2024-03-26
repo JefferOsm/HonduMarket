@@ -4,6 +4,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const SeleccionFechaHora = ({ onDateSelected}) => {
   const [selectedDate, setSelectedDate] = useState(null);
+  const fechaActual= new Date();
+
+  const filtrarHora=(time)=>{
+    const horaSeleccionada= new Date(time);
+
+    return fechaActual.getTime() < horaSeleccionada.getTime();
+  }
+
+
 
   useEffect(()=>{
     onDateSelected(selectedDate)
@@ -17,11 +26,14 @@ const SeleccionFechaHora = ({ onDateSelected}) => {
         onChange={(date) => setSelectedDate(date)}
         showTimeSelect
         timeFormat="HH:mm"
-        timeIntervals={1}
+        timeIntervals={30}
         timeCaption="Hora"
         dateFormat="dd/MM/yyyy h:mm aa"
         className="form-control"
         placeholderText={selectedDate ? selectedDate.toLocaleString() : "Haz click aquí"}
+        minDate={fechaActual}
+        isClearable
+        filterTime={filtrarHora}
       />
     </div>
   );

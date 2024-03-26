@@ -26,16 +26,19 @@ function PublicarArticulo() {
     //imagenes que se enviaran al backend
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
     const[botonActive, setBotonActive]=useState(true)
-    const[botonText, setBotonText]=useState('Publicar')
+    const[botonText, setBotonText]=useState('Publicar');
+
+      //para programar publicacion
+  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
 
     //opcion para subir
     const cammbiOpcion= (e)=>{
       setBotonActive(false);
-
+      console.log(fechaSeleccionada)
     }
+    
 
-  //para programar publicacion
-  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
+
 
   const handleDateSelected = (date)=>{
     setFechaSeleccionada(date);
@@ -114,6 +117,7 @@ function PublicarArticulo() {
       console.log(error)
     } finally{
       setBotonActive(false)
+      setBotonText('Publicar')
       if(fechaSeleccionada){
         window.alert('Tu publicacion Ha sido Programada')
       }else{
@@ -415,13 +419,13 @@ function PublicarArticulo() {
                        type="radio" name="flexRadioDefault" id="flexRadioDefault1"
                         data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" 
                         aria-expanded="false" aria-controls="flush-collapseTwo"
-                        onChange={cammbiOpcion} />
+                        onChange={cammbiOpcion}/>
                       <label className="form-check-label" htmlFor="flexRadioDefault1">
                         Programar Publicación
                       </label>
                     </div>
                     <div id="flush-collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <SeleccionFechaHora onDateSelected={handleDateSelected}/>
+                      <SeleccionFechaHora onDateSelected={handleDateSelected} />
                     </div>
                   </li>
                 </div>

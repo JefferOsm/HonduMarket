@@ -60,6 +60,7 @@ export const agregarProducto = async(req,res)=>{
                 [nombre,descripcion,precio,estado,categoria,req.user,departamento, fechaProgramada]);
 
             productoId= rows.insertId;
+            await pool.query('UPDATE tbl_productos SET fecha_publicacion=? WHERE producto_id=?',[fechaProgramada,productoId])
         }else{
             const [rows] = await pool.query(
                 'INSERT INTO tbl_productos(nombre_producto,descripcion_producto,precio_producto,estado_id,categoria_id,usuario_id,departamento_id) VALUES (?,?,?,?,?,?,?) ',
@@ -127,11 +128,12 @@ export const obtenerPublicacionesUsuario = async(req,res)=>{
     try {
         
         const [rows]= await pool.query('CALL sp_productosUsuario(?)', [req.user]);
-        console.log(rows[0])
+        console.log(req.user)
+        //console.log(rows[0])
         const resultados = await Promise.all(rows[0].map(async (producto) => {
             const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
             if(imagen[0]){
-            console.log(imagen[0])
+            //console.log(imagen[0])
             producto.imagen=imagen[0].url_imagen}
         }));
 
@@ -304,12 +306,12 @@ export const eliminarPublicacion= async(req,res)=>{
 export const agregarListaDeseos = async(req,res)=>{
     try {
         const [rows] = await pool.query('INSERT INTO tbl_listaDeseos(producto_id,usuario_id) VALUES(?,?)',[req.params.id,req.user]);
-        console.log(rows);
-        res.json(['Agregado a lista de deseos']);
+        //console.log(rows);
+        res.json(['Agregado a Favoritos']);
     } catch (error) {
         if(error.code === 'ER_DUP_ENTRY'){
             await pool.query('CALL sp_borrarDeseo(?,?)',[req.user,req.params.id]);
-            res.status(200).json(['Se borro de lista de deseos'])
+            res.status(200).json(['Borrado de Favoritos'])
         }else{
             res.status(500).json({
                 message: 'Ha ocurrido un error al agregar a lista de productos'
