@@ -238,7 +238,8 @@ function PublicarArticulo() {
 
   return (
     <div className="contenedor-publicar">
-      <div className="card py-3 px-3 col-auto">
+      <div className="card py-3 px-3" style={{height: "90vh", width: "31vw"}}>
+       <div class="card-body overflow-auto">
         <h3 className="fw-bold text-center">Registra tu producto</h3>
         <form className="col py-2" onSubmit={onSubmit}>
 
@@ -439,10 +440,11 @@ function PublicarArticulo() {
           </div>
 
         </form>
+        </div>
       </div>
 
       {/*Card de la vista previa del producto a registrar*/}
-      <div className="card shadow-lg bg-white rounded" style={{ margin: "3%", flexGrow: "100", display: "flex", flexDirection: "row" }}>
+      <div className="card shadow-lg bg-white rounded" style={{ margin: "3%", display: "flex", flexDirection: "row", height: "80vh", width: "60vw" }}>
           {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
           <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
               <h6 className="card-title">Vista previa</h6>
@@ -466,7 +468,7 @@ function PublicarArticulo() {
                         </React.Fragment>
                       ) : (
                         <div className='carousel-item text-center active'>
-                          <img className="d-block w-100" src='../../../public/images/preview.jpg' alt='...' />
+                          <img className="d-block" src='../../../public/images/preview.jpg' alt='...' style={{height: "70vh", width: "35vw"}}/>
                         </div>
                       )}
                     </div> 

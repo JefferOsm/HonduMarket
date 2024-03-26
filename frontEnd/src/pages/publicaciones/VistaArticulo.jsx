@@ -67,9 +67,14 @@ function VistaArticulo() {
     cargarDatos();
   }, [autenticado, detailProduct.idUsuario, id, usuario]);
 
-
-
-
+  // Convertir el número del precio con formato con comas
+  const comas = (value) => {
+    if (value !== undefined && value !== null) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    } else {
+      return '';
+    }
+  };
 
   return (
     <>
@@ -151,7 +156,7 @@ function VistaArticulo() {
                 ))
             }
               </div>
-              <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + detailProduct.precio}</p>
+              <p className="fs-3 fw-semibold text-info-emphasis">{"Lps " + comas(detailProduct.precio)}</p>
               <p className="size-detalle">{`Publicado ${detailProduct.fecha} en ${detailProduct.departamento}`}</p>
               <p className="fs-4">Detalles</p>
               <table className="table table-hover">

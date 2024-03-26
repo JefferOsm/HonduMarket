@@ -44,7 +44,10 @@ function HomePage() {
     console.log(categorias)
   },[])
 
-
+  // Convertir el número del precio con formato con comas
+  const comas = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
 
   return (
     <>
@@ -88,7 +91,7 @@ function HomePage() {
                 <div className='card-descripcion fw-light'>
                     <p>{publicacion.descripcion }</p>
                 </div>
-                <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + publicacion.precio}</p><br/>
+                <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + comas(publicacion.precio)}</p><br/>
             </div>
         </div>
         </Link>
