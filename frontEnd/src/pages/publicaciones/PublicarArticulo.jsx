@@ -116,7 +116,7 @@ function PublicarArticulo() {
     } catch (error) {
       console.log(error)
     } finally{
-      setBotonActive(false)
+      setBotonActive(true)
       setBotonText('Publicar')
       if(fechaSeleccionada){
         window.alert('Tu publicacion Ha sido Programada')
