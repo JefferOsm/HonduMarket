@@ -39,8 +39,8 @@ function SearchResultsPage() {
   };
 
 
-  // Lista de páginas
-  const totalPages = Math.round(results.length / 8);
+  // Calcular cuantas páginas se van a necesitar
+  const totalPages = Math.round(results.length / 4);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   // Función para manejar el clic en un número de página
@@ -50,12 +50,12 @@ function SearchResultsPage() {
   };
 
   // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
-  const startIndex = (paginacion - 1) * 8;
-  const endIndex = startIndex + 8;
+  const startIndex = (paginacion - 1) * 4;
+  const endIndex = startIndex + 4;
   // Obtener la porción de resultados para la página actual usando slice
   const resultsForPage = results.slice(startIndex, endIndex);
 
-  // Función para generar los elementos de la paginación
+  // Función para generar los numeros de páginas que hay
   const renderPaginationItems = () => {
     return pages.map((pageNumber) => (
       <li key={pageNumber} className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}>
