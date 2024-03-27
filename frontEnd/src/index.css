@@ -9,8 +9,7 @@
 body {
   margin: 0;
   background: #d1d0d0da;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family:Arial, Helvetica, sans-serif
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -176,6 +175,8 @@ input[type=number] { -moz-appearance:textfield; }
   }
 }
 
+
+/* Publicacion de productos */
 .contenedor-publicar{
   display: flex;
   justify-content: space-between;
@@ -205,6 +206,38 @@ input[type=number] { -moz-appearance:textfield; }
 @media (max-width: 768px ) {
     .contenedor-card-publicacion{
       grid-template-columns: repeat(1,1fr);
+    }
+}
+@media (min-width: 768px) {
+    .contenedor-publicar-form{
+      overflow: auto;
+    }
+}
+
+
+.contenedor-publicar-content{
+  height: 90vh;
+  width: 31vw;
+}
+@media (max-width: 768px) {
+
+    .contenedor-publicar-content{
+     width: 100%;
+     height: auto;
+    } 
+}
+
+.contenedor-publicar-preview{
+  margin: 3%;
+  display: flex;
+  flex-direction: row;
+  height: 80vh;
+  width: 60vw;
+}
+
+@media (max-width: 768px) {
+    .contenedor-publicar-preview{
+      width: 100%;
     }
 }
 

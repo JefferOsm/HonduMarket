@@ -5,7 +5,6 @@ import SeleccionFechaHora from "../../components/SeleccionFechaHora";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
-import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 function PublicarArticulo() {
@@ -36,9 +35,6 @@ function PublicarArticulo() {
       setBotonActive(false);
       console.log(fechaSeleccionada)
     }
-    
-
-
 
   const handleDateSelected = (date)=>{
     setFechaSeleccionada(date);
@@ -116,7 +112,7 @@ function PublicarArticulo() {
     } catch (error) {
       console.log(error)
     } finally{
-      setBotonActive(false)
+      setBotonActive(true)
       setBotonText('Publicar')
       if(fechaSeleccionada){
         window.alert('Tu publicacion Ha sido Programada')
@@ -238,8 +234,8 @@ function PublicarArticulo() {
 
   return (
     <div className="contenedor-publicar">
-      <div className="card py-3 px-3" style={{height: "90vh", width: "31vw"}}>
-       <div class="card-body overflow-auto">
+      <div className="card py-3 px-3 contenedor-publicar-content">
+       <div className="card-body contenedor-publicar-form">
         <h3 className="fw-bold text-center">Registra tu producto</h3>
         <form className="col py-2" onSubmit={onSubmit}>
 
@@ -444,7 +440,7 @@ function PublicarArticulo() {
       </div>
 
       {/*Card de la vista previa del producto a registrar*/}
-      <div className="card shadow-lg bg-white rounded" style={{ margin: "3%", display: "flex", flexDirection: "row", height: "80vh", width: "60vw" }}>
+      <div className="card shadow-lg bg-white rounded contenedor-publicar-preview" >
           {/*Apartado donde irian las imagenes que se suban antes de guardar el producto*/}
           <div className="card-secction" style={{flex: "1", padding: "10px", border: "1px solid #ccc"}}>
               <h6 className="card-title">Vista previa</h6>
