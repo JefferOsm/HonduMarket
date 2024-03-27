@@ -7,16 +7,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
+import ModalChat from "../Chat/ModalChat";
 
 
 function VistaArticulo() {
 
     //funcionalidades para el modal de Usuario
     const [show, setShow] = useState(false);
+    const [Chat, setChat] = useState(false);
     const handleClose = () => setShow(false);
+    const ChatClose = () => setChat(false);
+
     const handleShow = () => {
       obtenerUsuario(detailProduct.idUsuario)
       setShow(true)
+    };
+
+    const handleChat = () => {
+      obtenerUsuario(detailProduct.idUsuario)
+      setChat(true)
     };
 
     //funcionalidades para el modal de Eliminar Publicacion
@@ -191,7 +200,7 @@ function VistaArticulo() {
                   </div>
                   {autenticado ? (
                     <>
-                      <div className="btn bc-secondary fw-bold mt-3">Enviar Mensaje</div>   
+                      <div className="btn bc-secondary fw-bold mt-3" onClick={handleChat}>Enviar Mensaje</div>   
                     </>
                   ):(
                   <>
@@ -219,6 +228,7 @@ function VistaArticulo() {
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
     <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id}  />
+    <ModalChat show={Chat} handleClose={ChatClose}/>
     </>
   )
 }
