@@ -1,23 +1,33 @@
-import React,{useState} from 'react'
-import { Link,Navigate, useNavigate } from 'react-router-dom'
-import { usarAutenticacion } from '../context/autenticacion'
-import { usarProductosContex } from '../context/productosContext'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore,faSearch, faBookmark} from '@fortawesome/free-solid-svg-icons'
+import React, {useState} from 'react'
+import { Link,Navigate, useNavigate } from 'react-router-dom';
+import { usarAutenticacion } from '../context/autenticacion';
+import { usarProductosContex } from '../context/productosContext';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore,faSearch, faBookmark, faSignal, faMessage} from '@fortawesome/free-solid-svg-icons';
 import Dropdown from 'react-bootstrap/Dropdown';
-import ModalBusqueda from './modalBusqueda'
+import ModalBusqueda from './modalBusqueda';
+import ModalChat from "../pages/Chat/ModalChat";
 
 function NavBar() {
 
-  const{ obtenerPublicacionesSearch}= usarProductosContex();
+  const{detailProduct, obtenerUsuario, obtenerPublicacionesSearch}= usarProductosContex();
   const{autenticado,logout,usuario}=  usarAutenticacion();
-        //funcionalidades para el modal de Busqueda
-        const [show, setShow] = useState(false);
-        const handleClose = () => setShow(false);
-        const handleShow = () => {
-          setShow(true);
-          obtenerPublicacionesSearch();
-        };
+
+  //funcionalidades para el modal de Busqueda
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+    obtenerPublicacionesSearch();
+  };
+
+  //Funcionalidades para el modal del Chat
+  const [Chat, setChat] = useState(false);
+  const ChatClose = () => setChat(false);
+  const handleChat = () => {
+    obtenerUsuario(detailProduct.idUsuario)
+    setChat(true)
+  };
 
  
 
@@ -68,6 +78,10 @@ function NavBar() {
                         <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/lista_deseos">
                           <FontAwesomeIcon icon={faBookmark} />  Lista de Deseos
                         </Dropdown.Item>
+
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="#" onClick={handleChat}>
+                          <FontAwesomeIcon icon={faMessage} /> Mensajes
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                     </li>
@@ -107,6 +121,7 @@ function NavBar() {
         </div>
       </nav>
       <ModalBusqueda show={show} handleClose={handleClose} />
+      <ModalChat show={Chat} handleClose={ChatClose}/>
       </>
   )
 }

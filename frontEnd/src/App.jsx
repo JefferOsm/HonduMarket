@@ -13,6 +13,7 @@ import Vista_del_articulo from './pages/publicaciones/VistaArticulo';
 import MisPublicaciones from './pages/publicaciones/MisPublicaciones';
 import SearchResultsPage from './pages/publicaciones/searchPage';
 import ListaDeseosPage from './pages/publicaciones/ListaDeseosPage';
+import CentroChat from './pages/Chat/CentroChat';
 
 
 function App(){
@@ -34,6 +35,7 @@ function App(){
               <Route path='/perfil/publicar' element={<PublicarArticulo/>} />
               <Route path='/perfil/publicaciones' element={<MisPublicaciones/>} />
               <Route path='/perfil/lista_deseos' element={<ListaDeseosPage/>} />
+              <Route path='/perfil/chat' element={<CentroChat/>} />
             </Route>
           </Routes>
         </BrowserRouter>
