@@ -22,6 +22,10 @@ function SearchResultsPage() {
   const filtrosClose = () => setfiltros(false);
   const handlefiltros = () => setfiltros(true);
 
+  //funcionalidades para implementar el filtro
+  const [option1, setOption1] = useState(false);
+  const [option2, setOption2] = useState(false);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -57,14 +61,28 @@ function SearchResultsPage() {
     setPaginacion(pageNumber);
   };
 
+  //Funcionalidad para cambiar el orden los elemntos segun la opcion del modal
+  const handleOptionSelected = (option) => {
+    
+    if (option == "Opción_1" && !option1){
+      const reversedPublicacionesUser = [...results].reverse();
+      setResults(reversedPublicacionesUser);
+      setOption1(true);
+      setOption2(false);
+    }else if (option == "Opción_2" && option1 && !option2){
+      const reversedPublicacionesUser = [...results].reverse();
+      setResults(reversedPublicacionesUser);
+      setOption2(true);
+      setOption1(false);
+    }
+  };
+
   // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
   const startIndex = (paginacion - 1) * 4;
   const endIndex = startIndex + 4;
 
-  //ordenar del mas reciente al mas antiguo
-  const reversedResults = [...results].reverse();
   // Obtener la porción de resultados para la página actual usando slice
-  const resultsForPage = reversedResults.slice(startIndex, endIndex);
+  const resultsForPage = results.slice(startIndex, endIndex);
 
   // Función para generar los numeros de páginas que hay
   const renderPaginationItems = () => {
@@ -124,7 +142,7 @@ function SearchResultsPage() {
         </nav>
       </div>
 
-      <ModalFiltro show={filtros} handleClose={filtrosClose} />
+      <ModalFiltro show={filtros} handleClose={filtrosClose} onOptionSelected={handleOptionSelected}/>
     </div>
   );
 }
