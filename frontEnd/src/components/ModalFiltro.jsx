@@ -27,7 +27,8 @@ function ModalFiltro ({show,handleClose, onOptionSelected}) {
             <li className="list-group-item">
                 <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_1')}>Del mas reciente al mas antiguo</a></p>
                 <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>Del mas antiguo al mas reciente</a></p>
-                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>Del mas caro al mas barato</a></p>
+                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_3')}>De mayor a menor precio</a></p>
+                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_4')}>De menor a mayor precio</a></p>
             </li>
         </ul>
         <ul className="list-group list-group-flush px-3">

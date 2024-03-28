@@ -13,6 +13,9 @@ function useQuery() {
 function SearchResultsPage() {
   const query = useQuery().get('query');
   const [results, setResults] = useState([]);
+  const [results_2, setResults_2] = useState([]);
+  const [results_3, setResults_3] = useState([]);
+
   // constante para saber en que pagina estamos
   const [currentPage, setCurrentPage] = useState(1);
   const [paginacion, setPaginacion] = useState(1);
@@ -25,6 +28,8 @@ function SearchResultsPage() {
   //funcionalidades para implementar el filtro
   const [option1, setOption1] = useState(false);
   const [option2, setOption2] = useState(false);
+  const [option3, setOption3] = useState(false);
+  const [option4, setOption4] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,6 +38,8 @@ function SearchResultsPage() {
         const filteredProducts = await buscarProductos(query);
         console.log(filteredProducts)
         setResults(filteredProducts); // Establece los resultados en lugar de agregar a ellos
+        setResults_2(filteredProducts);
+        setResults_3(filteredProducts);
       } catch (error) {
         console.error(error);
       }
@@ -65,15 +72,33 @@ function SearchResultsPage() {
   const handleOptionSelected = (option) => {
     
     if (option == "Opción_1" && !option1){
-      const reversedPublicacionesUser = [...results].reverse();
+      const reversedPublicacionesUser = [...results_2].reverse();
       setResults(reversedPublicacionesUser);
       setOption1(true);
       setOption2(false);
+      setOption3(false);
+      setOption4(false);
     }else if (option == "Opción_2" && option1 && !option2){
-      const reversedPublicacionesUser = [...results].reverse();
+      const reversedPublicacionesUser = [...results_2];
       setResults(reversedPublicacionesUser);
       setOption2(true);
       setOption1(false);
+      setOption3(false);
+      setOption4(false);
+    }else if (option == "Opción_3" && !option3){
+      const Demayoramenor = [...results_3].sort((a, b) => b.precio - a.precio);
+      setResults(Demayoramenor);
+      setOption3(true);
+      setOption1(false);
+      setOption2(false);
+      setOption4(false);
+    }else if (option == "Opción_4" && !option4){
+      const Demenoramayor = [...results_3].sort((a, b) => a.precio - b.precio);
+      setResults(Demenoramayor);
+      setOption4(true);
+      setOption1(false);
+      setOption2(false);
+      setOption3(false);
     }
   };
 
