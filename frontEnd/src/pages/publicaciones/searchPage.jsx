@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { buscarProductos } from '../../api/productos'; // Importa la función de búsqueda
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import ModalFiltro from '../../components/ModalFiltro';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -13,6 +16,11 @@ function SearchResultsPage() {
   // constante para saber en que pagina estamos
   const [currentPage, setCurrentPage] = useState(1);
   const [paginacion, setPaginacion] = useState(1);
+
+  //funcionalidades para el modal de Filtros
+  const [filtros, setfiltros] = useState(false);
+  const filtrosClose = () => setfiltros(false);
+  const handlefiltros = () => setfiltros(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,7 +48,7 @@ function SearchResultsPage() {
 
 
   // Calcular cuantas páginas se van a necesitar
-  const totalPages = Math.round(results.length / 4);
+  const totalPages = Math.ceil(results.length / 4);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   // Función para manejar el clic en un número de página
@@ -52,8 +60,11 @@ function SearchResultsPage() {
   // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
   const startIndex = (paginacion - 1) * 4;
   const endIndex = startIndex + 4;
+
+  //ordenar del mas reciente al mas antiguo
+  const reversedResults = [...results].reverse();
   // Obtener la porción de resultados para la página actual usando slice
-  const resultsForPage = results.slice(startIndex, endIndex);
+  const resultsForPage = reversedResults.slice(startIndex, endIndex);
 
   // Función para generar los numeros de páginas que hay
   const renderPaginationItems = () => {
@@ -68,7 +79,16 @@ function SearchResultsPage() {
 
   return (
     <div className="container-fluid rounded shadow mb-4 mt-2" style={{background:'white'}}>
-      <h3 className="py-3 px-3">Resultados de la búsqueda</h3>
+      <h3 className="py-3 px-3 d-flex align-items-center">
+        Resultados de la búsqueda
+        <div className='ms-auto'>
+            <button className="btn bc-secondary d-flex align-items-center" type='button' onClick={handlefiltros}>
+                <span className='px-1'>Filtros</span>
+                <FontAwesomeIcon icon={faFilter} className="me-2" />
+            </button>
+        </div>
+      </h3>
+
       <div className="resultados-busqueda-card mt-4">
         {resultsForPage.map((producto) => (
                             <Link to={`/Vista_del_articulo/${producto.nombre}/${producto.id}`}
@@ -103,6 +123,8 @@ function SearchResultsPage() {
           </ul>
         </nav>
       </div>
+
+      <ModalFiltro show={filtros} handleClose={filtrosClose} />
     </div>
   );
 }

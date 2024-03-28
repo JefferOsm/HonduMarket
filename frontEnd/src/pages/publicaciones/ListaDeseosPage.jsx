@@ -21,7 +21,7 @@ function ListaDeseosPage() {
     };
 
     // Calcular cuantas páginas se van a necesitar
-    const totalPages = Math.round(publicacionesUser.length / 5);
+    const totalPages = Math.ceil(publicacionesUser.length / 5);
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     // Función para manejar el clic en un número de página
