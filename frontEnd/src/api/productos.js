@@ -1,3 +1,4 @@
+
 import axios from "./axios";
 
 export const obtenerCategoriasRequest = async () => {
@@ -57,6 +58,26 @@ export const detalleUsuarioRequest = async (id) => {
   return response.data;
 };
 
+export const agregarCalificacionRequest = async (values) => {
+  const response = await axios.post(`/usuarios/calificacion/`, values);
+  return response.data;
+};
+
+export const editarCalificacionRequest = async (values) => {
+  const response = await axios.put(`/usuarios/editarComentario/`, values);
+  return response.data;
+}
+
+export const obtenerCalificacionesRequest = async (id) => {
+  const response = await axios.get(`/usuarios/promedio-calificaciones/${id}`);
+  return response.data;
+}
+
+export const obtenerComentariosRequest = async (id) => {
+  const response = await axios.get(`/usuarios/comentarios/${id}`);
+  return response.data;
+};
+
 export const obtenerPublicacionesBusqueda = async () => {
   const response = await axios.get(`/productos/publicaciones/busqueda`);
   return response.data;
@@ -86,3 +107,4 @@ export const eliminarPublicacionRequest = async(id)=>{
   const response= await axios.delete(`/productos/publicacion/eliminar/${id}`);
   return response.data
 }
+

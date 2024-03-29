@@ -12,7 +12,12 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         agregarListaDeseo,
         obtenerListaDeseosRequest,
         validarListaDeseoRequest,
-        eliminarPublicacionRequest} from "../api/productos";
+        eliminarPublicacionRequest,
+        obtenerCalificacionesRequest,
+        agregarCalificacionRequest,
+        obtenerComentariosRequest,
+        editarCalificacionRequest
+    } from "../api/productos";
 
 
 export const ProductosContext= createContext();
@@ -41,6 +46,14 @@ export const ProductosProvider = ({children})=>{
     const [estados, setEstados] = useState([]);
     //detalles del producto
     const [detailProduct, setDetailProduct]= useState([]);
+    //Agregar calificacion a un usuario
+    const [calificacion, setCalificacion]= useState([]);
+    //Editar calificacion de un usuario
+    const [editarCalifi, setEditarCalificacion]= useState([]);
+    //calificaciones promedio de un usuario
+    const [calificaciones, setCalificaciones]= useState([]);
+    //obtener comentarios de un usuario
+    const [comentarios, setComentarios]= useState([]);
     //imagenes del producto
     const [imagenesProduct, setImagenesProduct]= useState([]);
     //video del producto(si hay)
@@ -183,6 +196,60 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
         }
     }
+
+    //Agregar calificacion a un usuario
+    const agregarCalificacion = async(values)=>{
+        try {
+            const response = await agregarCalificacionRequest(values);
+            //console.log(response)
+            setCalificacion(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //editar calificacion de un usuario
+    const editarCalificacion = async(values)=>{
+        try {
+            const response = await editarCalificacionRequest(values);
+            //console.log(response)
+            setEditarCalificacion(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    //Obtener califiaciones de un usuario
+    const obtenerCalificaciones = async(id)=>{
+        try {
+            const response = await obtenerCalificacionesRequest(id);
+            //console.log(response)
+            setCalificaciones(response)
+
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    //Obtener comentarios de un usuario
+    const obtenerComentarios = async(id)=>{
+        try {
+            const response = await obtenerComentariosRequest(id);
+            //console.log(response)
+            setComentarios(response)
+
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
 // Publicaciones para sugerencias
     const obtenerPublicacionesSearch= async()=>{
         try {
@@ -282,7 +349,15 @@ export const ProductosProvider = ({children})=>{
           mensajeDeseo,
           obtenerListaDeseos,
           validarListaDeseo,
-          validarLista
+          validarLista,
+          obtenerCalificaciones,
+          calificaciones,
+          obtenerComentarios,
+          comentarios,
+          agregarCalificacion,
+          calificacion,
+          editarCalificacion,
+          editarCalifi
         }}>
             {children}
         </ProductosContext.Provider>
