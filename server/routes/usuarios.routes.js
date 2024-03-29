@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
-        verificarToken,actualizarImagen,actualizarPassword, obtenerUsuario} from '../controllers/user.controllers.js'
+        verificarToken,actualizarImagen,actualizarPassword, obtenerUsuario,agregarCalificacion, obtenerCalificaciones, obtenerComentarios,editarComentario} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import {parserUsuarios} from '../middlewares/multer.js';
 
@@ -13,7 +13,7 @@ router.get("/", getUsers);
 //Ver perfil
 router.get("/perfil", autenticacionUsuario, getUser);
 
-//Ver ususario
+//Ver usuario
 router.get("/detalle/:id", obtenerUsuario);
 
 //Registrarse
@@ -40,5 +40,17 @@ router.post('/logout', logoutUser)
 
 //Verificar token de autenticacion
 router.get('/verificar', verificarToken)
+
+// Agregar calificacion de un usuario
+router.post('/calificacion',autenticacionUsuario, agregarCalificacion);
+
+// Obtener promedio calificaciones de un usuario
+router.get('/promedio-calificaciones/:id', obtenerCalificaciones);
+
+//obtener calificaciones de un usuario
+router.get('/comentarios/:id', obtenerComentarios);
+
+//Editar calificacion de un usuario
+router.put('/editarComentario',editarComentario)
 
 export default router;

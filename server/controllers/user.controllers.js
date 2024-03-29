@@ -72,6 +72,95 @@ export const obtenerUsuario = async (req, res) => {
 };
 
 
+//Agregar Calificacion de un usuario
+export const agregarCalificacion = async (req, res) => {
+  try {
+    const { usuario_id, calificacion, comentario, autor } = req.body;
+
+    await pool.query("INSERT INTO tbl_calificaciones (usuario_id, calificacion, comentario, autor) VALUES (?, ?, ?, ?)", [
+      usuario_id, calificacion, comentario, autor
+    ]);
+
+    res.status(201).json({
+      message: "Calificación agregada exitosamente",
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}
+
+// Editar comentario de un usuario
+export const editarComentario = async (req, res) => {
+  try {
+    const { usuario_id, calificacion, comentario, autor } = req.body;
+
+    await pool.query("UPDATE tbl_calificaciones SET calificacion = ?, comentario = ? WHERE usuario_id = ? AND autor = ?", [
+      calificacion, comentario, usuario_id, autor
+    ]);
+
+    res.status(200).json({
+      message: "Comentario actualizado exitosamente",
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+};
+
+
+//Obtener promedio calificaciones de un usuario
+export const obtenerCalificaciones = async (req, res) => {
+  try {
+    const [rows] = await pool.query("CALL sp_obtenerCalificaciones(?)", [
+      req.params.id
+    ]);
+
+    if (rows.length <= 0) {
+      return res.status(404).json({
+        message: "No se encontro el usuarios",
+      });
+    }
+
+    res.send(rows[0]);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}
+
+
+//Obtener calificaciones de un usuario
+export const obtenerComentarios = async (req, res) => {
+  try {
+    const [rows] = await pool.query("CALL sp_obtenerComentarios(?)", [
+      req.params.id
+    ]);
+
+    if (rows.length <= 0) {
+      return res.status(404).json({
+        message: "No se encontro el usuarios",
+      });
+    }
+
+    res.send(rows[0]);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}
 
 // Crear Usuarios
 export const createUser = async (req, res) => {
