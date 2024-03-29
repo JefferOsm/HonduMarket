@@ -8,6 +8,8 @@ import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-ico
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
+import ReactStars from "react-rating-stars-component";
+
 
 
 function VistaArticulo() {
@@ -42,7 +44,7 @@ function VistaArticulo() {
   //constante que recibe todas las publicaciones que existen
   const {autenticado,usuario} = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
-    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista} = usarProductosContex();
+    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista,obtenerCalificaciones} = usarProductosContex();
 
 
 
@@ -55,6 +57,10 @@ function VistaArticulo() {
   //para ocultar boton si es mi producto el que visualizo
   const [botonListaUsuario,setBotonListaUsuario]=useState(null)
 
+  // Nuevo estado para almacenar las calificaciones
+  const [calificaciones, setCalificaciones] = useState(null);
+
+
   //al cargar la pantalla
   useEffect(() => {
     const cargarDatos = async () => {
@@ -62,7 +68,6 @@ function VistaArticulo() {
       await obtenerImagenes(id);
       if(autenticado){
         await validarListaDeseo(id);
-  
         if(usuario.id === detailProduct.idUsuario){
           setBotonListaUsuario(true);
           console.log(usuario);
@@ -71,10 +76,15 @@ function VistaArticulo() {
           console.log(botonListaUsuario);
         }
       }
+      if(detailProduct.idUsuario) {
+        const result = await obtenerCalificaciones(detailProduct.idUsuario);
+        setCalificaciones(result);
+        console.log(result);
+      }
     };
   
     cargarDatos();
-  }, [autenticado, detailProduct.idUsuario, id, usuario]);
+  }, [autenticado, id, usuario, detailProduct.idUsuario]);
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
@@ -188,32 +198,47 @@ function VistaArticulo() {
 
             {/*Informacion del vendedor*/}
             <div className="mb-3 w-50-flex">
-                <div className="card p-4 shadow rounded ">  
-                  <div className="d-flex justify-content-between flex-row align-items-center">
-                    <div className="d-flex align-items-center">
-                          <div className="rounded-circle"
-                          style={{width:'65px', 
-                          height:'65px', backgroundImage:`url(${detailProduct.fotoPerfil})`, backgroundRepeat:'no-repeat', backgroundSize:'cover'}}></div>
-                          <div className="ms-3 fw-bold">{detailProduct.usuario}</div>
+              <div className="card p-4 shadow rounded ">  
+                <div className="d-flex justify-content-between flex-row align-items-center">
+                  <div className="d-flex align-items-center">
+                    <div className="rounded-circle"
+                    style={{width:'65px', 
+                    height:'65px', backgroundImage:`url(${detailProduct.fotoPerfil})`, backgroundRepeat:'no-repeat', backgroundSize:'cover'}}></div>
+                    <div className="ms-3 fw-bold">
+                      {detailProduct.usuario}
+                      {calificaciones && calificaciones.length > 0 && (
+                          <div className='d-flex'>
+                            <ReactStars
+                              count={5}
+                              value={calificaciones[0].promedio_calificaciones ? Number(calificaciones[0].promedio_calificaciones) : 0}
+                              size={24}
+                              isHalf={true} // Permite medias estrellas
+                              edit={false} // Hace que las estrellas sean solo de lectura
+                              activeColor="#ffd700"
+                            />
+                            <p className='ms-2' style={{ marginTop: '6px' }}>
+                              {typeof calificaciones[0].promedio_calificaciones === 'number' 
+                                ? calificaciones[0].promedio_calificaciones.toFixed(1) 
+                                : calificaciones[0].promedio_calificaciones}
+                            </p>
+                          </div>
+                      )}
                     </div>
-                    <div className="btn bc-primary text-light" onClick={handleShow}>Información</div>
                   </div>
-                  {autenticado ? (
-                    <>
-                      <div className="btn bc-secondary fw-bold mt-3" onClick={handleChat}>Enviar Mensaje</div>   
-                    </>
-                  ):(
+                  <div className="btn bc-primary text-light" onClick={handleShow}>Información</div>
+                </div>
+                {autenticado ? (
                   <>
-                    <button className="btn bc-secondary fw-bold mt-3" disabled>Enviar Mensaje</button>   
+                    <div className="btn bc-secondary fw-bold mt-3" onClick={handleChat}>Enviar Mensaje</div>   
                   </>
-                  )}
-
-
-                </div>  
-
+                ):(
+                <>
+                  <button className="btn bc-secondary fw-bold mt-3" disabled>Enviar Mensaje</button>   
+                </>
+                )}
+              </div> 
             </div>
         </div>
-
         {botonListaUsuario ? (
           <>
             <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
