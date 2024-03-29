@@ -13,6 +13,9 @@ function useQuery() {
 function SearchResultsPage() {
   const query = useQuery().get('query');
   const [results, setResults] = useState([]);
+  const [results_2, setResults_2] = useState([]);
+  const [results_3, setResults_3] = useState([]);
+
   // constante para saber en que pagina estamos
   const [currentPage, setCurrentPage] = useState(1);
   const [paginacion, setPaginacion] = useState(1);
@@ -22,6 +25,14 @@ function SearchResultsPage() {
   const filtrosClose = () => setfiltros(false);
   const handlefiltros = () => setfiltros(true);
 
+  //funcionalidades para implementar el filtro
+  const [option1, setOption1] = useState(false);
+  const [option2, setOption2] = useState(false);
+  const [option3, setOption3] = useState(false);
+  const [option4, setOption4] = useState(false);
+  const [categoria, setCategoria] = useState(false);
+  const [departamento, setDepartamento] = useState(false);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -29,6 +40,8 @@ function SearchResultsPage() {
         const filteredProducts = await buscarProductos(query);
         console.log(filteredProducts)
         setResults(filteredProducts); // Establece los resultados en lugar de agregar a ellos
+        setResults_2(filteredProducts);
+        setResults_3(filteredProducts);
       } catch (error) {
         console.error(error);
       }
@@ -57,14 +70,74 @@ function SearchResultsPage() {
     setPaginacion(pageNumber);
   };
 
+  const handleCategorySelect = (category) =>{
+    let filteredResults = []; // Declarar filteredResults como una variable local
+
+    if (category == "Inmuebles") {
+      filteredResults = results.filter((producto) => producto.categoria === "Inmuebles");
+      setResults(filteredResults);
+
+    }
+    else if(category == "Vehiculos") {
+      filteredResults = results.filter((producto) => producto.categoria === "Vehiculos");
+      setResults(filteredResults);
+
+    }
+    console.log(filteredResults);
+    
+
+  };
+
+  const handleDeptoSelect = (depto) => {
+    if (depto == "Atlántida") {
+
+    }
+    else if ( depto == "Choluteca") {
+
+    }
+
+  };
+
+  //Funcionalidad para cambiar el orden los elemntos segun la opcion del modal
+  const handleOptionSelected = (option) => {
+    
+    if (option == "Opción_1" && !option1){
+      const reversedPublicacionesUser = [...results_2].reverse();
+      setResults(reversedPublicacionesUser);
+      setOption1(true);
+      setOption2(false);
+      setOption3(false);
+      setOption4(false);
+    }else if (option == "Opción_2" && option1 && !option2){
+      const reversedPublicacionesUser = [...results_2];
+      setResults(reversedPublicacionesUser);
+      setOption2(true);
+      setOption1(false);
+      setOption3(false);
+      setOption4(false);
+    }else if (option == "Opción_3" && !option3){
+      const Demayoramenor = [...results_3].sort((a, b) => b.precio - a.precio);
+      setResults(Demayoramenor);
+      setOption3(true);
+      setOption1(false);
+      setOption2(false);
+      setOption4(false);
+    }else if (option == "Opción_4" && !option4){
+      const Demenoramayor = [...results_3].sort((a, b) => a.precio - b.precio);
+      setResults(Demenoramayor);
+      setOption4(true);
+      setOption1(false);
+      setOption2(false);
+      setOption3(false);
+    }
+  };
+
   // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
   const startIndex = (paginacion - 1) * 4;
   const endIndex = startIndex + 4;
 
-  //ordenar del mas reciente al mas antiguo
-  const reversedResults = [...results].reverse();
   // Obtener la porción de resultados para la página actual usando slice
-  const resultsForPage = reversedResults.slice(startIndex, endIndex);
+  const resultsForPage = results.slice(startIndex, endIndex);
 
   // Función para generar los numeros de páginas que hay
   const renderPaginationItems = () => {
@@ -124,7 +197,7 @@ function SearchResultsPage() {
         </nav>
       </div>
 
-      <ModalFiltro show={filtros} handleClose={filtrosClose} />
+      <ModalFiltro show={filtros} handleClose={filtrosClose} onOptionSelected={handleOptionSelected} onCategorySelected={handleCategorySelect} onSelectedDepto={handleDeptoSelect}/>
     </div>
   );
 }
