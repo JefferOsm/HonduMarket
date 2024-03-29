@@ -198,7 +198,9 @@ BEGIN
 		p.producto_id AS id,
         p.nombre_producto AS nombre,
         p.precio_producto AS precio,
-        p.descripcion_producto AS descripcion
+        p.descripcion_producto AS descripcion,
+        p.categoria_id AS categoria,
+        p.departamento_id AS departamento
     FROM 
         tbl_productos p
     WHERE 
