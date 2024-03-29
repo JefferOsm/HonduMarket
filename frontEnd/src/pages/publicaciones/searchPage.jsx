@@ -74,9 +74,8 @@ function SearchResultsPage() {
     let filteredResults = []; // Declarar filteredResults como una variable local
 
     if (category == "Inmuebles") {
-      filteredResults = results.filter((producto) => producto.categoria === "Inmuebles");
+      filteredResults = results.filter((producto) => producto.categoria === 1);
       setResults(filteredResults);
-
     }
     else if(category == "Vehiculos") {
       filteredResults = results.filter((producto) => producto.categoria === "Vehiculos");
@@ -172,7 +171,7 @@ function SearchResultsPage() {
                                     <h5 className="card-title fw-semibold">{producto.nombre}</h5>
                                     <div className="card-text">
                                         <div className='card-descripcion fw-light'>
-                                            <p>{producto.descripcion }</p>
+                                            <p>{producto.descripcion}</p>
                                         </div>
                                         <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + comas(producto.precio)}</p><br/>
                                     </div>
