@@ -76,9 +76,50 @@ function SearchResultsPage() {
     if (category == "Inmuebles") {
       filteredResults = results.filter((producto) => producto.categoria === 1);
       setResults(filteredResults);
+
     }
     else if(category == "Vehiculos") {
-      filteredResults = results.filter((producto) => producto.categoria === "Vehiculos");
+      filteredResults = results.filter((producto) => producto.categoria === 2);
+      setResults(filteredResults);
+
+    }
+    else if (category == "Hogar") {
+      filteredResults = results.filter((producto) => producto.categoria === 3);
+      setResults(filteredResults);
+
+    }
+    else if(category == "Bebes") {
+      filteredResults = results.filter((producto) => producto.categoria === 4);
+      setResults(filteredResults);
+
+    }
+    else if (category == "Moda") {
+      filteredResults = results.filter((producto) => producto.categoria === 5);
+      setResults(filteredResults);
+
+    }
+    else if(category == "Mascotas") {
+      filteredResults = results.filter((producto) => producto.categoria === 6);
+      setResults(filteredResults);
+
+    }
+    else if (category == "Electronica") {
+      filteredResults = results.filter((producto) => producto.categoria === 7);
+      setResults(filteredResults);
+
+    }
+    else if(category == "Servicios") {
+      filteredResults = results.filter((producto) => producto.categoria === 8);
+      setResults(filteredResults);
+
+    }
+    else if (category == "Negocios") {
+      filteredResults = results.filter((producto) => producto.categoria === 9);
+      setResults(filteredResults);
+
+    }
+    else if(category == "Empleos") {
+      filteredResults = results.filter((producto) => producto.categoria === 10);
       setResults(filteredResults);
 
     }
@@ -88,12 +129,99 @@ function SearchResultsPage() {
   };
 
   const handleDeptoSelect = (depto) => {
+    let filteredResults = []; // Declarar filteredResults como una variable local
+
     if (depto == "Atlántida") {
+      filteredResults = results.filter((producto) => producto.departamento === 1);
+      setResults(filteredResults);
 
     }
     else if ( depto == "Choluteca") {
+      filteredResults = results.filter((producto) => producto.departamento === 2);
+      setResults(filteredResults);
 
     }
+    else if ( depto == "Colón") {
+      filteredResults = results.filter((producto) => producto.departamento === 3);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Comayagua") {
+      filteredResults = results.filter((producto) => producto.departamento === 4);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Copán") {
+      filteredResults = results.filter((producto) => producto.departamento === 5);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "El Paraíso") {
+      filteredResults = results.filter((producto) => producto.departamento === 6);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Intibucá") {
+      filteredResults = results.filter((producto) => producto.departamento === 7);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Islas de la Bahiá") {
+      filteredResults = results.filter((producto) => producto.departamento === 8);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "La Paz") {
+      filteredResults = results.filter((producto) => producto.departamento === 9);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Ocotepeque") {
+      filteredResults = results.filter((producto) => producto.departamento === 10);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Olancho") {
+      filteredResults = results.filter((producto) => producto.departamento === 11);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Santa Bárbara") {
+      filteredResults = results.filter((producto) => producto.departamento === 12);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Valle") {
+      filteredResults = results.filter((producto) => producto.departamento === 13);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Yoro") {
+      filteredResults = results.filter((producto) => producto.departamento === 14);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Francisco Morazán") {
+      filteredResults = results.filter((producto) => producto.departamento === 15);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Cortes") {
+      filteredResults = results.filter((producto) => producto.departamento === 16);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Lempira") {
+      filteredResults = results.filter((producto) => producto.departamento === 17);
+      setResults(filteredResults);
+
+    }
+    else if ( depto == "Gracias a Dios") {
+      filteredResults = results.filter((producto) => producto.departamento === 18);
+      setResults(filteredResults);
+
+    }
+    console.log(filteredResults);
 
   };
 
