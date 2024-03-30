@@ -70,159 +70,130 @@ function SearchResultsPage() {
     setPaginacion(pageNumber);
   };
 
+  //Funcionalidad para hacer filtro por categoria
   const handleCategorySelect = (category) =>{
     let filteredResults = []; // Declarar filteredResults como una variable local
 
     if (category == "Inmuebles") {
-      filteredResults = results.filter((producto) => producto.categoria === 1);
+      filteredResults = results_2.filter((producto) => producto.categoria === 1);
       setResults(filteredResults);
-
     }
     else if(category == "Vehiculos") {
-      filteredResults = results.filter((producto) => producto.categoria === 2);
+      filteredResults = results_2.filter((producto) => producto.categoria === 2);
       setResults(filteredResults);
-
     }
     else if (category == "Hogar") {
-      filteredResults = results.filter((producto) => producto.categoria === 3);
+      filteredResults = results_2.filter((producto) => producto.categoria === 3);
       setResults(filteredResults);
-
     }
     else if(category == "Bebes") {
-      filteredResults = results.filter((producto) => producto.categoria === 4);
+      filteredResults = results_2.filter((producto) => producto.categoria === 4);
       setResults(filteredResults);
-
     }
     else if (category == "Moda") {
-      filteredResults = results.filter((producto) => producto.categoria === 5);
+      filteredResults = results_2.filter((producto) => producto.categoria === 5);
       setResults(filteredResults);
-
     }
     else if(category == "Mascotas") {
-      filteredResults = results.filter((producto) => producto.categoria === 6);
+      filteredResults = results_2.filter((producto) => producto.categoria === 6);
       setResults(filteredResults);
-
     }
     else if (category == "Electronica") {
-      filteredResults = results.filter((producto) => producto.categoria === 7);
+      filteredResults = results_2.filter((producto) => producto.categoria === 7);
       setResults(filteredResults);
-
     }
     else if(category == "Servicios") {
-      filteredResults = results.filter((producto) => producto.categoria === 8);
+      filteredResults = results_2.filter((producto) => producto.categoria === 8);
       setResults(filteredResults);
-
     }
     else if (category == "Negocios") {
-      filteredResults = results.filter((producto) => producto.categoria === 9);
+      filteredResults = results_2.filter((producto) => producto.categoria === 9);
       setResults(filteredResults);
-
     }
     else if(category == "Empleos") {
-      filteredResults = results.filter((producto) => producto.categoria === 10);
+      filteredResults = results_2.filter((producto) => producto.categoria === 10);
       setResults(filteredResults);
-
     }
     console.log(filteredResults);
-    
-
   };
 
+   //Funcionalidad para hacer filtro por departamento
   const handleDeptoSelect = (depto) => {
     let filteredResults = []; // Declarar filteredResults como una variable local
 
     if (depto == "Atlántida") {
-      filteredResults = results.filter((producto) => producto.departamento === 1);
+      filteredResults = results_3.filter((producto) => producto.departamento === 1);
       setResults(filteredResults);
-
     }
     else if ( depto == "Choluteca") {
-      filteredResults = results.filter((producto) => producto.departamento === 2);
+      filteredResults = results_3.filter((producto) => producto.departamento === 2);
       setResults(filteredResults);
-
     }
     else if ( depto == "Colón") {
-      filteredResults = results.filter((producto) => producto.departamento === 3);
+      filteredResults = results_3.filter((producto) => producto.departamento === 3);
       setResults(filteredResults);
-
     }
     else if ( depto == "Comayagua") {
-      filteredResults = results.filter((producto) => producto.departamento === 4);
+      filteredResults = results_3.filter((producto) => producto.departamento === 4);
       setResults(filteredResults);
-
     }
     else if ( depto == "Copán") {
-      filteredResults = results.filter((producto) => producto.departamento === 5);
+      filteredResults = results_3.filter((producto) => producto.departamento === 5);
       setResults(filteredResults);
-
     }
     else if ( depto == "El Paraíso") {
-      filteredResults = results.filter((producto) => producto.departamento === 6);
+      filteredResults = results_3.filter((producto) => producto.departamento === 6);
       setResults(filteredResults);
-
     }
     else if ( depto == "Intibucá") {
-      filteredResults = results.filter((producto) => producto.departamento === 7);
+      filteredResults = results_3.filter((producto) => producto.departamento === 7);
       setResults(filteredResults);
-
     }
-    else if ( depto == "Islas de la Bahiá") {
-      filteredResults = results.filter((producto) => producto.departamento === 8);
+    else if ( depto == "Islas de la Bahía") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 8);
       setResults(filteredResults);
-
     }
     else if ( depto == "La Paz") {
-      filteredResults = results.filter((producto) => producto.departamento === 9);
+      filteredResults = results_3.filter((producto) => producto.departamento === 9);
       setResults(filteredResults);
-
     }
     else if ( depto == "Ocotepeque") {
-      filteredResults = results.filter((producto) => producto.departamento === 10);
+      filteredResults = results_3.filter((producto) => producto.departamento === 10);
       setResults(filteredResults);
-
     }
     else if ( depto == "Olancho") {
-      filteredResults = results.filter((producto) => producto.departamento === 11);
+      filteredResults = results_3.filter((producto) => producto.departamento === 11);
       setResults(filteredResults);
-
     }
     else if ( depto == "Santa Bárbara") {
-      filteredResults = results.filter((producto) => producto.departamento === 12);
+      filteredResults = results_3.filter((producto) => producto.departamento === 12);
       setResults(filteredResults);
-
     }
     else if ( depto == "Valle") {
-      filteredResults = results.filter((producto) => producto.departamento === 13);
+      filteredResults = results_3.filter((producto) => producto.departamento === 13);
       setResults(filteredResults);
-
     }
     else if ( depto == "Yoro") {
-      filteredResults = results.filter((producto) => producto.departamento === 14);
+      filteredResults = results_3.filter((producto) => producto.departamento === 14);
       setResults(filteredResults);
-
     }
     else if ( depto == "Francisco Morazán") {
-      filteredResults = results.filter((producto) => producto.departamento === 15);
+      filteredResults = results_3.filter((producto) => producto.departamento === 15);
       setResults(filteredResults);
-
     }
-    else if ( depto == "Cortes") {
-      filteredResults = results.filter((producto) => producto.departamento === 16);
+    else if ( depto == "Cortés") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 16);
       setResults(filteredResults);
-
     }
     else if ( depto == "Lempira") {
       filteredResults = results.filter((producto) => producto.departamento === 17);
       setResults(filteredResults);
-
     }
     else if ( depto == "Gracias a Dios") {
-      filteredResults = results.filter((producto) => producto.departamento === 18);
+      filteredResults = results_3.filter((producto) => producto.departamento === 18);
       setResults(filteredResults);
-
     }
     console.log(filteredResults);
-
   };
 
   //Funcionalidad para cambiar el orden los elemntos segun la opcion del modal
@@ -288,26 +259,36 @@ function SearchResultsPage() {
             </button>
         </div>
       </h3>
-
-      <div className="resultados-busqueda-card mt-4">
-        {resultsForPage.map((producto) => (
-                            <Link to={`/Vista_del_articulo/${producto.nombre}/${producto.id}`}
-                            className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2"  key={producto.id}>
-                                <img src={producto.url_imagen} className="card-img-top" alt="..."
-                                style={{ width: '100%', height: '10rem', objectFit: 'cover' }}/>
-                                <div className="card-body"  style={{ height: '10rem'}}>
-                                    <h5 className="card-title fw-semibold">{producto.nombre}</h5>
-                                    <div className="card-text">
-                                        <div className='card-descripcion fw-light'>
-                                            <p>{producto.descripcion}</p>
-                                        </div>
-                                        <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + comas(producto.precio)}</p><br/>
-                                    </div>
-                                </div>
-                            </Link>
-                            
-        ))}
-      </div>
+      {resultsForPage.length>0 ? (
+      <>
+        <div className="resultados-busqueda-card mt-4">
+          {resultsForPage.map((producto) => (
+                              <Link to={`/Vista_del_articulo/${producto.nombre}/${producto.id}`}
+                              className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2"  key={producto.id}>
+                                  <img src={producto.url_imagen} className="card-img-top" alt="..."
+                                  style={{ width: '100%', height: '10rem', objectFit: 'cover' }}/>
+                                  <div className="card-body"  style={{ height: '10rem'}}>
+                                      <h5 className="card-title fw-semibold">{producto.nombre}</h5>
+                                      <div className="card-text">
+                                          <div className='card-descripcion fw-light'>
+                                              <p>{producto.descripcion}</p>
+                                          </div>
+                                          <p className='fw-semibold' style={{position:'absolute', bottom:'0'}}>{"Lps " + comas(producto.precio)}</p><br/>
+                                      </div>
+                                  </div>
+                              </Link>
+                              
+          ))}
+        </div>
+      </>
+      ):(
+        <>
+          <div className='p-4 w-100 my-auto d-flex flex-column justify-content-center align-items-center'> 
+            <p className='text-dark text-center fw-bold fs-4'>No se encontraron resultados</p>
+            <img className='' src="../../../public/images/lista-deseos-notFound.jpg" alt="..."  style={{width:'20rem', height:'20rem', objectFit:'contain'}}/>
+          </div>
+        </>
+      )}
 
       {/*Botones para pasar de pagina */}
       <div className="pagination-container d-flex justify-content-center">

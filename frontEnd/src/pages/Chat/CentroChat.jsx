@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChatList } from 'react-chat-elements';
+
 import Modal from 'react-bootstrap/Modal';
 
 function CentroChat() {

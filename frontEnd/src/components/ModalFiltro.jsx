@@ -39,59 +39,65 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
       </Modal.Header>
       <Modal.Body className='d-flex flex-row justify-content-between align-items-start text-body'>
 
- 
+        {/*Parte para hacer filtro por un orden de publicacion*/}
         <ul className="list-group list-group-flush">
-            <li className="list-group-item">Ordenar</li>
+            <li className="list-group-item">Ordenar del</li>
             <li className="list-group-item">
-                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_1')}>Del mas reciente al mas antiguo</a></p>
-                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>Del mas antiguo al mas reciente</a></p>
-                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_3')}>De mayor a menor precio</a></p>
-                <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_4')}>De menor a mayor precio</a></p>
+              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_1')}>más reciente a más antiguo</a></p>
+              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>más antiguo al más reciente</a></p>
             </li>
         </ul>
-        <div className="dropdown">
-          <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Categoría
-          </button>
-          <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Inmuebles')}>Inmuebles</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Vehiculos')}>Vehiculos</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Hogar')}>Hogar</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Bebes')}>Bebes</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Moda')}>Moda</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Mascotas')}>Mascotas</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Electronica')}>Electronica</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Servicios')}>Servicios</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Negocios')}>Negocios</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleCategorySelect('Empleos')}>Empleos</a></li>
-          </ul>
-        </div>
 
-        <div className="dropdown">
-          <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Departamento
-          </button>
-          <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Atlántida')}>Atlántida</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Choluteca')}>Choluteca</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Colón')}>Colón</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Comayagua')}>Comayagua</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Copán')}>Copán</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Cortés')}>Cortés</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('El Paraíso')}>El Paraíso</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Francisco Morazán')}>Francisco Morazán</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Gracias a Dios')}>Gracias a Dios</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Intibucá')}>Intibucá</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Islas de la Bahía')}>Islas de la Bahía</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('La Paz')}>La Paz</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Lempira')}>Lempira</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Ocotepeque')}>Ocotepeque</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Olancho')}>Olancho</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Santa Bárbara')}>Santa Bárbara</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Valle')}>Valle</a></li>
-            <li><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Yoro')}>Yoro</a></li>
-          </ul>
-        </div>
+        {/*Parte para hacer filtro por un orden del precio*/}
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Precio</li>
+          <li className="list-group-item">
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_3')}>De mayor a menor</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_4')}>De menor a mayor</a></p>
+          </li>
+        </ul>
+
+        {/*Parte para hacer filtro por Categoría*/}
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Categoría</li>
+          <li className="list-group-item">
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Inmuebles')}>Inmuebles</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Vehiculos')}>Vehiculos</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Hogar')}>Hogar</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Bebes')}>Bebes</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Moda')}>Moda</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Mascotas')}>Mascotas</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Electronica')}>Electronica</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Servicios')}>Servicios</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Negocios')}>Negocios</a></p>
+            <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleCategorySelect('Empleos')}>Empleos</a></p>
+          </li>
+        </ul>
+
+        {/*Parte para hacer filtro por Departamento*/}
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Departamento</li>
+          <li className="list-group-item">
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Atlántida')}>Atlántida</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Choluteca')}>Choluteca</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Colón')}>Colón</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Comayagua')}>Comayagua</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Copán')}>Copán</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Cortés')}>Cortés</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('El Paraíso')}>El Paraíso</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Francisco Morazán')}>Francisco Morazán</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Gracias a Dios')}>Gracias a Dios</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Intibucá')}>Intibucá</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Islas de la Bahía')}>Islas de la Bahía</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('La Paz')}>La Paz</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Lempira')}>Lempira</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Ocotepeque')}>Ocotepeque</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Olancho')}>Olancho</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Santa Bárbara')}>Santa Bárbara</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Valle')}>Valle</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Yoro')}>Yoro</a></p>
+          </li>
+        </ul>
 
       </Modal.Body>
     </Modal>
