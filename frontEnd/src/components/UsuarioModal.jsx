@@ -18,9 +18,10 @@ function UsuarioModal ({show,handleClose}) {
 
   // Nuevo estado para almacenar las calificaciones
   const [calificaciones, setCalificaciones] = useState(null);
-  const [comentarios, setComentarios] = useState(null); 
+  const [comentarios, setComentarios] = useState(); 
   const [formValues, setFormValues] = useState({ calificacion: 0, comentario: '', idComentarioEditando: null })
   const [open, setOpen] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const usuarioYaComento = (username) => {
     // Buscar en la lista de comentarios si ya existe un comentario de este usuario
@@ -49,6 +50,15 @@ function UsuarioModal ({show,handleClose}) {
     
     fetchCalificaciones();
   },[detailProduct.idUsuario])
+
+  //ACTUALIZAR PROMEDIO DE CALIFICACIONES
+  const [promedioCalificaciones, setPromedioCalificaciones] = useState(0);
+
+  useEffect(() => {
+    if (calificaciones && calificaciones.length > 0) {
+      setPromedioCalificaciones(Number(calificaciones[0].promedio_calificaciones));
+    }
+  }, [calificaciones]);
 
   const responsive = {
     desktop: {
@@ -104,16 +114,17 @@ function UsuarioModal ({show,handleClose}) {
                 <div className='d-flex'>
                   <ReactStars
                     count={5}
-                    value={calificaciones[0].promedio_calificaciones ? Number(calificaciones[0].promedio_calificaciones) : 0}
+                    value={promedioCalificaciones ? promedioCalificaciones : 0}
                     size={24}
                     isHalf={true} // Permite medias estrellas
                     edit={false} // Hace que las estrellas sean solo de lectura
                     activeColor="#ffd700"
                   />
+
                   <p className='ms-2' style={{ marginTop: '6px' }}>
-                    {typeof calificaciones[0].promedio_calificaciones === 'number' 
-                      ? calificaciones[0].promedio_calificaciones.toFixed(1) 
-                      : calificaciones[0].promedio_calificaciones}
+                    {typeof promedioCalificaciones === 'number' 
+                      ? promedioCalificaciones.toFixed(1) 
+                      : promedioCalificaciones}
                   </p>
                 </div>
             )}
@@ -146,7 +157,7 @@ function UsuarioModal ({show,handleClose}) {
             <div className="container p-4">
               <div className="row justify-content-center">
                 <div className="col-md-12">
-                  
+                  {usuario.username !== usuarioProduct.username && (
                     <Button
                       onClick={() => setOpen(!open)}
                       aria-controls="example-collapse-text"
@@ -154,8 +165,21 @@ function UsuarioModal ({show,handleClose}) {
                       className="mb-3"
                     >
                       Envia tu opinión
-                    </Button>
-                 
+                    </Button>      
+                  )}
+                  {submitSuccess && (
+                    <div style={{
+                      color: 'green',
+                      backgroundColor: '#d4edda',
+                      borderColor: '#c3e6cb',
+                      padding: '10px',
+                      marginTop: '10px',
+                      borderRadius: '5px',
+                      textAlign: 'center',
+                    }}>
+                      Tu opinión ha sido publicada con éxito.
+                    </div>
+                  )}
                   <Collapse in={open}>
                     <div className="card bc-degrate text-light shadow">
                       <div className="card-body">
@@ -186,6 +210,12 @@ function UsuarioModal ({show,handleClose}) {
                             setCalificaciones(calificacionesResult);
                             const comentariosResult = await obtenerComentarios(detailProduct.idUsuario);
                             setComentarios(comentariosResult);
+
+                            // Establecer submitSuccess en true para mostrar el mensaje de éxito
+                            setSubmitSuccess(true);
+
+                            // Cerrar el formulario
+                            setOpen(false);
                           }}>
                           <h2 className="text-center fw-bold">Envia tu opinión</h2>
 
