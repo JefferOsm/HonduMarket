@@ -319,3 +319,17 @@ BEGIN
     WHERE c.usuario_id = p_usuario_id;
 END//
 DELIMITER ;
+
+-- procedimiento para obtener conversaciones
+DELIMITER //
+create procedure sp_obtenerConversacion (
+    IN p_emisor INT(11),
+    IN p_receptor INT(11)
+)
+BEGIN
+	SELECT mensaje_id as mensajeID,emisor_id as emisor,receptor_id as receptor,mensaje
+	FROM tbl_mensajes
+	WHERE (emisor_id=p_emisor OR emisor_id=p_receptor) AND (receptor_id=p_receptor OR receptor_id=p_emisor)
+    ORDER BY fecha_envio ASC;
+END //
+DELIMITER ;

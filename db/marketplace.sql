@@ -87,6 +87,17 @@ CREATE TABLE tbl_listaDeseos(
     CONSTRAINT PK_ListaDeseos PRIMARY KEY (producto_id, usuario_id) 
 );
 
+CREATE TABLE tbl_mensajes(
+	mensaje_id INT(11) NOT NULL AUTO_INCREMENT,
+    emisor_id INT(11) NOT NULL,
+    receptor_id INT(11) NOT NULL,
+    mensaje TEXT ,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PkMensajes PRIMARY KEY(mensaje_id),
+    CONSTRAINT FKemisor FOREIGN KEY(emisor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FKreceptor FOREIGN KEY(receptor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
