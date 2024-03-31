@@ -4,11 +4,8 @@
 
 # Dependencias frontEnd
 accedeer a carpeta frontEnd y ejecutar npm run dev
-<<<<<<< HEAD
-```npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome axios bootstrap js-cookie react-hook-form react-router-dom react-bootstrap react-player react-multi-carousel react-datepicker socket.io-client```
-=======
-```npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome axios bootstrap js-cookie react-hook-form react-router-dom react-bootstrap react-player react-multi-carousel react-datepicker react-rating-stars-component```
->>>>>>> caed21a68288c6296c4da2bd6a6f29f907378ae7
+```npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome axios bootstrap js-cookie react-hook-form react-router-dom react-bootstrap react-player react-multi-carousel react-datepicker react-rating-stars-component socket.io-client```
+
 
 
 Proyecto Ingeniería de Software  
