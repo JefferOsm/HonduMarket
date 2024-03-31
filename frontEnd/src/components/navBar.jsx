@@ -79,7 +79,7 @@ function NavBar() {
                           <FontAwesomeIcon icon={faBookmark} />  Lista de Deseos
                         </Dropdown.Item>
 
-                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="#" onClick={handleChat}>
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/chat" >
                           <FontAwesomeIcon icon={faMessage} /> Mensajes
                         </Dropdown.Item>
                       </Dropdown.Menu>

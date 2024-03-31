@@ -1,10 +1,10 @@
 # Marketplace
 # Dependencias Backend
-```npm install --save express bcrypt body-parser cookie-parser dotenv express jsonwebtoken morgan mysql2 nodemon multer cloudinary multer-storage-cloudinary cors timeago.js```
+```npm install --save express bcrypt body-parser cookie-parser dotenv express jsonwebtoken morgan mysql2 nodemon multer cloudinary multer-storage-cloudinary cors timeago.js socket.io```
 
 # Dependencias frontEnd
 accedeer a carpeta frontEnd y ejecutar npm run dev
-```npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome axios bootstrap js-cookie react-hook-form react-router-dom react-bootstrap react-player react-multi-carousel react-datepicker```
+```npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome axios bootstrap js-cookie react-hook-form react-router-dom react-bootstrap react-player react-multi-carousel react-datepicker socket.io-client```
 
 
 Proyecto Ingeniería de Software  

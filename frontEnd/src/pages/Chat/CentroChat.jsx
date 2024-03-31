@@ -7,12 +7,12 @@ function CentroChat() {
     <div className="card" style={{display: "flex", flexDirection: "row", height: "89vh", width: "100vw"}}>
       {/*Apartado donde ira la lista de chat*/}
       <div className="card-secction overflow-scroll" style={{flex: "0.4", padding: "10px", border: "1px solid #ccc"}}>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Jeffer</li>
-          <li class="list-group-item">Leonel</li>
-          <li class="list-group-item">Jesus</li>
-          <li class="list-group-item">Carlos</li>
-          <li class="list-group-item">Nestor Luque</li>
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Jeffer</li>
+          <li className="list-group-item">Leonel</li>
+          <li className="list-group-item">Jesus</li>
+          <li className="list-group-item">Carlos</li>
+          <li className="list-group-item">Nestor Luque</li>
         </ul>
         
 

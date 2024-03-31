@@ -1,39 +1,154 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { usarProductosContex } from '../../context/productosContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { usarAutenticacion } from '../../context/autenticacion';
 import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import io from 'socket.io-client';
+import { usarChatContext } from '../../context/chatContext';
 
-function ModalChat ({show,handleClose}){
-  const {usuarioProduct} = usarProductosContex();
+
+
+function ModalChat ({show,handleClose,receptor}){
+  const{obtenerConversacion} = usarChatContext();
+  const {usuarioProduct,detailProduct,imagenesProduct} = usarProductosContex();
+  const {usuario,autenticado}= usarAutenticacion();
+
+  const [socket, setSocket]= useState(null);
+  const[onlineUsers,setOnlineUsers]= useState([]);
+  const[usuarioLog, setUsuarioLog]= useState(null);
+
+  const [mensaje,setMensaje]= useState('');
+  const [mensajes, setMensajes] = useState([]);
+
+  useEffect(()=>{
+    const newSocket= io('http://localhost:3000');
+
+    setSocket(newSocket);
+
+
+    return ()=>{
+      newSocket.disconnect();
+    }
+
+  },[show]);
+
+
+  useEffect(()=>{
+    if(socket === null || !usuario ||!show) return;
+    setUsuarioLog(usuario.id);
+    socket.emit('agregarUsuarios', usuario.id);
+    socket.on('usuariosConectados',(res)=>{
+      setOnlineUsers(res)
+    });
+
+        
+    if(show && autenticado){
+      const cargarConversacion= async()=>{
+        const conversaciones= await obtenerConversacion({emisor:usuario.id,receptor});
+        //console.log(conversaciones);
+        setMensajes(conversaciones);
+      };
+  
+      cargarConversacion();
+    }
+  
+
+    return()=>{
+      socket.off('agregarUsuarios')
+    }
+  },[socket,usuario,autenticado,receptor]);
+
+
+  const handleSubmit= (e)=>{
+    e.preventDefault()
+
+    const newMensaje= {
+      mensaje,
+      emisor:usuarioLog,
+      receptor
+    }
+    //enviamos datos al websocket server
+    setMensajes([... mensajes, newMensaje])
+    socket.emit('mensajes',
+    { mensaje,
+      emisor:usuarioLog,
+      receptor,
+      producto: detailProduct.id
+    }
+    );
+    //console.log(mensajes);
+    setMensaje('');
+
+  }
+
+  useEffect(()=>{
+    if(socket === null) return
+    socket.on('getMensajes', mensaje=>{
+      if (mensaje.receptor === usuarioLog) {
+        recibirMensajes(mensaje);
+      }
+    });
+
+    return ()=>{
+      socket.off('getMensajes')
+    }
+  },[socket]);
+
+  const recibirMensajes =(mensaje)=>{
+    setMensajes(prevMessages => [...prevMessages, mensaje]);
+    console.log(mensajes)
+  }
 
   return (
 
-      <Modal show={show} onHide={handleClose} dialogClassName="modal-dialog-scrollable">
+      <Modal show={show} onHide={handleClose} dialogClassName="modal-dialog-scrollable" backdrop='static'>
         <Modal.Header closeButton>
-          <Modal.Title className='fw-bold'>Enviale un mensaje a @{usuarioProduct.username}</Modal.Title>
+          <p className='fw-bold fs-5 my-auto'> {detailProduct.nombre} (@{usuarioProduct.username})</p>
         </Modal.Header>
 
         <Modal.Body className=''>
 
-          <div className="row">
-            <span className="bc-secondary-body text-light rounded ml-auto col-md-2">Hola</span>
-          </div>
+          <ul className="">
 
-          <div className="row">
-            <span className="bc-primary-2 col-md-2 rounded text-light ms-auto">Hola</span>
-          </div>
+            {mensajes.map((message,i)=>(
+              <>
+                {message.emisor===usuarioLog ? (
+                  <>
+                  <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5" key={message.mensajeID} style={{wordWrap:'break-word'}}>
+                  {message.emisor}:{message.mensaje}
+                  </li>
+                  </>
+                ):(
+                  <>
+                  <li className="bc-primary-2 rounded text-light ms-auto col-md-5 p-2 my-2" style={{wordWrap:'break-word'}} key={message.mensajeID}>
+                    {message.emisor}:{message.mensaje}
+                  </li>
+                  </>
+                )}
+              </>
+             ))}
+            
+          </ul>
+
+          <ul className="row">
+           
+          </ul>
         </Modal.Body>
 
         <Modal.Footer className='input-group'>
-          <input type="text" className="form-control form-control-ms" placeholder="Escribe tu mensaje" aria-label="mensaje"/>
-          <Button className="btn btn-danger">
+          <form className='form d-flex w-100' onSubmit={handleSubmit}>
+            <input type="text" className="form-control form-control-ms" placeholder="Escribe tu mensaje" aria-label="mensaje"
+            onChange={(e)=>{setMensaje(e.target.value)}}/>
+            <button className="btn btn-danger ms-2">
              <FontAwesomeIcon icon= {faPaperPlane} />
-          </Button>
-          <Button className="">
-              <FontAwesomeIcon icon={faImage} />
-          </Button>
+            </button>
+            {/* <Button className="">
+                <FontAwesomeIcon icon={faImage} />
+            </Button> */}
+          </form>
+
         </Modal.Footer>
       </Modal>
 

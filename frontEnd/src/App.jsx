@@ -14,12 +14,14 @@ import MisPublicaciones from './pages/publicaciones/MisPublicaciones';
 import SearchResultsPage from './pages/publicaciones/searchPage';
 import ListaDeseosPage from './pages/publicaciones/ListaDeseosPage';
 import CentroChat from './pages/Chat/CentroChat';
+import { ChatProvider } from './context/chatContext';
 
 
 function App(){
   return (
     <AutenticacionProvider>
       <ProductosProvider>
+        <ChatProvider>
           <BrowserRouter>
           <NavBar />
             <Routes>
@@ -39,6 +41,7 @@ function App(){
             </Route>
           </Routes>
         </BrowserRouter>
+        </ChatProvider>
       </ProductosProvider>
     </AutenticacionProvider>
   );

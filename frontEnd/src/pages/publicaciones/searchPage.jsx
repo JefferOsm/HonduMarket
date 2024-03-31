@@ -94,11 +94,11 @@ function SearchResultsPage() {
         <nav aria-label="...">
           <ul className="pagination">
             <li className="page-item disabled">
-              <span className="page-link">Previous</span>
+              <span className="page-link">Anterior</span>
             </li>
             {renderPaginationItems()}
             <li className="page-item">
-              <span className="page-link" href="#">Next</span>
+              <span className="page-link" href="#">Siguiente</span>
             </li>
           </ul>
         </nav>

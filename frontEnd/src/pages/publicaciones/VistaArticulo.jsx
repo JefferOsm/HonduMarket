@@ -8,6 +8,8 @@ import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-ico
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
+import io from 'socket.io-client';
+
 
 
 function VistaArticulo() {
@@ -68,12 +70,13 @@ function VistaArticulo() {
           console.log(usuario);
         } else {
           setBotonListaUsuario(false);
-          console.log(botonListaUsuario);
         }
       }
     };
+
   
     cargarDatos();
+
   }, [autenticado, detailProduct.idUsuario, id, usuario]);
 
   // Convertir el número del precio con formato con comas
@@ -228,7 +231,7 @@ function VistaArticulo() {
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
     <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id}  />
-    <ModalChat show={Chat} handleClose={ChatClose}/>
+    <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
     </>
   )
 }
