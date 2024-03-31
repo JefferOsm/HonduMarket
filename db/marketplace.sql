@@ -14,6 +14,16 @@ CREATE TABLE tbl_usuarios (
     CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
 
+CREATE TABLE tbl_calificaciones (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    usuario_id INT(11) NOT NULL,
+    calificacion INT NOT NULL,
+    comentario text null,
+    autor varchar(20) null,
+    CONSTRAINT PKcalificaciones PRIMARY KEY (id),
+    CONSTRAINT FKusuarioid FOREIGN KEY (usuario_id) REFERENCES tbl_usuarios(id)
+);
+
 
 CREATE TABLE tbl_categorias (
     categoria_id INT(11) NOT NULL AUTO_INCREMENT,

@@ -198,7 +198,9 @@ BEGIN
 		p.producto_id AS id,
         p.nombre_producto AS nombre,
         p.precio_producto AS precio,
-        p.descripcion_producto AS descripcion
+        p.descripcion_producto AS descripcion,
+        p.categoria_id AS categoria,
+        p.departamento_id AS departamento
     FROM 
         tbl_productos p
     WHERE 
@@ -281,3 +283,39 @@ DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 0;
 
 DROP EVENT inhabilitar_producto
+
+
+-- PROMEDIO DE CALIFICACIONES
+DELIMITER //
+CREATE PROCEDURE sp_obtenerCalificaciones(
+    IN p_usuario_id INT
+)
+BEGIN
+    -- Declarar variable para almacenar el promedio
+    DECLARE promedio DECIMAL(2,1);
+    
+    -- Obtener el promedio de las calificaciones del usuario
+    SELECT COALESCE(AVG(calificacion), 0)
+    INTO promedio
+    FROM tbl_calificaciones
+    WHERE usuario_id = p_usuario_id;
+    
+    -- Devolver el resultado
+    SELECT promedio AS promedio_calificaciones;
+END//
+DELIMITER ;
+
+
+
+-- Obtener calificaciones y comentarios de un usuario
+DELIMITER //
+CREATE PROCEDURE sp_obtenerComentarios(
+    IN p_usuario_id INT
+)
+BEGIN
+    -- Seleccionar las calificaciones y comentarios del usuario especificado
+    SELECT c.calificacion, c.comentario, c.autor
+    FROM tbl_calificaciones c
+    WHERE c.usuario_id = p_usuario_id;
+END//
+DELIMITER ;

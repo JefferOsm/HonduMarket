@@ -35,7 +35,7 @@ function NavBar() {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary sticky-top py-2 bc-primary  ">
         <div className="container-fluid">
-          <Link className="navbar-brand text-light me-3 px-3" to={'/'}>HonduMarket</Link>
+          <Link className="navbar-brand text-light me-3 px-3" to={'/'} >HonduMarket</Link>
           <button className="navbar-toggler text-light border" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span ><FontAwesomeIcon icon={faBars}/></span>
           </button>
