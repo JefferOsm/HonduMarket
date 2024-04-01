@@ -104,11 +104,12 @@ function ModalChat ({show,handleClose,receptor}){
   return (
 
       <Modal show={show} onHide={handleClose} dialogClassName="modal-dialog-scrollable" backdrop='static'>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton >
           <p className='fw-bold fs-5 my-auto'> {detailProduct.nombre} (@{usuarioProduct.username})</p>
         </Modal.Header>
 
-        <Modal.Body className=''>
+        <Modal.Body style={{backgroundImage:`url('../../../public/images/Fondo_del_chat.jpg')`,
+              backgroundRepeat:'no-repeat', backgroundSize:'cover'}}>
 
           <ul className="">
 
@@ -116,13 +117,13 @@ function ModalChat ({show,handleClose,receptor}){
               <>
                 {message.emisor===usuarioLog ? (
                   <>
-                  <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5" key={message.mensajeID} style={{wordWrap:'break-word'}}>
+                  <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5 list-unstyled" key={message.mensajeID} style={{wordWrap:'break-word'}}>
                   {message.emisor}:{message.mensaje}
                   </li>
                   </>
                 ):(
                   <>
-                  <li className="bc-primary-2 rounded text-light ms-auto col-md-5 p-2 my-2" style={{wordWrap:'break-word'}} key={message.mensajeID}>
+                  <li className="bc-primary-2 rounded text-light ms-auto col-md-5 p-2 my-2 list-unstyled" style={{wordWrap:'break-word'}} key={message.mensajeID}>
                     {message.emisor}:{message.mensaje}
                   </li>
                   </>

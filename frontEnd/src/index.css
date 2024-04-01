@@ -410,3 +410,7 @@ input[type=number] { -moz-appearance:textfield; }
   bottom: 10px;
   right: 10px;
 }
+
+.bc-lista-chat{
+  background: #7b2558;
+}
