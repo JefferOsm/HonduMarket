@@ -23,6 +23,7 @@ function ModalChat ({show,handleClose,receptor}){
   const [mensajes, setMensajes] = useState([]);
 
   useEffect(()=>{
+    if(show){
     const newSocket= io('http://localhost:3000');
 
     setSocket(newSocket);
@@ -31,6 +32,7 @@ function ModalChat ({show,handleClose,receptor}){
     return ()=>{
       newSocket.disconnect();
     }
+  }
 
   },[show]);
 
@@ -46,9 +48,10 @@ function ModalChat ({show,handleClose,receptor}){
         
     if(show && autenticado){
       const cargarConversacion= async()=>{
-        const conversaciones= await obtenerConversacion({emisor:usuario.id,receptor});
+        const conversaciones= await obtenerConversacion({emisor:usuario.id,receptor, producto:detailProduct.id});
         //console.log(conversaciones);
-        setMensajes(conversaciones);
+        if(conversaciones){
+        setMensajes(conversaciones);}
       };
   
       cargarConversacion();
@@ -114,7 +117,7 @@ function ModalChat ({show,handleClose,receptor}){
 
             {mensajes.map((message,i)=>(
               <>
-                {message.emisor===usuarioLog ? (
+                {message.emisor!==usuarioLog ? (
                   <>
                   <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5" key={message.mensajeID} style={{wordWrap:'break-word'}}>
                   {message.emisor}:{message.mensaje}

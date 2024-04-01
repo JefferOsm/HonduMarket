@@ -1,5 +1,5 @@
 import { createContext,useState,useContext, useEffect } from "react";
-import { obtenerConversaciones } from "../api/chat";
+import { obtenerConvGenReq, obtenerConvProdReq, obtenerConversaciones, obtenerUsuariosReq } from "../api/chat";
 
 export const ChatContext= createContext();
 
@@ -17,6 +17,7 @@ export const usarChatContext = () =>{
 export const ChatProvider = ({children}) =>{
     const [conversacion, setConversacion]= useState([]);
 
+
     const obtenerConversacion= async(data)=>{
         try {
             const response= await obtenerConversaciones(data);
@@ -29,10 +30,40 @@ export const ChatProvider = ({children}) =>{
         }
     }
 
+    const obtenerUsuarios= async()=>{
+        try {
+            const response= await obtenerUsuariosReq();
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const obtenerConvProd= async()=>{
+        try {
+            const response= await obtenerConvProdReq();
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const obtenerConvGen= async()=>{
+        try {
+            const response= await obtenerConvGenReq();
+            return response;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return(
         <ChatContext.Provider value={{
             obtenerConversacion,
             conversacion,
+            obtenerUsuarios,
+            obtenerConvProd,
+            obtenerConvGen,
 
         }}>
             {children}

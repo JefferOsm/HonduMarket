@@ -63,7 +63,7 @@ function VistaArticulo() {
 
 
   //al cargar la pantalla
-  useEffect(() => {
+  useEffect(() => {    
     const cargarDatos = async () => {
       await obtenerDetalles(id);
       await obtenerImagenes(id);
@@ -142,7 +142,7 @@ function VistaArticulo() {
               <div className="d-flex ">
                 <p className="fs-2 fw-bold">{detailProduct.nombre}</p>
 
-                <div className=" w-30 text-center ms-4">
+                <div className="w-30 text-center">
                 {autenticado && !botonListaUsuario ? (
                     <>
                       {validarLista.length>0 ? (
@@ -170,8 +170,8 @@ function VistaArticulo() {
                                 
             {
                 mensajeDeseo.map((mensaje, i)=>(
-                  <div className="alert mensaje-deseo p-2 text-light my-2 text-center custom-fade mx-auto" key={i} >
-                    <FontAwesomeIcon icon={faCheckCircle}/> {mensaje}
+                  <div className="rounded mensaje-deseo text-light my-2 me-2 text-center custom-fade mx-auto p-1 " key={i} >
+                    <FontAwesomeIcon icon={faCheckCircle} className="my-auto"/> {mensaje}
                   </div>
                 ))
             }

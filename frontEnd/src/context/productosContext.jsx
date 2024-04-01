@@ -297,7 +297,7 @@ export const ProductosProvider = ({children})=>{
     const validarListaDeseo= async(id)=>{
         try {
             const response= await validarListaDeseoRequest(id);
-            console.log(response)
+            //console.log(response)
             setValidarLista(response)
         } catch (error) {
             console.log(error)

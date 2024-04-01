@@ -43,8 +43,8 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
         <ul className="list-group list-group-flush">
             <li className="list-group-item">Ordenar del</li>
             <li className="list-group-item">
-              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_1')}>más reciente a más antiguo</a></p>
-              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>más antiguo al más reciente</a></p>
+              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_1')}>más antiguo a más reciente</a></p>
+              <p><a className="link-dark link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={() => handleOptionSelect('Opción_2')}>más reciente al más antiguo</a></p>
             </li>
         </ul>
 

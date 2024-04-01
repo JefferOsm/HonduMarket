@@ -13,7 +13,7 @@ io.on('connection', socket =>{
       socketId: socket.id
     });
 
-    socket.join(`usuario${usuarioId}`);
+    socket.join(`usuario${socket.id}`);
 
     console.log('conexiones', usuariosConectados);
     io.emit('usuariosConectados', usuariosConectados);
@@ -24,16 +24,17 @@ io.on('connection', socket =>{
   socket.on('mensajes', async(data)=>{
     const usuario= usuariosConectados.find((usuario)=> usuario.usuarioId === data.receptor);
     console.log(data)
-    console.log(usuario)
+    //console.log(usuario)
     let result
 
     try {
-      result = await pool.query('INSERT INTO tbl_mensajes(emisor_id,receptor_id,mensaje) VALUES(?,?,?)',[data.emisor,data.receptor,data.mensaje])
+      result = await pool.query('INSERT INTO tbl_mensajes(emisor_id,receptor_id,mensaje,producto_id) VALUES(?,?,?,?)',
+      [data.emisor,data.receptor,data.mensaje,data.producto])
     } catch (error) {
       console.error(error)
     }
     if(usuario){
-      io.to(`usuario${usuario.usuarioId}`).emit('getMensajes',
+      io.to(`usuario${usuario.socketId}`).emit('getMensajes',
       { mensajeID:result[0].insertId,
         mensaje:data.mensaje, 
         emisor:data.emisor, 
@@ -49,7 +50,8 @@ io.on('connection', socket =>{
   socket.on('disconnect', ()=>{
     usuariosConectados= usuariosConectados.filter((usuario)=> usuario.socketId !== socket.id);
     io.emit('usuariosConectados', usuariosConectados);
-
+    console.log('desconectado', usuariosConectados);
+    //console.log(socket.rooms)
   })
 
 })
