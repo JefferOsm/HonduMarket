@@ -76,16 +76,36 @@ function VistaArticulo() {
           setBotonListaUsuario(false);
         }
       }
-      if(detailProduct.idUsuario) {
-        const result = await obtenerCalificaciones(detailProduct.idUsuario);
-        setCalificaciones(result);
-        console.log(result);
-      }
     };
 
   
     cargarDatos();
   }, [autenticado, id, usuario, detailProduct.idUsuario]);
+
+
+  useEffect(()=>{
+    const fetchCalificaciones = async () => {
+      if(detailProduct.idUsuario) {
+        const result = await obtenerCalificaciones(detailProduct.idUsuario);
+        setCalificaciones(result);
+        //console.log(result);
+      }
+    }
+    
+    fetchCalificaciones();
+  },[detailProduct.idUsuario]) 
+
+  useEffect(() => {
+    setCalificaciones([]); // Borra las calificaciones actuales
+    const fetchCalificaciones = async () => {
+      if (detailProduct.idUsuario) {
+        const result = await obtenerCalificaciones(detailProduct.idUsuario);
+        setCalificaciones(result);
+      }
+    }
+  
+    fetchCalificaciones();
+  }, [detailProduct]);
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
