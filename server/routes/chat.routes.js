@@ -1,10 +1,13 @@
 import { Router } from "express";
 import { autenticacionUsuario } from "../middlewares/auth.js";
-import { obtenerChat, obtenerConversacionesGenerales, obtenerConversacionesProductos, obtenerUsuariosChat } from "../controllers/chat.controller.js";
+import { obtenerChat, obtenerConversacionesGenerales, obtenerConversacionesProductos, obtenerMensajesGeneral, obtenerUsuariosChat } from "../controllers/chat.controller.js";
 const router= Router();
 
 //obtener conversaciones
 router.get('/conversacion', autenticacionUsuario, obtenerChat );
+
+//obtener conversacion general
+router.get('/mensajes-general', autenticacionUsuario, obtenerMensajesGeneral)
 
 //obtener usuarios disponibles para chatear
 router.get('/usuarios',autenticacionUsuario,obtenerUsuariosChat);

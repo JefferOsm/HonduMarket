@@ -1,5 +1,5 @@
 import { createContext,useState,useContext, useEffect } from "react";
-import { obtenerConvGenReq, obtenerConvProdReq, obtenerConversaciones, obtenerUsuariosReq } from "../api/chat";
+import { obtenerConvGenReq, obtenerConvProdReq, obtenerConversaciones, obtenerUsuariosReq, obtenermsjGeneralReq } from "../api/chat";
 
 export const ChatContext= createContext();
 
@@ -17,7 +17,7 @@ export const usarChatContext = () =>{
 export const ChatProvider = ({children}) =>{
     const [conversacion, setConversacion]= useState([]);
 
-
+    //obtener msj de una conversacion de productos
     const obtenerConversacion= async(data)=>{
         try {
             const response= await obtenerConversaciones(data);
@@ -29,7 +29,7 @@ export const ChatProvider = ({children}) =>{
             return;
         }
     }
-
+    //usuarios disponibles para chatear
     const obtenerUsuarios= async()=>{
         try {
             const response= await obtenerUsuariosReq();
@@ -39,6 +39,7 @@ export const ChatProvider = ({children}) =>{
         }
     }
 
+    //conversaciones realizadas sobre productos
     const obtenerConvProd= async()=>{
         try {
             const response= await obtenerConvProdReq();
@@ -48,6 +49,7 @@ export const ChatProvider = ({children}) =>{
         }
     }
 
+    //conversaciones generales de usuario a usuario
     const obtenerConvGen= async()=>{
         try {
             const response= await obtenerConvGenReq();
@@ -57,9 +59,22 @@ export const ChatProvider = ({children}) =>{
         }
     }
 
+    //mensajes de una conversacion general de usuario a usuario
+    const obtenerMsjGeneral= async(data)=>{
+        try {
+            const response= await obtenermsjGeneralReq(data);
+            //console.log(response)
+            return response;
+        } catch (error) {
+            console.log(error)
+            return;
+        }
+    }
+
     return(
         <ChatContext.Provider value={{
             obtenerConversacion,
+            obtenerMsjGeneral,
             conversacion,
             obtenerUsuarios,
             obtenerConvProd,

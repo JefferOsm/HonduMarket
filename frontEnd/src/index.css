@@ -410,3 +410,22 @@ input[type=number] { -moz-appearance:textfield; }
   bottom: 10px;
   right: 10px;
 }
+
+.bc-lista-chat{
+  background: #5c1545;
+}
+.bc-lista-chat-item{
+  background: #440d32;
+}
+
+.nav-chat-active{
+  background: #440d32; /* Cambia esto al color que desees */
+  color: #fff; /* Cambia esto al color que desees */
+  border-radius: 1rem;
+  padding: .5rem;
+}
+
+.bc-lista-chat-item:hover{
+  background: #320623;
+  cursor: pointer;
+}

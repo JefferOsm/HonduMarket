@@ -20,3 +20,8 @@ export const obtenerConvGenReq= async()=>{
   const response = await axios.get(`/chat/conversaciones-general`);
   return response.data;
 }
+
+export const obtenermsjGeneralReq = async (data) => {
+  const response = await axios.get(`/chat/mensajes-general?emisor=${data.emisor}&receptor=${data.receptor}`);
+  return response.data;
+};

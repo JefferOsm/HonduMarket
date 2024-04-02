@@ -278,14 +278,6 @@ END //
 DELIMITER ;
 
 
--- Inhabilitar Productos
-CREATE EVENT inhabilitar_producto
-ON SCHEDULE EVERY 1 MINUTE
-DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 0;
-
-DROP EVENT inhabilitar_producto
-
 
 -- PROMEDIO DE CALIFICACIONES
 DELIMITER //
@@ -307,8 +299,6 @@ BEGIN
 END//
 DELIMITER ;
 
-
-
 -- Obtener calificaciones y comentarios de un usuario
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentarios(
@@ -322,9 +312,26 @@ BEGIN
 END//
 DELIMITER ;
 
--- procedimiento para obtener conversaciones
+
+-- procedimiento para obtener  mensajes de una conversacion de productos
 DELIMITER //
-create procedure sp_obtenerConversacion (
+create procedure sp_obtenerConversacion_producto (
+    IN p_emisor INT(11),
+    IN p_receptor INT(11),
+    IN p_producto INT(11)
+)
+BEGIN
+	SELECT mensaje_id as mensajeID,emisor_id as emisor,receptor_id as receptor,mensaje
+	FROM tbl_mensajes
+	WHERE (emisor_id=p_emisor OR emisor_id=p_receptor) AND (receptor_id=p_receptor OR receptor_id=p_emisor)
+    AND producto_id=p_producto
+    ORDER BY fecha_envio ASC;
+END //
+DELIMITER ;
+
+-- procedimiento para obtener mensajes de una conversacion general
+DELIMITER //
+create procedure sp_obtenerConversacion_general(
     IN p_emisor INT(11),
     IN p_receptor INT(11)
 )
@@ -332,6 +339,76 @@ BEGIN
 	SELECT mensaje_id as mensajeID,emisor_id as emisor,receptor_id as receptor,mensaje
 	FROM tbl_mensajes
 	WHERE (emisor_id=p_emisor OR emisor_id=p_receptor) AND (receptor_id=p_receptor OR receptor_id=p_emisor)
+    AND producto_id IS NULL
     ORDER BY fecha_envio ASC;
 END //
 DELIMITER ;
+
+-- procedimiento para obtener usuarios para escrbirle por chat
+DELIMITER //
+create procedure sp_usuariosChat (
+    IN p_usuario INT(11)
+)
+BEGIN
+	SELECT id, nombre,username,url_imagen as foto
+	FROM tbl_usuarios
+	WHERE id <> p_usuario;
+    
+END //
+DELIMITER ;
+
+-- procedimiento para obtener lasc conversaciones de productos
+DELIMITER //
+create procedure sp_conversacionesProductos (
+    IN p_usuario INT(11)
+)
+BEGIN
+	SELECT DISTINCT u.id, u.nombre,u.username, m.producto_id, p.nombre_producto,
+       (SELECT MAX(fecha_envio) 
+        FROM tbl_mensajes 
+        WHERE (emisor_id = u.id OR receptor_id = u.id) 
+          AND (emisor_id = p_usuario OR receptor_id = p_usuario) 
+          AND producto_id = m.producto_id) AS fecha_ultimo_mensaje
+	FROM tbl_mensajes m
+	JOIN tbl_usuarios u ON (m.emisor_id = u.id OR m.receptor_id = u.id)
+	JOIN tbl_productos p ON m.producto_id = p.producto_id
+	WHERE (m.emisor_id = p_usuario OR m.receptor_id = p_usuario)
+	AND u.id != p_usuario AND m.producto_id <> ''
+	ORDER BY fecha_ultimo_mensaje DESC;
+
+END //
+DELIMITER ;
+
+-- procedimiento para obtener las conversaciones de usuario a usuario sin productos o canales
+DELIMITER //
+create procedure sp_conversacionesUsers (
+    IN p_usuario INT(11)
+)
+BEGIN
+SELECT DISTINCT u.id, u.nombre,u.username, u.url_imagen as foto,
+       (SELECT MAX(fecha_envio) 
+        FROM tbl_mensajes 
+        WHERE (emisor_id = u.id OR receptor_id = u.id) 
+          AND (emisor_id = p_usuario OR receptor_id = p_usuario)
+          AND producto_id IS NULL) AS fecha_ultimo_mensaje
+FROM tbl_mensajes m
+JOIN tbl_usuarios u ON (m.emisor_id = u.id OR m.receptor_id = u.id)
+WHERE (m.emisor_id = p_usuario OR m.receptor_id = p_usuario)
+AND u.id != p_usuario AND m.producto_id IS NULL
+ORDER BY fecha_ultimo_mensaje DESC;
+END //
+DELIMITER ;
+
+
+-- Inhabilitar Productos
+CREATE EVENT inhabilitar_producto
+ON SCHEDULE EVERY 1 MINUTE
+DO
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 0;
+
+DROP EVENT inhabilitar_producto
+
+
+
+
+

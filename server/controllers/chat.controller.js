@@ -53,4 +53,17 @@ export const obtenerConversacionesGenerales= async(req,res)=>{
             message: "Ha Ocurrido un Error al obtener las conversaciones generales"
           });
     }
-}
+};
+
+export const obtenerMensajesGeneral = async(req,res)=>{
+    const {emisor,receptor}= req.query;
+    try {
+        const [conversacion] = await pool.query('CALL sp_obtenerConversacion_general(?,?)',[emisor,receptor]);
+        res.send(conversacion[0]) 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error al obtener los mensajes de la conversacion general",
+          });
+    }
+};
