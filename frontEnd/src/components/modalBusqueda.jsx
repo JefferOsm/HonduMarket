@@ -11,7 +11,7 @@ function ModalBusqueda({show,handleClose}) {
 
     const{productosBusqueda}= usarProductosContex();
     const [busqueda,setBusqueda]= useState('');
-    const [matchPublicaciones, setMatchPublicaciones]=useState([])
+    const [matchPublicaciones, setMatchPublicaciones]=useState([]);
 
     
 //filtrar publicaciones para mostrar los nombres

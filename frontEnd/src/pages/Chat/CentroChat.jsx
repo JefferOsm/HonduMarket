@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { usarChatContext } from '../../context/chatContext';
 import { usarAutenticacion } from '../../context/autenticacion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 function CentroChat() {
   const{obtenerUsuarios,obtenerConvProd,obtenerConvGen,
@@ -104,6 +104,30 @@ function CentroChat() {
     setMostrarMsj(true);
   }
 
+  //funcionalidades para hacer la busqueda del chat
+  const [busqueda,setBusqueda]= useState('');
+  const [matchPublicaciones, setMatchPublicaciones]=useState([]);
+
+  //filtrar publicaciones para mostrar los nombres
+  const handleChange= e=>{
+    if (e.target.value.trim() == ''){
+        setMatchPublicaciones([])
+        setBusqueda(e.target.value)
+    }else{
+        setBusqueda(e.target.value)
+        filtrado(e.target.value)
+    }
+  }
+
+  const filtrado=(termino)=>{
+    let resultado= usuariosChat.filter((publicacion)=>{
+        if(publicacion.nombre.toString().toLowerCase().includes(termino.toLowerCase())){
+            return publicacion
+        }
+    })
+    setMatchPublicaciones(resultado)
+    console.log(matchPublicaciones)
+  }
 
   return (
     <div
@@ -163,6 +187,14 @@ function CentroChat() {
             </div>
           </div>
         </nav>
+        <div className="navbar-nav">
+          <form className="d-flex input-group py-2" role="search">
+              <div className=" input-group-text btn bc-secondary-body text-light" ><FontAwesomeIcon icon={faSearch}/></div>
+              <input className="form-control" type="search" placeholder="Busca un chat o inicia uno nuevo" aria-label="Search"
+              value={busqueda}
+              onChange={handleChange}/>
+          </form>
+        </div>
         {/* Conversaciones */}
         <ul className="list-group">
           {/* Mostrar conversaciones generales entre ususarios */}
