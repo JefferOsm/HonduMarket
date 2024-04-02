@@ -16,7 +16,8 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         obtenerCalificacionesRequest,
         agregarCalificacionRequest,
         obtenerComentariosRequest,
-        editarCalificacionRequest
+        editarCalificacionRequest,
+        editarPublicacionRequest
     } from "../api/productos";
 
 
@@ -68,6 +69,8 @@ export const ProductosProvider = ({children})=>{
     const[mensajeDeseo,setMensajeDeseo]= useState([]);
     //validacion de lista de deseo
     const[validarLista,setValidarLista]= useState([]);
+    //editar publicacion
+    const [editPublicacion, setEditarPublicacion] = useState([]);
 
     const obtenerCategorias= async()=>{
         try {
@@ -138,6 +141,17 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
         }
     }
+
+    const editarPublicacion = async (id, values) => {
+        try {
+          const response = await editarPublicacionRequest(id, values);
+          setEditarPublicacion(response);
+          console.log(response)
+          return response;
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     //Eliminar Publicacion
     const eliminarPublicacion = async(id)=>{
@@ -304,7 +318,7 @@ export const ProductosProvider = ({children})=>{
             
         }
     }
-
+    
         //Eliminar los mensajes despues de 3 segundos
         useEffect(()=>{
             if (mensajeDeseo.length > 0){
@@ -315,7 +329,7 @@ export const ProductosProvider = ({children})=>{
                 return () => clearTimeout(timer)
             }
         },[mensajeDeseo])
-
+        
         
 
     return(
@@ -357,7 +371,9 @@ export const ProductosProvider = ({children})=>{
           agregarCalificacion,
           calificacion,
           editarCalificacion,
-          editarCalifi
+          editarCalifi,
+          editarPublicacion,
+          editPublicacion
         }}>
             {children}
         </ProductosContext.Provider>

@@ -350,3 +350,27 @@ export const validarListaDeseo = async(req,res)=>{
             console.log(error);
         }
 }
+
+
+// Editar Producto
+// Editar Producto
+export const editarProducto = async(req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion, precio } = req.body;
+
+    try {
+        // Actualizar datos del producto en la base de datos
+        const [rows] = await pool.query(
+            'UPDATE tbl_productos SET nombre_producto = ?, descripcion_producto = ?, precio_producto = ? WHERE producto_id = ?',
+            [nombre, descripcion, precio, id]
+        );
+
+        res.json({ message: 'Producto actualizado correctamente' });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error",
+        });
+    }
+}

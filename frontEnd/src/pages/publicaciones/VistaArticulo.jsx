@@ -10,6 +10,7 @@ import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
 import io from 'socket.io-client';
 import ReactStars from "react-rating-stars-component";
+import EditarProductoModal from "../../components/EditPublicacionModal";
 
 
 
@@ -37,6 +38,11 @@ function VistaArticulo() {
     const handleShowDelete = () => {
         setShowDelete(true)
     };
+
+    //funcionalidades para el modal de Editar Publicacion
+    const [showEdit, setShowEdit] = useState(false);
+    const handleCloseEdit = () => setShowEdit(false);
+    const handleShowEdit = () => setShowEdit(true);
     
 
 //Mostrar detalles
@@ -265,6 +271,9 @@ function VistaArticulo() {
             <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
                       <FontAwesomeIcon icon={faTrash}/> Eliminar
             </button>
+            <button className="btn btn-outline-primary btn-nuevo-modal" onClick={handleShowEdit}>
+            Editar producto
+          </button>
           </>
         ):(
           <></>
@@ -274,6 +283,7 @@ function VistaArticulo() {
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
     <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id}  />
+    <EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />
     <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
     </>
   )
