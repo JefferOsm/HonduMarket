@@ -106,11 +106,9 @@ function MisPublicaciones() {
             <nav aria-label="...">
             <ul className="pagination">
                 <li className="page-item disabled">
-                <span className="page-link">Previous</span>
                 </li>
                 {renderPaginationItemsActivas()}
                 <li className="page-item">
-                <span className="page-link" href="#">Next</span>
                 </li>
             </ul>
             </nav>
@@ -143,11 +141,9 @@ function MisPublicaciones() {
             <nav aria-label="...">
             <ul className="pagination">
                 <li className="page-item disabled">
-                <span className="page-link">Previous</span>
                 </li>
                 {renderPaginationItemsInactivas()}
                 <li className="page-item">
-                <span className="page-link" href="#">Next</span>
                 </li>
             </ul>
             </nav>

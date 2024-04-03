@@ -112,3 +112,9 @@ export const editarPublicacionRequest = async(id,values)=>{
   const response= await axios.put(`/productos/publicacion/editar/${id}`,values);
   return response.data
 }
+
+export const eliminarImagenProdReq = async(id)=>{
+  const response= await axios.delete(`/productos/publicacion/imagen/delete/${id}`);
+  return response.data
+}
+

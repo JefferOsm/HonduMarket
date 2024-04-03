@@ -61,7 +61,7 @@ function SearchResultsPage() {
 
 
   // Calcular cuantas páginas se van a necesitar
-  const totalPages = Math.ceil(results.length / 4);
+  const totalPages = Math.ceil(results.length / 8);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   // Función para manejar el clic en un número de página
@@ -75,43 +75,43 @@ function SearchResultsPage() {
     let filteredResults = []; // Declarar filteredResults como una variable local
 
     if (category == "Inmuebles") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 1);
+      filteredResults = results_2.filter((producto) => producto.categoria === 11);
       setResults(filteredResults);
     }
     else if(category == "Vehiculos") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 2);
+      filteredResults = results_2.filter((producto) => producto.categoria === 12);
       setResults(filteredResults);
     }
     else if (category == "Hogar") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 3);
+      filteredResults = results_2.filter((producto) => producto.categoria === 13);
       setResults(filteredResults);
     }
     else if(category == "Bebes") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 4);
+      filteredResults = results_2.filter((producto) => producto.categoria === 14);
       setResults(filteredResults);
     }
     else if (category == "Moda") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 5);
+      filteredResults = results_2.filter((producto) => producto.categoria === 15);
       setResults(filteredResults);
     }
     else if(category == "Mascotas") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 6);
+      filteredResults = results_2.filter((producto) => producto.categoria === 16);
       setResults(filteredResults);
     }
     else if (category == "Electronica") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 7);
+      filteredResults = results_2.filter((producto) => producto.categoria === 17);
       setResults(filteredResults);
     }
     else if(category == "Servicios") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 8);
+      filteredResults = results_2.filter((producto) => producto.categoria === 18);
       setResults(filteredResults);
     }
     else if (category == "Negocios") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 9);
+      filteredResults = results_2.filter((producto) => producto.categoria === 19);
       setResults(filteredResults);
     }
     else if(category == "Empleos") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 10);
+      filteredResults = results_2.filter((producto) => producto.categoria === 20);
       setResults(filteredResults);
     }
     console.log(filteredResults);
@@ -122,75 +122,75 @@ function SearchResultsPage() {
     let filteredResults = []; // Declarar filteredResults como una variable local
 
     if (depto == "Atlántida") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 1);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Choluteca") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 2);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Colón") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 3);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Comayagua") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 4);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Copán") {
       filteredResults = results_3.filter((producto) => producto.departamento === 5);
       setResults(filteredResults);
     }
-    else if ( depto == "El Paraíso") {
+    else if ( depto == "Choluteca") {
       filteredResults = results_3.filter((producto) => producto.departamento === 6);
       setResults(filteredResults);
     }
-    else if ( depto == "Intibucá") {
+    else if ( depto == "Colón") {
       filteredResults = results_3.filter((producto) => producto.departamento === 7);
       setResults(filteredResults);
     }
-    else if ( depto == "Islas de la Bahía") {
+    else if ( depto == "Comayagua") {
       filteredResults = results_3.filter((producto) => producto.departamento === 8);
       setResults(filteredResults);
     }
-    else if ( depto == "La Paz") {
+    else if ( depto == "Copán") {
       filteredResults = results_3.filter((producto) => producto.departamento === 9);
       setResults(filteredResults);
     }
-    else if ( depto == "Ocotepeque") {
+    else if ( depto == "El Paraíso") {
       filteredResults = results_3.filter((producto) => producto.departamento === 10);
       setResults(filteredResults);
     }
-    else if ( depto == "Olancho") {
+    else if ( depto == "Intibucá") {
       filteredResults = results_3.filter((producto) => producto.departamento === 11);
       setResults(filteredResults);
     }
-    else if ( depto == "Santa Bárbara") {
+    else if ( depto == "Islas de la Bahía") {
       filteredResults = results_3.filter((producto) => producto.departamento === 12);
       setResults(filteredResults);
     }
-    else if ( depto == "Valle") {
+    else if ( depto == "La Paz") {
       filteredResults = results_3.filter((producto) => producto.departamento === 13);
       setResults(filteredResults);
     }
-    else if ( depto == "Yoro") {
+    else if ( depto == "Ocotepeque") {
       filteredResults = results_3.filter((producto) => producto.departamento === 14);
       setResults(filteredResults);
     }
-    else if ( depto == "Francisco Morazán") {
+    else if ( depto == "Olancho") {
       filteredResults = results_3.filter((producto) => producto.departamento === 15);
       setResults(filteredResults);
     }
-    else if ( depto == "Cortés") {
+    else if ( depto == "Santa Bárbara") {
       filteredResults = results_3.filter((producto) => producto.departamento === 16);
       setResults(filteredResults);
     }
+    else if ( depto == "Valle") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 17);
+      setResults(filteredResults);
+    }
+    else if ( depto == "Yoro") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 18);
+      setResults(filteredResults);
+    }
+    else if ( depto == "Francisco Morazán") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 1);
+      setResults(filteredResults);
+    }
+    else if ( depto == "Cortés") {
+      filteredResults = results_3.filter((producto) => producto.departamento === 2);
+      setResults(filteredResults);
+    }
     else if ( depto == "Lempira") {
-      filteredResults = results.filter((producto) => producto.departamento === 17);
+      filteredResults = results.filter((producto) => producto.departamento === 3);
       setResults(filteredResults);
     }
     else if ( depto == "Gracias a Dios") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 18);
+      filteredResults = results_3.filter((producto) => producto.departamento === 4);
       setResults(filteredResults);
     }
     console.log(filteredResults);
@@ -230,18 +230,17 @@ function SearchResultsPage() {
     }
   };
 
-  // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
-  const startIndex = (paginacion - 1) * 4;
-  const endIndex = startIndex + 4;
+    // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
+    const startIndex = (paginacion - 1) * 8;
+    const endIndex= startIndex + 8
 
-  // Obtener la porción de resultados para la página actual usando slice
   const resultsForPage = results.slice(startIndex, endIndex);
 
   // Función para generar los numeros de páginas que hay
   const renderPaginationItems = () => {
     return pages.map((pageNumber) => (
       <li key={pageNumber} className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}>
-        <a className="page-link" href="#" onClick={() => handleClick(pageNumber)}>
+        <a className="page-link btn" onClick={() => handleClick(pageNumber)}>
           {pageNumber}
         </a>
       </li>
@@ -295,11 +294,9 @@ function SearchResultsPage() {
         <nav aria-label="...">
           <ul className="pagination">
             <li className="page-item disabled">
-              <span className="page-link">Anterior</span>
             </li>
             {renderPaginationItems()}
             <li className="page-item">
-              <span className="page-link" href="#">Siguiente</span>
             </li>
           </ul>
         </nav>

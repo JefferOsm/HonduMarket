@@ -40,12 +40,8 @@ function ModalChat ({show,handleClose,receptor}){
   useEffect(()=>{
     if(socket === null || !usuario ||!show) return;
     setUsuarioLog(usuario.id);
-    socket.emit('agregarUsuarios', usuario.id);
-    socket.on('usuariosConectados',(res)=>{
-      setOnlineUsers(res)
-    });
+    socket.emit('agregarUsuariosProductos', `${usuario.id}-${detailProduct.id}`);
 
-        
     if(show && autenticado){
       const cargarConversacion= async()=>{
         const conversaciones= await obtenerConversacion({emisor:usuario.id,receptor, producto:detailProduct.id});
@@ -59,7 +55,7 @@ function ModalChat ({show,handleClose,receptor}){
   
 
     return()=>{
-      socket.off('agregarUsuarios')
+      socket.off('agregarUsuariosProductos')
     }
   },[socket,usuario,autenticado,receptor]);
 
@@ -83,6 +79,7 @@ function ModalChat ({show,handleClose,receptor}){
     );
     //console.log(mensajes);
     setMensaje('');
+    document.getElementById('input-message').value='';
 
   }
 
@@ -121,13 +118,13 @@ function ModalChat ({show,handleClose,receptor}){
                 {message.emisor!==usuarioLog ? (
                   <>
                   <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5 list-unstyled" key={message.mensajeID} style={{wordWrap:'break-word'}}>
-                  {message.emisor}:{message.mensaje}
+                  {message.mensaje}
                   </li>
                   </>
                 ):(
                   <>
                   <li className="bc-primary-2 rounded text-light ms-auto col-md-5 p-2 my-2 list-unstyled" style={{wordWrap:'break-word'}} key={message.mensajeID}>
-                    {message.emisor}:{message.mensaje}
+                    {message.mensaje}
                   </li>
                   </>
                 )}
@@ -143,7 +140,7 @@ function ModalChat ({show,handleClose,receptor}){
 
         <Modal.Footer className='input-group'>
           <form className='form d-flex w-100' onSubmit={handleSubmit}>
-            <input type="text" className="form-control form-control-ms" placeholder="Escribe tu mensaje" aria-label="mensaje"
+            <input type="text" id='input-message' className="form-control form-control-ms" placeholder="Escribe tu mensaje" aria-label="mensaje"
             onChange={(e)=>{setMensaje(e.target.value)}}/>
             <button className="btn btn-danger ms-2">
              <FontAwesomeIcon icon= {faPaperPlane} />

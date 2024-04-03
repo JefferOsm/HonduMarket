@@ -17,7 +17,8 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         agregarCalificacionRequest,
         obtenerComentariosRequest,
         editarCalificacionRequest,
-        editarPublicacionRequest
+        editarPublicacionRequest,
+        eliminarImagenProdReq
     } from "../api/productos";
 
 
@@ -317,7 +318,19 @@ export const ProductosProvider = ({children})=>{
             console.log(error)
             
         }
+    };
+
+       //validar mi lista de deseos
+       const eliminarImagenProd= async(id)=>{
+        try {
+            const response= await eliminarImagenProdReq(id);
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+            
+        }
     }
+    
     
         //Eliminar los mensajes despues de 3 segundos
         useEffect(()=>{
@@ -373,7 +386,8 @@ export const ProductosProvider = ({children})=>{
           editarCalificacion,
           editarCalifi,
           editarPublicacion,
-          editPublicacion
+          editPublicacion,
+          eliminarImagenProd
         }}>
             {children}
         </ProductosContext.Provider>

@@ -111,14 +111,18 @@ END //
 DELIMITER ;
 
 -- OBTENER Detalle de un producto
+
+-- OBTENER Detalle de un producto
 DELIMITER //
 create procedure sp_detalleProductos (
     IN p_id INT(11)
 )
 BEGIN
-    SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
-	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion,tbl_usuarios.nombre as usuario,
+    SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion,
+    precio_producto as precio, tbl_estadoProducto.nombre_estado as estado,tbl_estadoProducto.id_estado,
+    tbl_categorias.nombre_categoria as categoria,tbl_categorias.categoria_id,
+	tbl_departamentos.nombre_departamento as departamento,tbl_departamentos.id_departamento,
+    fecha_publicacion,tbl_usuarios.nombre as usuario,
     tbl_usuarios.url_imagen as fotoPerfil, tbl_usuarios.id as idUsuario
 	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
 	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
@@ -127,6 +131,7 @@ BEGIN
 	WHERE producto_id= p_id;
 
 END //
+
 -- obtener imagenes de un producto
 DELIMITER //
 create procedure sp_imagenesProductos (

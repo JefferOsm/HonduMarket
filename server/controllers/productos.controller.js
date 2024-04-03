@@ -214,38 +214,6 @@ export const obtenerResultadosBusqueda = async (req, res) => {
     }
   };
 
-// Función para eliminar una imagen de un producto
-export const eliminarImagenProducto = async (req, res) => {
-    
-    const { nombreImagen } = req.params;
-
-    try {
-        
-        const [result] = await pool.query(
-            'DELETE FROM tbl_imagenesProductos WHERE id_imagen = ?',
-            [ nombreImagen]
-        );
-
-        // Verificar si se eliminó la imagen correctamente
-        if (result.affectedRows === 1) {
-            
-            res.json({
-                message: 'Imagen eliminada correctamente'
-            });
-        } else {
-            // Si hubo error
-            res.status(404).json({
-                message: 'No se encontró la imagen para eliminar'
-            });
-        }
-    } catch (error) {
-        // pa cualquier error ocurrido durante el proceso
-        console.error(error);
-        res.status(500).json({
-            message: 'Ha ocurrido un error al eliminar la imagen del producto'
-        });
-    }
-};
 
 export const obtenerDetallePublicacion = async(req,res)=>{
     try {
@@ -258,7 +226,7 @@ export const obtenerDetallePublicacion = async(req,res)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: 'Ha ocurrido un error al eliminar la imagen del producto'
+            message: 'Ha ocurrido un error al obtener el producto'
         });
     }
 }
@@ -379,36 +347,35 @@ export const validarListaDeseo = async(req,res)=>{
 // Editar Producto
 // Editar Producto
 export const editarProducto = async(req, res) => {
-    const {nombre, descripcion, precio, estado, categoria, departamento, fechaSubida} = req.body;
+    const {nombre, descripcion, precio, estado, categoria, departamento} = req.body;
     const imagenes = req.files;
-    const fechaProgramada = new Date(fechaSubida);
     const productoId = req.params.id; // Asegúrate de que estás pasando el ID del producto en la URL
   
     try {
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: 'No se subieron imágenes' });
-      }
   
       // Actualizar el producto
       await pool.query(
-        'UPDATE tbl_productos SET nombre_producto=?, descripcion_producto=?, precio_producto=?, estado_id=?, categoria_id=?, usuario_id=?, departamento_id=?, fecha_programada=? WHERE producto_id=?',
-        [nombre, descripcion, precio, estado, categoria, req.user, departamento, fechaProgramada, productoId]
+        'UPDATE tbl_productos SET nombre_producto=?, descripcion_producto=?, precio_producto=?, estado_id=?, categoria_id=?, departamento_id=? WHERE producto_id=?',
+        [nombre, descripcion, precio, estado, categoria, departamento, productoId]
       );
   
       // Agregar las nuevas imágenes
       let imageUrl;
       let id_imagen;
   
-      imagenes.map(async (imagen) => {
-        const result = await cloudinary.uploader.upload(imagen.path);
-        imageUrl = result.secure_url;
-        id_imagen = result.original_filename;
-  
-        await pool.query(
-          'INSERT INTO tbl_imagenesProductos(id_imagen, url_imagen, producto_id) VALUES (?,?,?)',
-          [id_imagen, imageUrl, productoId]
-        );
-      });
+      if(imagenes){
+        imagenes.map(async (imagen) => {
+            const result = await cloudinary.uploader.upload(imagen.path);
+            imageUrl = result.secure_url;
+            id_imagen = result.original_filename;
+      
+            await pool.query(
+              'INSERT INTO tbl_imagenesProductos(id_imagen, url_imagen, producto_id) VALUES (?,?,?)',
+              [id_imagen, imageUrl, productoId]
+            );
+          });
+      }
+
   
       res.json({ message: 'Producto actualizado con éxito' });
   
@@ -419,3 +386,34 @@ export const editarProducto = async(req, res) => {
       });
     }
   };
+
+
+  // Función para eliminar una imagen de un producto
+export const eliminarImagenProducto = async (req, res) => {
+    try {
+        
+        const [result] = await pool.query(
+            'DELETE FROM tbl_imagenesProductos WHERE id_imagen = ?',
+            [ req.params.id]
+        );
+
+        // Verificar si se eliminó la imagen correctamente
+        if (result.affectedRows === 1) {
+            
+            res.json({
+                message: 'Imagen eliminada correctamente'
+            });
+        } else {
+            // Si hubo error
+            res.status(404).json({
+                message: 'No se encontró la imagen para eliminar'
+            });
+        }
+    } catch (error) {
+        // pa cualquier error ocurrido durante el proceso
+        console.error(error);
+        res.status(500).json({
+            message: 'Ha ocurrido un error al eliminar la imagen del producto'
+        });
+    }
+};

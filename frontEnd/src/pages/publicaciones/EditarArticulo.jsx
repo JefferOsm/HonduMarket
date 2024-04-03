@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usarAutenticacion } from "../../context/autenticacion";
 import { useForm } from 'react-hook-form';
 import { usarProductosContex } from "../../context/productosContext";
@@ -12,6 +12,8 @@ import 'react-multi-carousel/lib/styles.css';
 
 function EditarArticulo (){
 
+  const navegacion= useNavigate();
+
   const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
     departamentos, estados, editarPublicacion , subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -22,7 +24,7 @@ function EditarArticulo (){
   //constante que recibe todas las publicaciones que existen
   const {autenticado,usuario} = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
-    videoProduct, obtenerUsuario} = usarProductosContex();
+    videoProduct, obtenerUsuario,eliminarImagenProd} = usarProductosContex();
 
    //al cargar la pantalla
    useEffect(() => {
@@ -44,22 +46,6 @@ function EditarArticulo (){
 
     //imagenes que se enviaran al backend
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
-    const[botonActive, setBotonActive]=useState(true)
-    const[botonText, setBotonText]=useState('Publicar');
-
-      //para programar publicacion
-  const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
-
-    //opcion para subir
-    const cammbiOpcion= (e)=>{
-      setBotonActive(false);
-      console.log(fechaSeleccionada)
-    }
-
-  const handleDateSelected = (date)=>{
-    setFechaSeleccionada(date);
-    
-  }
 
 
   // Convertir el número a cadena y aplicar el formato con comas
@@ -88,31 +74,21 @@ function EditarArticulo (){
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
-    setBotonActive(true)
-    setBotonText('Publicando ...')
+    console.log(values)
     try {
       //DATOS Y FOTOS
       const formData = new FormData();
       formData.append('nombre', text !== "" ? values.nombre : detailProduct.nombre);
       formData.append('descripcion', descripcion !== "" ? values.descripcion : detailProduct.descripcion);
       formData.append('precio', precio !== "" ? values.precio : detailProduct.precio);
-      formData.append('categoria', categoria !== "" ? values.categoria : detailProduct.categoria);
-      formData.append('estado', estado !== "" ? values.estado : detailProduct.estado);
-      formData.append('departamento', departamento !== "" ? values.departamento : detailProduct.departamento);
+      formData.append('categoria', categoria !== "" ? values.categoria : detailProduct.categoria_id);
+      formData.append('estado', estado !== "" ? values.estado : detailProduct.id_estado);
+      formData.append('departamento', departamento !== "" ? values.departamento : detailProduct.id_departamento);
   
       for (let i = 0; i < imagenesSeleccionadas.length; i++) {
           formData.append('imagenes', imagenesSeleccionadas[i]);
       }
-  
-      if(fechaSeleccionada){
-        console.log(fechaSeleccionada)
-        formData.append('fechaSubida', fechaSeleccionada)
-        setBotonText('Programando ...')
-      }
-  
-      for (var pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-    }
+
   
       const idProdAct= await editarPublicacion(id,formData);
       console.log(idProdAct)
@@ -134,13 +110,7 @@ function EditarArticulo (){
     } catch (error) {
       console.log(error)
     } finally{
-      setBotonActive(true)
-      setBotonText('Publicar')
-      if(fechaSeleccionada){
-        window.alert('Tu publicacion Ha sido Programada')
-      }else{
-        window.alert('Se realizo tu Publicacion')
-      }
+      navegacion(`/Vista_del_articulo/${values.nombre}/${detailProduct.id}`)
     }
   })
 
@@ -187,7 +157,7 @@ function EditarArticulo (){
 
         const urlsImagenes = imagenesProduct.map(imagen => imagen.url_imagen);
         setImagenesSeleccionadas([...urlsImagenes, ...imagenesForm]);
-        setImagenesPreview(urlsImagenes);
+        setImagenesPreview(imagenesProduct);
       }, [imagenesProduct]);
 
         // Función para generar la vista previa de las imágenes seleccionadas y para enviarlas al backend
@@ -197,7 +167,7 @@ function EditarArticulo (){
         const imagenesForm= [];
         const limite= 6
 
-        if(imagenesSeleccionadas.length + files.length > limite){
+        if(imagenesSeleccionadas.length  > limite){
           window.alert('Solo se Permiten 6 imagenes Maximo');
           return
         }
@@ -227,10 +197,11 @@ function EditarArticulo (){
 
 
       // variable de imagenes con el objeto a renderizar
-      let vistaPreviaImagenes = imagenesPreview.map((url, index) => (
+      let vistaPreviaImagenes = imagenesPreview.map((data, index) => (
         <div className={`carousel-item ${index === 0 ? 'active' : ''} text-center`} key={index}>
-           <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
-           <button type="button" className="btn-delete p-2 rounded mx-auto"  onClick={() => eliminarImagen(index)}><FontAwesomeIcon icon={faTrash}/></button>
+           <img className="d-block w-100"  src={data.url_imagen ? data.url_imagen : data } alt={`Imagen ${index}`} />
+           <button type="button" className="btn-delete p-2 rounded mx-auto"  
+           onClick={() => eliminarImagen(index, data.id_imagen ? data.id_imagen : null)}><FontAwesomeIcon icon={faTrash}/></button>
         </div>
       ));
 
@@ -243,7 +214,8 @@ function EditarArticulo (){
       );
 
       //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
-      const eliminarImagen = (index) => {
+      const eliminarImagen = (index,idImagen) => {
+
           const nuevasImagenesPreview = [...imagenesPreview.slice(0, index), ...imagenesPreview.slice(index + 1)];
           setImagenesPreview(nuevasImagenesPreview);
           // Verificar si se eliminó la última imagen y no hay otras imágenes
@@ -251,12 +223,16 @@ function EditarArticulo (){
             // Establecer el primer elemento como activo
             document.querySelector('.carousel-item:first-child').classList.add('active');
           }
+          if(idImagen){
+            eliminarImagenProd(idImagen)
+          }
 
 
-          vistaPreviaImagenes = imagenesPreview.map((url, index) => (
+          vistaPreviaImagenes = imagenesPreview.map((data, index) => (
           <div className={`carousel-item text-center`} key={index}>
-            <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
-            <button type="button" className="btn-delete p-2 rounded mx-auto"  onClick={() => eliminarImagen(index)}><FontAwesomeIcon icon={faTrash}/></button>
+            <img className="d-block w-100"  src={data.url_imagen ? data.url_imagen : data} alt={`Imagen ${index}`} />
+            <button type="button" className="btn-delete p-2 rounded mx-auto"  
+            onClick={() => eliminarImagen(index, data.id_imagen ? data.id_imagen : null)}><FontAwesomeIcon icon={faTrash}/></button>
           </div>
         ));
 
@@ -294,9 +270,9 @@ function EditarArticulo (){
             <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
               {...register('categoria', { onChange: (e) => { Categoria(e) } })}
-              value={detailProduct.categoria}>
+              defaultValue={detailProduct.categoria_id}>
 
-              <option value="">Selecciona una opcion</option>
+              <option value="">{detailProduct.categoria}</option>
               {categorias.map(categoria => (
                 <option value={categoria.categoria_id} key={categoria.categoria_id}>{categoria.nombre_categoria} </option>
               ))}
@@ -308,10 +284,10 @@ function EditarArticulo (){
             <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Estado}
               {...register('estado', { onChange: (e) => { Estado(e) } })}
-              defaultValue={detailProduct.estado}>
-              <option value="">Selecciona una opcion</option>
+              defaultValue={detailProduct.id_estado}>
+              <option value=''>{detailProduct.estado}</option>
               {estados.map(estado => (
-                <option value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
+                <option value={estado.estado} key={estado.id_estado}>{estado.nombre_estado}</option>
               ))}
             </select>
 
@@ -323,8 +299,8 @@ function EditarArticulo (){
 
             <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
               {...register('departamento', { onChange: (e) => { Departamento(e) } })}
-              defaultValue={detailProduct.departamento}>
-              <option value="">Selecciona una opcion</option>
+              defaultValue={detailProduct.id_departamento}>
+              <option value="">{detailProduct.departamento}</option>
               {departamentos.map(departamento => (
                 <option value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
               ))}
@@ -350,9 +326,9 @@ function EditarArticulo (){
 
                     <input 
                     type='file' className='form-control' accept='image/*'
-                    {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6}, onChange:(e)=>{generarVistaPreviaImagenes(e)}
+                    {... register('imagenes',{ onChange:(e)=>{generarVistaPreviaImagenes(e)}
                      })} id='imagenes' style={{ display: 'none' }}
-                      multiple />
+                      multiple defaultValue={null} />
                     </div>
 
                         {/* Video */}
@@ -372,59 +348,15 @@ function EditarArticulo (){
                     <input 
                     type='file' className='form-control' accept='video/*'
                     {... register('video',{onChange:(e)=>{generarVistaPreviaVideo(e)}})} id='video' style={{ display: 'none' }}
-                    />
+                     defaultValue={null}/>
 
                         
                     </div>
                 </div>
 
-          {/*Boton para decidir si se programa el registro o se publica de un solo */}
-          <div className="py-3">
-            <ul className="list-group">
-              <div className="accordion accordion-flush" id="accordionFlushExample">
-                {/*Primera opcion para subir la publicacion */}
-                <div className="accordion-item">
-                  <li className="list-group-item bg-dark-subtle">
-                    <div className="form-check">
-                      <input className="form-check-input bg-secondary collapsed" type="radio" 
-                      name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" 
-                      data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" 
-                       onChange={cammbiOpcion}/>
-                      <label className="form-check-label" htmlFor="flexRadioDefault1">
-                        Publicar Ahora
-                      </label>
-                    </div>
-                    <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      
-                    </div>
-                  </li>
-                </div>
-
-              {/*Segunda opcion para subir la publicacion se cra un acordion*/}
-                <div className="accordion-item">
-                  <li className="list-group-item bg-dark-subtle">
-                    <div className="form-check">
-                      <input className="form-check-input bg-secondary collapsed"
-                       type="radio" name="flexRadioDefault" id="flexRadioDefault1"
-                        data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" 
-                        aria-expanded="false" aria-controls="flush-collapseTwo"
-                        onChange={cammbiOpcion}/>
-                      <label className="form-check-label" htmlFor="flexRadioDefault1">
-                        Programar Publicación
-                      </label>
-                    </div>
-                    <div id="flush-collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                      <SeleccionFechaHora onDateSelected={handleDateSelected} />
-                    </div>
-                  </li>
-                </div>
-              </div>
-            </ul>
-          </div>
-
           {/*Boton para guardar el producto en la BD */}
           <div className="vstack gap-2 col-md-5 mx-auto">
-          <button type="submit" className="btn btn-primary" disabled={botonActive}>{botonText}</button>
+          <button type="submit" className="btn btn-primary my-4">Actualizar</button>
           </div>
 
         </form>
