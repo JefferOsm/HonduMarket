@@ -411,6 +411,18 @@ input[type=number] { -moz-appearance:textfield; }
   right: 10px;
 }
 
+.btn-editar-publicacion{
+  position: absolute;
+  bottom: 10px;
+  right: 120px;
+}
+
+.btn-resubir-publicacion{
+  position: absolute;
+  bottom: 10px;
+  right: 215px;
+}
+
 .bc-lista-chat{
   background: #5c1545;
 }

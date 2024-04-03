@@ -4,7 +4,7 @@ import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCloud, faCloudArrowDown, faCloudArrowUp, faHeart, faSquare, faSquarePen, faSquarePersonConfined, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
@@ -273,8 +273,11 @@ function VistaArticulo() {
             <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
                       <FontAwesomeIcon icon={faTrash}/> Eliminar
             </button>
-            <button className="btn btn-outline-primary mx-auto" onClick={handleShowEdit}>
-              Editar producto
+            <button className="btn btn-outline-primary btn-editar-publicacion" onClick={handleShowEdit}>
+                      <FontAwesomeIcon icon={faSquarePen}/> Editar
+            </button>
+            <button className="btn bc-secondary btn-resubir-publicacion" onClick={handleShowEdit}>
+                      <FontAwesomeIcon icon={faCloudArrowUp}/> Resubir
             </button>
           </>
         ):(

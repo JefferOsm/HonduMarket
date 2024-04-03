@@ -65,7 +65,7 @@ function PublicarArticulo() {
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
-    setBotonActive(true)
+    setBotonActive(false)
     setBotonText('Publicando ...')
     try {
        //DATOS Y FOTOS

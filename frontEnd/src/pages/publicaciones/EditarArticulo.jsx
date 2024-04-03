@@ -22,7 +22,7 @@ function EditarArticulo (){
   //constante que recibe todas las publicaciones que existen
   const {autenticado,usuario} = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
-    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista,obtenerCalificaciones} = usarProductosContex();
+    videoProduct, obtenerUsuario} = usarProductosContex();
 
    //al cargar la pantalla
    useEffect(() => {
@@ -31,7 +31,7 @@ function EditarArticulo (){
       await obtenerImagenes(id);
     };
     cargarDatos();
-  }, [autenticado, id, usuario, detailProduct.idUsuario]);
+  }, [id]);
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -93,42 +93,12 @@ function EditarArticulo (){
     try {
        //DATOS Y FOTOS
     const formData = new FormData();
-
-    if (text === ""){
-      formData.append('nombre', detailProduct.nombre);
-    }else{
-      formData.append('nombre', values.nombre);
-    }
-
-    if (descripcion === ""){
-      formData.append('descripcion', detailProduct.descripcion);
-    }else{
-      formData.append('descripcion', values.descripcion);
-    }
-
-    if (precio === ""){
-      formData.append('precio', detailProduct.precio);
-    }else{
-      formData.append('precio', values.precio);
-    }
-    
-    if (categoria === ""){
-      formData.append('categoria', detailProduct.categoria);
-    }else{
-      formData.append('categoria', values.categoria);
-    }
-    
-    if (estado === ""){
-      formData.append('estado', detailProduct.estado);
-    }else{
-      formData.append('estado', values.estado);
-    }
-    
-    if (departamento === ""){
-      formData.append('departamento', detailProduct.departamento);
-    }else{
-      formData.append('departamento', values.departamento);
-    }
+    formData.append('nombre', values.nombre);
+    formData.append('descripcion', values.descripcion);
+    formData.append('precio', values.precio);
+    formData.append('categoria', values.categoria);
+    formData.append('estado', values.estado);
+    formData.append('departamento', values.departamento);
     
     for (let i = 0; i < imagenesSeleccionadas.length; i++) {
         formData.append('imagenes', imagenesSeleccionadas[i]);
@@ -212,8 +182,10 @@ function EditarArticulo (){
 
       useEffect(() => {
         // sacamos la url de la imagen y se la mandamos a los set correspondientes
+        const imagenesForm= imagenesProduct.map(imagen => imagen.id_imagenesProd);
+
         const urlsImagenes = imagenesProduct.map(imagen => imagen.url_imagen);
-        setImagenesSeleccionadas(urlsImagenes);
+        setImagenesSeleccionadas([...urlsImagenes, ...imagenesForm]);
         setImagenesPreview(urlsImagenes);
       }, [imagenesProduct]);
 
@@ -228,6 +200,8 @@ function EditarArticulo (){
           window.alert('Solo se Permiten 6 imagenes Maximo');
           return
         }
+
+        alert("las imagenes actuales son " + imagenesSeleccionadas.length);
 
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
@@ -297,31 +271,34 @@ function EditarArticulo (){
 
           {/* Registro nombre */}
           <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
-            {...register('nombre', { onChange: (e) => { Titulo(e) } })} />
+            {...register('nombre', { onChange: (e) => { Titulo(e) } })}
+            defaultValue={detailProduct.nombre} />
 
           {/* Registro Descripcion */}
           <label className="form-label py-2">Descripción</label>
           <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"
-            {...register('descripcion', { onChange: (e) => { Descripcion(e) } })}></textarea>
+            {...register('descripcion', { onChange: (e) => { Descripcion(e) } })}
+            defaultValue={detailProduct.descripcion}></textarea>
 
           {/* Registro Precio */}
           <div className="input-group py-2" style={{ width: "20vw", borderRadius: "5px" }}>
             <div className="input-group-text">Lps</div>
             <input type="number" className="form-control" placeholder="Precio" aria-label="Precio"
-              {...register('precio', {onChange: (e) => { Precio(e) } })} />
+              {...register('precio', {onChange: (e) => { Precio(e) } })}
+              defaultValue={detailProduct.precio}/>
           </div>
 
           {/* Registro Categoria */}
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
-              {...register('categoria', { onChange: (e) => { Categoria(e) } })}>
+              {...register('categoria', { onChange: (e) => { Categoria(e) } })}
+              value={detailProduct.categoria}>
 
               <option value="">Selecciona una opcion</option>
               {categorias.map(categoria => (
                 <option value={categoria.categoria_id} key={categoria.categoria_id}>{categoria.nombre_categoria} </option>
               ))}
-
             </select>
           </div>
 
@@ -329,7 +306,8 @@ function EditarArticulo (){
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Estado}
-              {...register('estado', { onChange: (e) => { Estado(e) } })}>
+              {...register('estado', { onChange: (e) => { Estado(e) } })}
+              defaultValue={detailProduct.estado}>
               <option value="">Selecciona una opcion</option>
               {estados.map(estado => (
                 <option value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
@@ -343,7 +321,8 @@ function EditarArticulo (){
             <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
             <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
-              {...register('departamento', { onChange: (e) => { Departamento(e) } })}>
+              {...register('departamento', { onChange: (e) => { Departamento(e) } })}
+              defaultValue={detailProduct.departamento}>
               <option value="">Selecciona una opcion</option>
               {departamentos.map(departamento => (
                 <option value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
