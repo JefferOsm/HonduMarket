@@ -3,7 +3,7 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
     editarProducto,
-    eliminarImagenProducto} from "../controllers/productos.controller.js";
+    eliminarImagenProducto,cambiarEstadoPublicacion} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -64,5 +64,8 @@ router.put('/publicacion/editar/:id', autenticacionUsuario,productoParser.array(
 
 //eliminar una imagen
 router.delete('/publicacion/imagen/delete/:id', autenticacionUsuario, eliminarImagenProducto)
+//cambiar estado de publicacion
+router.put('/publicacion/estado/:id', autenticacionUsuario, cambiarEstadoPublicacion);
+
 
 export default router

@@ -18,7 +18,8 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         obtenerComentariosRequest,
         editarCalificacionRequest,
         editarPublicacionRequest,
-        eliminarImagenProdReq
+        eliminarImagenProdReq,
+        cambiarEstadoPublicacionRequest
     } from "../api/productos";
 
 
@@ -72,6 +73,9 @@ export const ProductosProvider = ({children})=>{
     const[validarLista,setValidarLista]= useState([]);
     //editar publicacion
     const [editPublicacion, setEditarPublicacion] = useState([]);
+    //Cambiar estado de la publicacion
+    const [cambiarEstado, setCambiarEstado] = useState([]);
+
 
     const obtenerCategorias= async()=>{
         try {
@@ -330,6 +334,17 @@ export const ProductosProvider = ({children})=>{
             
         }
     }
+
+    //Cambiar estado de la publicacion
+    const cambiarEstadoPublicacion = async(id,estado)=>{
+        try {
+            const response= await cambiarEstadoPublicacionRequest(id,estado);
+            console.log(response)
+            setCambiarEstado(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     
     
         //Eliminar los mensajes despues de 3 segundos
@@ -387,7 +402,9 @@ export const ProductosProvider = ({children})=>{
           editarCalifi,
           editarPublicacion,
           editPublicacion,
-          eliminarImagenProd
+          eliminarImagenProd,
+          cambiarEstado,
+          cambiarEstadoPublicacion
         }}>
             {children}
         </ProductosContext.Provider>

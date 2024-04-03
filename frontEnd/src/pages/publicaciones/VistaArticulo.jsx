@@ -47,13 +47,19 @@ function VistaArticulo() {
       navigate(`/Editar_articulo/${detailProduct.nombre}/${detailProduct.id}`);
     };
 
+    const handleResubir = () => {
+      cambiarEstadoPublicacion(detailProduct.id);
+      alert("El producto ha sido publicado nuevamente");
+      navigate("/perfil/publicaciones");
+  };
+
 //Mostrar detalles
   // funcion para obtener el id de la url
     const {id} = useParams();
   //constante que recibe todas las publicaciones que existen
   const {autenticado,usuario} = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
-    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista,obtenerCalificaciones} = usarProductosContex();
+    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo,validarListaDeseo,validarLista,obtenerCalificaciones, cambiarEstadoPublicacion} = usarProductosContex();
 
 
 
@@ -68,6 +74,7 @@ function VistaArticulo() {
 
   // Nuevo estado para almacenar las calificaciones
   const [calificaciones, setCalificaciones] = useState(null);
+
 
 
   //al cargar la pantalla
@@ -276,9 +283,11 @@ function VistaArticulo() {
             <button className="btn btn-outline-primary btn-editar-publicacion" onClick={handleShowEdit}>
                       <FontAwesomeIcon icon={faSquarePen}/> Editar
             </button>
-            <button className="btn bc-secondary btn-resubir-publicacion" onClick={handleShowEdit}>
-                      <FontAwesomeIcon icon={faCloudArrowUp}/> Resubir
-            </button>
+            {detailProduct.producto_inactivo === 1 && (
+                <button className="btn bc-secondary btn-resubir-publicacion" onClick={handleResubir}>
+                    <FontAwesomeIcon icon={faCloudArrowUp}/> Resubir
+                </button>
+            )}
           </>
         ):(
           <></>
