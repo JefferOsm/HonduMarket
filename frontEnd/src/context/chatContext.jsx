@@ -16,6 +16,7 @@ export const usarChatContext = () =>{
 //Componente para englobar a otros
 export const ChatProvider = ({children}) =>{
     const [conversacion, setConversacion]= useState([]);
+    const [socket,setSocket]= useState(null)
 
     //obtener msj de una conversacion de productos
     const obtenerConversacion= async(data)=>{

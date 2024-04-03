@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { usarChatContext } from '../../context/chatContext';
 import { usarAutenticacion } from '../../context/autenticacion';
 import { faPaperPlane, faSearch } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { io } from 'socket.io-client';
 
 function CentroChat() {
   const{obtenerUsuarios,obtenerConvProd,obtenerConvGen,
@@ -17,14 +18,18 @@ function CentroChat() {
   const handleLink=(opcion)=>{
     setActivo(opcion);
     setMostrarMsj(false);
-
+    const cargarDatos= async(opcion)=>{
     if(opcion==='General'){
       setConversaciones(convGen);
     }else if(opcion === 'Productos'){
+      const convProd= await obtenerConvProd()
       setConversaciones(convProd);
     }else if(opcion === 'Canales'){
 
     }
+  }
+
+  cargarDatos(opcion)
   }
 
   //formatear ultima hora de la conversacion
@@ -66,7 +71,29 @@ function CentroChat() {
   const[conversaciones,setConversaciones]= useState([]); //estado general para conversaciones
   const [usuarioLog,setUsuarioLog]= useState([]);//estado para el usuario logeado
 
+  //WebSockets
+  const socket= useRef();// guardar el socket
+  const [socketConectado,setSocketConectado]= useState(false)// solo conectarse a ws una vez
+  const [onlineUsers,setOnlineUsers]= useState([])// usuarios en linea
+  const [mensajeWs,setMensajeWs]= useState('');// mensaje enviado al websocket
+  const [receptor,setReceptor]= useState(null);
+  const [idProd,setIdProd]= useState(null);
+
+  const ultimoMensajeRef = useRef(null);
+
+
+  //conectarse a websocket y traer la info
   useEffect(()=>{
+    if(usuario && !socketConectado){
+      socket.current= io('http://localhost:3000');
+      setSocketConectado(true);
+    }
+
+    socket.current.emit('agregarUsuarios', usuario.id);
+    socket.current.on('usuariosConectados',(res)=>{
+      setOnlineUsers(res)
+    });
+    
     const cargarData= async()=>{
       const usuarios= await obtenerUsuarios();
       const convGen= await obtenerConvGen();
@@ -79,20 +106,71 @@ function CentroChat() {
     }
     cargarData();
     setUsuarioLog(usuario.id);
+
   },[usuario]);
 
 
+  //enviar informacion de mensajes y usar websockets
+  
+  const handleSubmit= (e)=>{
+    e.preventDefault()
+
+    const newMensaje= {
+      mensajeID:`${usuarioLog}-${mensajeWs}`,
+      mensaje: mensajeWs,
+      emisor:usuarioLog,
+      receptor
+    }
+    //enviamos datos al websocket server
+    setmensajes([... mensajes, newMensaje])
+    socket.current.emit('mensajes',
+    { mensaje: mensajeWs,
+      emisor:usuarioLog,
+      receptor,
+      producto: idProd
+    }
+    );
+    //console.log(mensajes);
+    setMensajeWs('');
+    document.getElementById('input-message').value='';
+
+  };
+
+  //recibir mensajes
+  useEffect(()=>{
+    console.log('useefect en uso')
+    socket.current.on('getMensajes', mensaje=>{
+      setmensajes(prevMessages => [...prevMessages, mensaje]);
+      console.log(mensaje)
+    });
+  },[]);
+
+  //IR AL ULTIMO MENSAJE
+  useEffect(() => {
+    if (ultimoMensajeRef.current) {
+      ultimoMensajeRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [mensajes]);
+  
+
+//cargar los datos de la conversacion
   const handleClickConversacion= (data)=>{
     const cargarConv= async(data)=>{
       try {
         if(data.producto){
+          socket.current.emit('agregarUsuariosProductos',`${usuarioLog}-${data.producto}`);
           const msj= await obtenerConversacion(data);
-          console.log(msj)
+          //console.log(msj)
           setmensajes(msj);
+          setReceptor(data.receptor);
+          setIdProd(data.producto);
         }else{
+          socket.current.emit('agregarUsuarios',usuarioLog);
           const msj= await obtenerMsjGeneral(data);
-          console.log(msj)
+          //console.log(msj)
           setmensajes(msj);
+          setReceptor(data.receptor);
+          setIdProd(null);
         }
 
       } catch (error) {
@@ -102,6 +180,7 @@ function CentroChat() {
     }
     cargarConv(data);
     setMostrarMsj(true);
+ 
   }
 
   //funcionalidades para hacer la busqueda del chat
@@ -110,8 +189,10 @@ function CentroChat() {
 
   //filtrar publicaciones para mostrar los nombres
   const handleChange= e=>{
+    setMostrarMsj(false);
     if (e.target.value.trim() == ''){
         setMatchPublicaciones([])
+        setConversaciones(convGen);
         setBusqueda(e.target.value)
     }else{
         setBusqueda(e.target.value)
@@ -121,12 +202,13 @@ function CentroChat() {
 
   const filtrado=(termino)=>{
     let resultado= usuariosChat.filter((publicacion)=>{
-        if(publicacion.nombre.toString().toLowerCase().includes(termino.toLowerCase())){
+        if(publicacion.username.toString().toLowerCase().includes(termino.toLowerCase())){
             return publicacion
         }
     })
-    setMatchPublicaciones(resultado)
-    console.log(matchPublicaciones)
+    setMatchPublicaciones(resultado);
+    setConversaciones(resultado)
+    document.getElementById('buscarUser').value=''
   }
 
   return (
@@ -187,26 +269,34 @@ function CentroChat() {
             </div>
           </div>
         </nav>
-        <div className="navbar-nav">
-          <form className="d-flex input-group py-2" role="search">
-              <div className=" input-group-text btn bc-secondary-body text-light" ><FontAwesomeIcon icon={faSearch}/></div>
-              <input className="form-control" type="search" placeholder="Busca un chat o inicia uno nuevo" aria-label="Search"
-              value={busqueda}
-              onChange={handleChange}/>
-          </form>
-        </div>
         {/* Conversaciones */}
         <ul className="list-group">
           {/* Mostrar conversaciones generales entre ususarios */}
           {activo === "General" ? (
             <>
+              <div className="navbar-nav">
+                <form className="d-flex input-group py-2" role="search" >
+                    <div className=" input-group-text btn bc-secondary-body text-light" ><FontAwesomeIcon icon={faSearch}/></div>
+                    <input className="form-control" id='buscarUser' type="search" placeholder="Busca un chat o inicia uno nuevo" aria-label="Search"
+                    value={busqueda}
+                    onChange={handleChange}/>
+                </form>
+              </div>
               {conversaciones.map((conversacion) => {
-                const horaFormateada = formatearHora(
+                let horaFormateada
+                let fechaFormateada
+                if(conversacion.fecha_ultimo_mensaje){
+                horaFormateada = formatearHora(
                   conversacion.fecha_ultimo_mensaje
                 );
-                const fechaFormateada = formatearFecha(
+                fechaFormateada = formatearFecha(
                   conversacion.fecha_ultimo_mensaje
                 );
+              }else{ 
+                horaFormateada = ''
+                fechaFormateada = ''
+              
+              }
                 return (
                   <li
                     className="p-2 bc-lista-chat-item text-light rounded-3 my-1 d-flex align-items-center"
@@ -312,18 +402,21 @@ function CentroChat() {
                 {mensajes.map((msj, i) => (
                   <>
                     {msj.emisor !== usuarioLog ? (
-                      <>
-                        <li className="bc-secondary-body text-light rounded ml-auto p-2 my-3 col-md-5 list-unstyled" key={msj.mensajeID}>
+                      
+                        <li 
+                        className="bc-secondary-body text-light rounded ml-auto p-2 my-3 col-md-5 list-unstyled" 
+                        key={msj.mensajeID}
+                        ref={i === mensajes.length - 1 ? ultimoMensajeRef : null}>
                           {msj.mensaje}
                         </li>
-                      </>
+                      
                     ) : (
-                      <>
-
-                        <li className="bc-primary-2 rounded text-light ms-auto  col-md-5 p-2 my-3 list-unstyled" key={msj.mensajeID}>
+                        <li 
+                        className="bc-primary-2 rounded text-light ms-auto  col-md-5 p-2 my-3 list-unstyled" 
+                        key={msj.mensajeID}
+                        ref={i === mensajes.length - 1 ? ultimoMensajeRef : null}>
                           {msj.mensaje}
                         </li>
-                      </>
                     )}
                   </>
                 ))}
@@ -334,12 +427,15 @@ function CentroChat() {
               className="card-footer text-body-secondary position-absolute bottom-0"
               style={{ width: "70%" }}
             >
-              <form className="form d-flex">
+              <form className="form d-flex" onSubmit={handleSubmit}>
                 <input
+                autoFocus
+                id='input-message'
                   type="text"
                   className="form-control form-control-ms w-100"
                   placeholder="Escribe tu mensaje"
                   aria-label="mensaje"
+                  onChange={(e)=>{setMensajeWs(e.target.value)}}
                 />
                 <button className="btn btn-danger ms-2">
                   <FontAwesomeIcon icon={faPaperPlane} />
@@ -361,7 +457,7 @@ function CentroChat() {
             }}
           >
             <div className="p-2  text-center w-100 h-100 d-flex align-items-center justify-content-center">
-              <p className="text-light fw-bold">Aqui veras tus mensajes</p>
+              <p className="text-light fw-bold">Aquí veras tus mensajes</p>
             </div>
           </div>
         </>

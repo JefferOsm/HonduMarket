@@ -28,8 +28,8 @@ function MisPublicaciones() {
     };
 
     // Calcular cuantas páginas se van a necesitar para cada conjunto
-    const totalPagesActivas = Math.round(publicacionesActivas.length / 4);
-    const totalPagesInactivas = Math.round(publicacionesInactivas.length / 4);
+    const totalPagesActivas = Math.ceil(publicacionesActivas.length / 8);
+    const totalPagesInactivas = Math.ceil(publicacionesInactivas.length / 8);
     const pagesActivas = Array.from({ length: totalPagesActivas }, (_, i) => i + 1);
     const pagesInactivas = Array.from({ length: totalPagesInactivas }, (_, i) => i + 1);
 
@@ -43,10 +43,10 @@ function MisPublicaciones() {
     };
 
     // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
-    const startIndexActivas = (currentPageActivas - 1) * 5;
-    const endIndexActivas = startIndexActivas + 5;
-    const startIndexInactivas = (currentPageInactivas - 1) * 5;
-    const endIndexInactivas = startIndexInactivas + 5;
+    const startIndexActivas = (currentPageActivas - 1) * 8;
+    const endIndexActivas = Math.min(startIndexActivas + 8, publicacionesActivas.length);
+    const startIndexInactivas = (currentPageInactivas - 1) * 8;
+    const endIndexInactivas = Math.min(startIndexInactivas + 8, publicacionesInactivas.length);
 
     // Obtener la porción de resultados para la página actual usando slice
     const resultsForPageActivas = publicacionesActivas.slice(startIndexActivas, endIndexActivas);
@@ -56,7 +56,7 @@ function MisPublicaciones() {
     const renderPaginationItemsActivas = () => {
         return pagesActivas.map((pageNumber) => (
             <li key={pageNumber} className={`page-item ${currentPageActivas === pageNumber ? 'active' : ''}`}>
-                <a className="page-link" href="#" onClick={() => handleClickActivas(pageNumber)}>
+                <a className="page-link btn" onClick={() => handleClickActivas(pageNumber)}>
                     {pageNumber}
                 </a>
             </li>
@@ -66,7 +66,7 @@ function MisPublicaciones() {
     const renderPaginationItemsInactivas = () => {
         return pagesInactivas.map((pageNumber) => (
             <li key={pageNumber} className={`page-item ${currentPageInactivas === pageNumber ? 'active' : ''}`}>
-                <a className="page-link" href="#" onClick={() => handleClickInactivas(pageNumber)}>
+                <a className="page-link btn" onClick={() => handleClickInactivas(pageNumber)}>
                     {pageNumber}
                 </a>
             </li>
