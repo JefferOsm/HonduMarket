@@ -91,47 +91,8 @@ function EditarArticulo (){
     setBotonActive(true)
     setBotonText('Publicando ...')
     try {
-       //DATOS Y FOTOS
-    const formData = new FormData();
-    formData.append('nombre', values.nombre);
-    formData.append('descripcion', values.descripcion);
-    formData.append('precio', values.precio);
-    formData.append('categoria', values.categoria);
-    formData.append('estado', values.estado);
-    formData.append('departamento', values.departamento);
-    
-    for (let i = 0; i < imagenesSeleccionadas.length; i++) {
-        formData.append('imagenes', imagenesSeleccionadas[i]);
-    }
-
-    if(fechaSeleccionada){
-      console.log(fechaSeleccionada)
-      formData.append('fechaSubida', fechaSeleccionada)
-      setBotonText('Programando ...')
-    }
-
-    console.log(formData)
-
-   const idProdAct= await agregarPublicacion(formData);
-   console.log(idProdAct)
-
-    if(values.video.length>0){
-      const dataVideo = new FormData();
-      dataVideo.append('video', values.video[0])
-
-      await subirVideoPublicacion(idProdAct, dataVideo);
-    }
-
-    reset();
-    setText("");
-    setDescipcion("");
-    setprecio("");
-    setcategoria("");
-    setestado("");
-    setdepartamento("");
       //DATOS Y FOTOS
       const formData = new FormData();
-  
       formData.append('nombre', text !== "" ? values.nombre : detailProduct.nombre);
       formData.append('descripcion', descripcion !== "" ? values.descripcion : detailProduct.descripcion);
       formData.append('precio', precio !== "" ? values.precio : detailProduct.precio);
