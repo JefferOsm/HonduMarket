@@ -14,6 +14,7 @@ import MisPublicaciones from './pages/publicaciones/MisPublicaciones';
 import SearchResultsPage from './pages/publicaciones/searchPage';
 import ListaDeseosPage from './pages/publicaciones/ListaDeseosPage';
 import CentroChat from './pages/Chat/CentroChat';
+import Editar_Articulo from './pages/publicaciones/EditarArticulo';
 import { ChatProvider } from './context/chatContext';
 
 
@@ -28,7 +29,8 @@ function App(){
               <Route path='/' element={<HomePage/>} />
               <Route path='/login' element={<LoginPage />} />
               <Route path='/registro' element={<RegistroPage />} />
-              <Route path='/Vista_del_articulo/:nombre/:id' element={<Vista_del_articulo/>} />
+              <Route path='/Vista_del_articulo/:nombre/:id' element={<Vista_del_articulo/>}/>
+              <Route path='/Editar_articulo/:nombre/:id' element={<Editar_Articulo/>} />
               <Route path='/search' element={<SearchResultsPage/>}/>
               
             <Route element={<ProteccionRoute/>}>

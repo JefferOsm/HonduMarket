@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import { useParams } from 'react-router-dom';
+import { usarAutenticacion } from "../../context/autenticacion";
 import { useForm } from 'react-hook-form';
 import { usarProductosContex } from "../../context/productosContext";
 import SeleccionFechaHora from "../../components/SeleccionFechaHora";
@@ -7,11 +9,29 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
 import 'react-multi-carousel/lib/styles.css';
 
-function PublicarArticulo() {
+
+function EditarArticulo (){
+
   const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
-    departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
+    departamentos, estados, editarPublicacion , subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+  //Mostrar detalles
+  // funcion para obtener el id de la url
+  const {id} = useParams();
+  //constante que recibe todas las publicaciones que existen
+  const {autenticado,usuario} = usarAutenticacion();
+  const { obtenerImagenes, obtenerDetalles,detailProduct,imagenesProduct,
+    videoProduct, obtenerUsuario} = usarProductosContex();
+
+   //al cargar la pantalla
+   useEffect(() => {
+    const cargarDatos = async () => {
+      await obtenerDetalles(id);
+      await obtenerImagenes(id);
+    };
+    cargarDatos();
+  }, [id]);
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -42,18 +62,21 @@ function PublicarArticulo() {
   }
 
 
+  // Convertir el número a cadena y aplicar el formato con comas
   const comas = (value) => {
-    // Convertir el número a cadena y aplicar el formato con comas
+    if (typeof value === 'undefined') {
+        return 'No sirve esta chanchada';
+    }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
+};
 
 
-  const defaultTitulo = "Titulo";
-  const defaultDescripcion = "La descripcion aparecera aqui";
-  const defaultPrecio = "Precio";
-  const defaultCategoria = "Categoria";
-  const defaultEstado = "Estado";
-  const defaultDepartamento = "Publicado hace unos segundos en";
+  const defaultTitulo = detailProduct.nombre;
+  const defaultDescripcion = detailProduct.descripcion;
+  const defaultPrecio = comas(detailProduct.precio);
+  const defaultCategoria = "Categoria: " + detailProduct.categoria;
+  const defaultEstado = "Estado: " + detailProduct.estado;
+  const defaultDepartamento = "Publicado hace unos segundos en "+ detailProduct.departamento;
 
 
   //Traer datos de dep,cat,est
@@ -65,50 +88,49 @@ function PublicarArticulo() {
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
-    setBotonActive(false)
+    setBotonActive(true)
     setBotonText('Publicando ...')
     try {
-       //DATOS Y FOTOS
-    const formData = new FormData();
-    formData.append('nombre', values.nombre);
-    formData.append('descripcion', values.descripcion);
-    formData.append('precio', values.precio);
-    formData.append('categoria', values.categoria);
-    formData.append('estado', values.estado);
-    formData.append('departamento', values.departamento);
-    
-    for (let i = 0; i < imagenesSeleccionadas.length; i++) {
-        formData.append('imagenes', imagenesSeleccionadas[i]);
+      //DATOS Y FOTOS
+      const formData = new FormData();
+      formData.append('nombre', text !== "" ? values.nombre : detailProduct.nombre);
+      formData.append('descripcion', descripcion !== "" ? values.descripcion : detailProduct.descripcion);
+      formData.append('precio', precio !== "" ? values.precio : detailProduct.precio);
+      formData.append('categoria', categoria !== "" ? values.categoria : detailProduct.categoria);
+      formData.append('estado', estado !== "" ? values.estado : detailProduct.estado);
+      formData.append('departamento', departamento !== "" ? values.departamento : detailProduct.departamento);
+  
+      for (let i = 0; i < imagenesSeleccionadas.length; i++) {
+          formData.append('imagenes', imagenesSeleccionadas[i]);
+      }
+  
+      if(fechaSeleccionada){
+        console.log(fechaSeleccionada)
+        formData.append('fechaSubida', fechaSeleccionada)
+        setBotonText('Programando ...')
+      }
+  
+      for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
     }
-
-    if(fechaSeleccionada){
-      console.log(fechaSeleccionada)
-      formData.append('fechaSubida', fechaSeleccionada)
-      setBotonText('Programando ...')
-    }
-
-    console.log(formData)
-
-   const idProdAct= await agregarPublicacion(formData);
-   console.log(idProdAct)
-
-    if(values.video.length>0){
-      const dataVideo = new FormData();
-      dataVideo.append('video', values.video[0])
-
-      await subirVideoPublicacion(idProdAct, dataVideo);
-    }
-
-    reset();
-    setText("");
-    setDescipcion("");
-    setprecio("");
-    setcategoria("");
-    setestado("");
-    setdepartamento("");
-    setImagenesPreview([])
-    setVideoPreview('')
-    setImagenesSeleccionadas([])
+  
+      const idProdAct= await editarPublicacion(id,formData);
+      console.log(idProdAct)
+  
+      if(values.video.length>0){
+        const dataVideo = new FormData();
+        dataVideo.append('video', values.video[0])
+  
+        await subirVideoPublicacion(idProdAct, dataVideo);
+      }
+  
+      reset();
+      setText("");
+      setDescipcion("");
+      setprecio("");
+      setcategoria("");
+      setestado("");
+      setdepartamento("");
     } catch (error) {
       console.log(error)
     } finally{
@@ -120,7 +142,6 @@ function PublicarArticulo() {
         window.alert('Se realizo tu Publicacion')
       }
     }
-
   })
 
   //Vista Previa (Datos)
@@ -140,25 +161,34 @@ function PublicarArticulo() {
       const Categoria = (event) => {
         const id = event.target.value;
         const categoriaSeleccionada = categorias.find(categoria => categoria.categoria_id === Number(id));
-        setcategoria(defaultCategoria +' : '+ categoriaSeleccionada.nombre_categoria);
+        setcategoria('Categoria: '+ categoriaSeleccionada.nombre_categoria);
       };
 
       const Estado = (event) => {
         const id = event.target.value;
         const estadoSeleccionado = estados.find(estado => estado.id_estado === Number(id));
-        setestado(defaultEstado+' : '+estadoSeleccionado.nombre_estado);
+        setestado('Estado: '+estadoSeleccionado.nombre_estado);
       };
 
       const Departamento = (event) => {
         const id = event.target.value;
         const departamentoSeleccionado = departamentos.find(departamento => departamento.id_departamento=== Number(id));
-        setdepartamento(defaultDepartamento +'  '+ departamentoSeleccionado.nombre_departamento);
+        setdepartamento('Publicado hace unos segundos en '+ departamentoSeleccionado.nombre_departamento);
       };
 
        // urls de las imagenes que se usaran en vista previa
       const [imagenesPreview, setImagenesPreview] = useState([]);
       // urls que se usaran para vista previa de videos
       const [videoPreview, setVideoPreview] = useState('');
+
+      useEffect(() => {
+        // sacamos la url de la imagen y se la mandamos a los set correspondientes
+        const imagenesForm= imagenesProduct.map(imagen => imagen.id_imagenesProd);
+
+        const urlsImagenes = imagenesProduct.map(imagen => imagen.url_imagen);
+        setImagenesSeleccionadas([...urlsImagenes, ...imagenesForm]);
+        setImagenesPreview(urlsImagenes);
+      }, [imagenesProduct]);
 
         // Función para generar la vista previa de las imágenes seleccionadas y para enviarlas al backend
       const generarVistaPreviaImagenes = (event) => {
@@ -171,6 +201,8 @@ function PublicarArticulo() {
           window.alert('Solo se Permiten 6 imagenes Maximo');
           return
         }
+
+        alert("las imagenes actuales son " + imagenesSeleccionadas.length);
 
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
@@ -219,6 +251,8 @@ function PublicarArticulo() {
             // Establecer el primer elemento como activo
             document.querySelector('.carousel-item:first-child').classList.add('active');
           }
+
+
           vistaPreviaImagenes = imagenesPreview.map((url, index) => (
           <div className={`carousel-item text-center`} key={index}>
             <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
@@ -229,87 +263,58 @@ function PublicarArticulo() {
         const nuevasImagenesSeleccionadas = [...imagenesSeleccionadas.slice(0, index), ...imagenesSeleccionadas.slice(index + 1)];
         setImagenesSeleccionadas(nuevasImagenesSeleccionadas);
       };
-    
-
-
   return (
     <div className="contenedor-publicar">
       <div className="card py-3 px-3 contenedor-publicar-content">
        <div className="card-body contenedor-publicar-form">
-        <h3 className="fw-bold text-center">Registra tu producto</h3>
+        <h3 className="fw-bold text-center">Edita tu producto</h3>
         <form className="col py-2" onSubmit={onSubmit}>
 
           {/* Registro nombre */}
           <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
-            {...register('nombre', { required: true, onChange: (e) => { Titulo(e) } })} />
-
-          {
-            errors.nombre && (
-              <p className="text-danger">El Campo es Obligatorio</p>
-            )
-          }
+            {...register('nombre', { onChange: (e) => { Titulo(e) } })}
+            defaultValue={detailProduct.nombre} />
 
           {/* Registro Descripcion */}
           <label className="form-label py-2">Descripción</label>
           <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"
-            {...register('descripcion', { required: true, onChange: (e) => { Descripcion(e) } })}></textarea>
-
-          {
-            errors.descripcion && (
-              <p className="text-danger"> El Campo es Obligatorio</p>
-            )
-          }
+            {...register('descripcion', { onChange: (e) => { Descripcion(e) } })}
+            defaultValue={detailProduct.descripcion}></textarea>
 
           {/* Registro Precio */}
           <div className="input-group py-2" style={{ width: "20vw", borderRadius: "5px" }}>
             <div className="input-group-text">Lps</div>
-            <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
-              {...register('precio', { required: true, onChange: (e) => { Precio(e) } })} />
-
-            {
-              errors.precio && (
-                <p className="text-danger"> El Campo es Obligatorio y Debe ser un número</p>
-              )
-            }
+            <input type="number" className="form-control" placeholder="Precio" aria-label="Precio"
+              {...register('precio', {onChange: (e) => { Precio(e) } })}
+              defaultValue={detailProduct.precio}/>
           </div>
 
           {/* Registro Categoria */}
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
-              {...register('categoria', { required: true, onChange: (e) => { Categoria(e) } })}>
+              {...register('categoria', { onChange: (e) => { Categoria(e) } })}
+              value={detailProduct.categoria}>
 
               <option value="">Selecciona una opcion</option>
               {categorias.map(categoria => (
                 <option value={categoria.categoria_id} key={categoria.categoria_id}>{categoria.nombre_categoria} </option>
               ))}
-
             </select>
-
-
-            {
-              errors.categoria && (
-                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-              )
-            }
           </div>
 
           {/* Registro de estado */}
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Estado}
-              {...register('estado', { required: true, onChange: (e) => { Estado(e) } })}>
+              {...register('estado', { onChange: (e) => { Estado(e) } })}
+              defaultValue={detailProduct.estado}>
               <option value="">Selecciona una opcion</option>
               {estados.map(estado => (
                 <option value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
               ))}
             </select>
 
-            {
-              errors.estado && (
-                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-              )
-            }
           </div>
 
           {/* Registro de Departamento */}
@@ -317,20 +322,14 @@ function PublicarArticulo() {
             <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
             <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
-              {...register('departamento', { required: true, onChange: (e) => { Departamento(e) } })}>
+              {...register('departamento', { onChange: (e) => { Departamento(e) } })}
+              defaultValue={detailProduct.departamento}>
               <option value="">Selecciona una opcion</option>
               {departamentos.map(departamento => (
                 <option value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
               ))}
 
             </select>
-
-
-            {
-              errors.departamento && (
-                <p className="text-danger ms-2"> El Campo es Obligatorio</p>
-              )      
-            }
           </div>
                 
                 {/* Registro de imagenes Y video*/}
@@ -354,13 +353,6 @@ function PublicarArticulo() {
                     {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6}, onChange:(e)=>{generarVistaPreviaImagenes(e)}
                      })} id='imagenes' style={{ display: 'none' }}
                       multiple />
-
-                        {
-                          errors.imagenes && (
-                            <p className="ms-2 text-danger"> Seleccione una imagen minimo y 6 maximo</p>
-                          )
-                        }
-
                     </div>
 
                         {/* Video */}
@@ -496,8 +488,6 @@ function PublicarArticulo() {
   )
 }
 
-export default PublicarArticulo
+export default EditarArticulo
 
 const imgdemas = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6ElEQVR4nO2ZUQrCMAyGexB99iKNegNZ9iI2l9sQdrFp7S5QqS8OcUgrtIX9H+R5/7+kKU2UAgCAatmfzltic9WNTMTic4ZuZNIsw6G97JLFa5ZbbuH0aYTNPWiJNhD+fGnx9I4+2kCJsqHlcnIJGSgvnGYBA7SmDIzWfQ0YiAEZsCghj0NM6EKuzjY6LvT5f4NgYAYyYFFCHoeYcA+4Ou8BwntAkIGfoIQsHjQecyGqYCJHq53M6YqGu8TmEW+AZajIQBdtIGxGwnKhuPhGxmMrG5W+YpI+zOdzC9evb5ouWTwAAKgcPAF1HK9L/+dO1QAAAABJRU5ErkJggg==';
-
-const video = 'https://ia600208.us.archive.org/9/items/video-de-whats-app-2024-03-15-a-las-11.23.51-c-6e-81cde/Video%20de%20WhatsApp%202024-03-15%20a%20las%2011.23.51_c6e81cde.mp4';

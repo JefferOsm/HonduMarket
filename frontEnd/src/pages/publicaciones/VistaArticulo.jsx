@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCloud, faCloudArrowDown, faCloudArrowUp, faHeart, faSquare, faSquarePen, faSquarePersonConfined, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
@@ -42,8 +42,10 @@ function VistaArticulo() {
     //funcionalidades para el modal de Editar Publicacion
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
-    const handleShowEdit = () => setShowEdit(true);
-    
+    const navigate  = useNavigate();
+    const handleShowEdit = () => {
+      navigate(`/Editar_articulo/${detailProduct.nombre}/${detailProduct.id}`);
+    };
 
 //Mostrar detalles
   // funcion para obtener el id de la url
@@ -69,7 +71,7 @@ function VistaArticulo() {
 
 
   //al cargar la pantalla
-  useEffect(() => {    
+  useEffect(() => {
     const cargarDatos = async () => {
       await obtenerDetalles(id);
       await obtenerImagenes(id);
@@ -271,19 +273,21 @@ function VistaArticulo() {
             <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
                       <FontAwesomeIcon icon={faTrash}/> Eliminar
             </button>
-            <button className="btn btn-outline-primary btn-nuevo-modal" onClick={handleShowEdit}>
-            Editar producto
-          </button>
+            <button className="btn btn-outline-primary btn-editar-publicacion" onClick={handleShowEdit}>
+                      <FontAwesomeIcon icon={faSquarePen}/> Editar
+            </button>
+            <button className="btn bc-secondary btn-resubir-publicacion" onClick={handleShowEdit}>
+                      <FontAwesomeIcon icon={faCloudArrowUp}/> Resubir
+            </button>
           </>
         ):(
           <></>
         )}
-
       </div>
     </div>
     <UsuarioModal show={show} handleClose={handleClose} />
     <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id}  />
-    <EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />
+    {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
     <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
     </>
   )
