@@ -29,15 +29,6 @@ function EditarArticulo (){
     const cargarDatos = async () => {
       await obtenerDetalles(id);
       await obtenerImagenes(id);
-      if(autenticado){
-        await validarListaDeseo(id);
-        if(usuario.id === detailProduct.idUsuario){
-          setBotonListaUsuario(true);
-          console.log(usuario);
-        } else {
-          setBotonListaUsuario(false);
-        }
-      }
     };
     cargarDatos();
   }, [autenticado, id, usuario, detailProduct.idUsuario]);
@@ -102,12 +93,42 @@ function EditarArticulo (){
     try {
        //DATOS Y FOTOS
     const formData = new FormData();
-    formData.append('nombre', values.nombre);
-    formData.append('descripcion', values.descripcion);
-    formData.append('precio', values.precio);
-    formData.append('categoria', values.categoria);
-    formData.append('estado', values.estado);
-    formData.append('departamento', values.departamento);
+
+    if (text === ""){
+      formData.append('nombre', detailProduct.nombre);
+    }else{
+      formData.append('nombre', values.nombre);
+    }
+
+    if (descripcion === ""){
+      formData.append('descripcion', detailProduct.descripcion);
+    }else{
+      formData.append('descripcion', values.descripcion);
+    }
+
+    if (precio === ""){
+      formData.append('precio', detailProduct.precio);
+    }else{
+      formData.append('precio', values.precio);
+    }
+    
+    if (categoria === ""){
+      formData.append('categoria', detailProduct.categoria);
+    }else{
+      formData.append('categoria', values.categoria);
+    }
+    
+    if (estado === ""){
+      formData.append('estado', detailProduct.estado);
+    }else{
+      formData.append('estado', values.estado);
+    }
+    
+    if (departamento === ""){
+      formData.append('departamento', detailProduct.departamento);
+    }else{
+      formData.append('departamento', values.departamento);
+    }
     
     for (let i = 0; i < imagenesSeleccionadas.length; i++) {
         formData.append('imagenes', imagenesSeleccionadas[i]);
@@ -138,9 +159,6 @@ function EditarArticulo (){
     setcategoria("");
     setestado("");
     setdepartamento("");
-    setImagenesPreview([])
-    setVideoPreview('')
-    setImagenesSeleccionadas([])
     } catch (error) {
       console.log(error)
     } finally{
@@ -191,6 +209,13 @@ function EditarArticulo (){
       const [imagenesPreview, setImagenesPreview] = useState([]);
       // urls que se usaran para vista previa de videos
       const [videoPreview, setVideoPreview] = useState('');
+
+      useEffect(() => {
+        // sacamos la url de la imagen y se la mandamos a los set correspondientes
+        const urlsImagenes = imagenesProduct.map(imagen => imagen.url_imagen);
+        setImagenesSeleccionadas(urlsImagenes);
+        setImagenesPreview(urlsImagenes);
+      }, [imagenesProduct]);
 
         // Función para generar la vista previa de las imágenes seleccionadas y para enviarlas al backend
       const generarVistaPreviaImagenes = (event) => {
@@ -251,6 +276,8 @@ function EditarArticulo (){
             // Establecer el primer elemento como activo
             document.querySelector('.carousel-item:first-child').classList.add('active');
           }
+
+
           vistaPreviaImagenes = imagenesPreview.map((url, index) => (
           <div className={`carousel-item text-center`} key={index}>
             <img className="d-block w-100"  src={url} alt={`Imagen ${index}`} />
@@ -270,43 +297,25 @@ function EditarArticulo (){
 
           {/* Registro nombre */}
           <input type="text" className="form-control" placeholder="Titulo" aria-label="Titulo"
-            {...register('nombre', { required: true, onChange: (e) => { Titulo(e) } })} />
-
-          {
-            errors.nombre && (
-              <p className="text-danger">El Campo es Obligatorio</p>
-            )
-          }
+            {...register('nombre', { onChange: (e) => { Titulo(e) } })} />
 
           {/* Registro Descripcion */}
           <label className="form-label py-2">Descripción</label>
           <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"
-            {...register('descripcion', { required: true, onChange: (e) => { Descripcion(e) } })}></textarea>
-
-          {
-            errors.descripcion && (
-              <p className="text-danger"> El Campo es Obligatorio</p>
-            )
-          }
+            {...register('descripcion', { onChange: (e) => { Descripcion(e) } })}></textarea>
 
           {/* Registro Precio */}
           <div className="input-group py-2" style={{ width: "20vw", borderRadius: "5px" }}>
             <div className="input-group-text">Lps</div>
-            <input type="number" className="form-control" placeholder="Precio" aria-label="Precio" required
-              {...register('precio', { required: true, onChange: (e) => { Precio(e) } })} />
-
-            {
-              errors.precio && (
-                <p className="text-danger"> El Campo es Obligatorio y Debe ser un número</p>
-              )
-            }
+            <input type="number" className="form-control" placeholder="Precio" aria-label="Precio"
+              {...register('precio', {onChange: (e) => { Precio(e) } })} />
           </div>
 
           {/* Registro Categoria */}
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Categoria</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Categoria}
-              {...register('categoria', { required: true, onChange: (e) => { Categoria(e) } })}>
+              {...register('categoria', { onChange: (e) => { Categoria(e) } })}>
 
               <option value="">Selecciona una opcion</option>
               {categorias.map(categoria => (
@@ -314,31 +323,19 @@ function EditarArticulo (){
               ))}
 
             </select>
-
-
-            {
-              errors.categoria && (
-                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-              )
-            }
           </div>
 
           {/* Registro de estado */}
           <div className="input-group mb-3">
             <label className="input-group-text" htmlFor="inputGroupSelect01">Estado</label>
             <select className="form-select" id="inputGroupSelect01" onChange={Estado}
-              {...register('estado', { required: true, onChange: (e) => { Estado(e) } })}>
+              {...register('estado', { onChange: (e) => { Estado(e) } })}>
               <option value="">Selecciona una opcion</option>
               {estados.map(estado => (
                 <option value={estado.id_estado} key={estado.id_estado}>{estado.nombre_estado}</option>
               ))}
             </select>
 
-            {
-              errors.estado && (
-                <p className="ms-2 text-danger"> El Campo es Obligatorio</p>
-              )
-            }
           </div>
 
           {/* Registro de Departamento */}
@@ -346,20 +343,13 @@ function EditarArticulo (){
             <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
             <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
-              {...register('departamento', { required: true, onChange: (e) => { Departamento(e) } })}>
+              {...register('departamento', { onChange: (e) => { Departamento(e) } })}>
               <option value="">Selecciona una opcion</option>
               {departamentos.map(departamento => (
                 <option value={departamento.id_departamento} key={departamento.id_departamento}>{departamento.nombre_departamento}</option>
               ))}
 
             </select>
-
-
-            {
-              errors.departamento && (
-                <p className="text-danger ms-2"> El Campo es Obligatorio</p>
-              )      
-            }
           </div>
                 
                 {/* Registro de imagenes Y video*/}
@@ -383,13 +373,6 @@ function EditarArticulo (){
                     {... register('imagenes',{ required: true, validate:{maxFiles: files => files.length <= 6}, onChange:(e)=>{generarVistaPreviaImagenes(e)}
                      })} id='imagenes' style={{ display: 'none' }}
                       multiple />
-
-                        {
-                          errors.imagenes && (
-                            <p className="ms-2 text-danger"> Seleccione una imagen minimo y 6 maximo</p>
-                          )
-                        }
-
                     </div>
 
                         {/* Video */}
