@@ -2,7 +2,7 @@ import { Router } from "express";
 import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados, 
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
-    editarProducto} from "../controllers/productos.controller.js";
+    editarProducto, cambiarEstadoPublicacion} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -60,6 +60,9 @@ router.get('/lista_deseo/validar/:id', autenticacionUsuario, validarListaDeseo)
 
 // Editar Producto
 router.put('/publicacion/editar/:id', autenticacionUsuario,productoParser.array('imagenes', 6), editarProducto);
+
+//cambiar estado de publicacion
+router.put('/publicacion/estado/:id', autenticacionUsuario, cambiarEstadoPublicacion);
 
 
 export default router

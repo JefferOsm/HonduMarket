@@ -112,3 +112,8 @@ export const editarPublicacionRequest = async(id,values)=>{
   const response= await axios.put(`/productos/publicacion/editar/${id}`,values);
   return response.data
 }
+
+export const cambiarEstadoPublicacionRequest = async(id)=>{
+  const response= await axios.put(`/productos/publicacion/estado/${id}`);
+  return response.data
+}

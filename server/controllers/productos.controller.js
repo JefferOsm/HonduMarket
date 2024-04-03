@@ -419,3 +419,16 @@ export const editarProducto = async(req, res) => {
       });
     }
   };
+
+//Cambiar estado de la publicacion
+export const cambiarEstadoPublicacion = async(req,res)=>{
+    try {
+        const [rows]= await pool.query('CALL sp_cambiarEstado(?,0)',[req.params.id])
+        res.send(rows)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message: "Ha Ocurrido un Error",
+        });
+    }
+}
