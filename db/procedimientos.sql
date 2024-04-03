@@ -117,14 +117,14 @@ create procedure sp_detalleProductos (
 )
 BEGIN
     SELECT producto_id as id, nombre_producto as nombre, descripcion_producto as descripcion, precio_producto as precio,
-	tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
-	tbl_departamentos.nombre_departamento as departamento,fecha_publicacion,tbl_usuarios.nombre as usuario,
-    tbl_usuarios.url_imagen as fotoPerfil, tbl_usuarios.id as idUsuario
-	FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
-	INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
-	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
+    tbl_estadoProducto.nombre_estado as estado, tbl_categorias.nombre_categoria as categoria,
+    tbl_departamentos.nombre_departamento as departamento,fecha_publicacion,tbl_usuarios.nombre as usuario,
+    tbl_usuarios.url_imagen as fotoPerfil, tbl_usuarios.id as idUsuario, tbl_productos.producto_inactivo
+    FROM tbl_productos INNER JOIN tbl_estadoProducto ON tbl_estadoProducto.id_estado = tbl_productos.estado_id
+    INNER JOIN tbl_categorias ON tbl_categorias.categoria_id = tbl_productos.categoria_id
+    INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
     INNER JOIN tbl_usuarios ON tbl_usuarios.id = tbl_productos.usuario_id
-	WHERE producto_id= p_id;
+    WHERE producto_id= p_id;
 
 END //
 -- obtener imagenes de un producto
@@ -150,7 +150,8 @@ BEGIN
     FROM 
         tbl_productos p
 	WHERE
-        p.fecha_programada IS NULL OR p.fecha_programada <= NOW() 
+        p.fecha_programada IS NULL OR p.fecha_programada <= NOW()
+        AND p.producto_inactivo != 1 
 	ORDER BY RAND()
     LIMIT 10;
 END //
@@ -171,6 +172,7 @@ BEGIN
     FROM 
         tbl_productos p
 	WHERE p.usuario_id <> p_user_id AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
+    AND p.producto_inactivo != 1
 	ORDER BY RAND()
     LIMIT 10;
 END //
@@ -207,6 +209,7 @@ BEGIN
     WHERE 
         p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
        AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
+       AND p.producto_inactivo != 1
        ORDER BY p.fecha_publicacion desc;
 END //
 DELIMITER ;
@@ -409,6 +412,17 @@ DO
 DROP EVENT inhabilitar_producto
 
 
-
+-- Cambiar estado del producto
+DELIMITER //
+CREATE PROCEDURE sp_cambiarEstado(IN p_producto_id INT, IN p_estado TINYINT)
+BEGIN
+    UPDATE tbl_productos
+    SET 
+        producto_inactivo = p_estado,
+        fecha_publicacion = CURRENT_TIMESTAMP
+    WHERE 
+        producto_id = p_producto_id;
+END //
+DELIMITER ;
 
 
