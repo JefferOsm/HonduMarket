@@ -13,7 +13,7 @@ import 'react-multi-carousel/lib/styles.css';
 function EditarArticulo (){
 
   const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
-    departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
+    departamentos, estados, editarPublicacion , subirVideoPublicacion } = usarProductosContex();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   //Mostrar detalles
@@ -129,6 +129,47 @@ function EditarArticulo (){
     setcategoria("");
     setestado("");
     setdepartamento("");
+      //DATOS Y FOTOS
+      const formData = new FormData();
+  
+      formData.append('nombre', text !== "" ? values.nombre : detailProduct.nombre);
+      formData.append('descripcion', descripcion !== "" ? values.descripcion : detailProduct.descripcion);
+      formData.append('precio', precio !== "" ? values.precio : detailProduct.precio);
+      formData.append('categoria', categoria !== "" ? values.categoria : detailProduct.categoria);
+      formData.append('estado', estado !== "" ? values.estado : detailProduct.estado);
+      formData.append('departamento', departamento !== "" ? values.departamento : detailProduct.departamento);
+  
+      for (let i = 0; i < imagenesSeleccionadas.length; i++) {
+          formData.append('imagenes', imagenesSeleccionadas[i]);
+      }
+  
+      if(fechaSeleccionada){
+        console.log(fechaSeleccionada)
+        formData.append('fechaSubida', fechaSeleccionada)
+        setBotonText('Programando ...')
+      }
+  
+      for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+  
+      const idProdAct= await editarPublicacion(id,formData);
+      console.log(idProdAct)
+  
+      if(values.video.length>0){
+        const dataVideo = new FormData();
+        dataVideo.append('video', values.video[0])
+  
+        await subirVideoPublicacion(idProdAct, dataVideo);
+      }
+  
+      reset();
+      setText("");
+      setDescipcion("");
+      setprecio("");
+      setcategoria("");
+      setestado("");
+      setdepartamento("");
     } catch (error) {
       console.log(error)
     } finally{
@@ -140,7 +181,6 @@ function EditarArticulo (){
         window.alert('Se realizo tu Publicacion')
       }
     }
-
   })
 
   //Vista Previa (Datos)
@@ -266,7 +306,7 @@ function EditarArticulo (){
     <div className="contenedor-publicar">
       <div className="card py-3 px-3 contenedor-publicar-content">
        <div className="card-body contenedor-publicar-form">
-        <h3 className="fw-bold text-center">Registra tu producto</h3>
+        <h3 className="fw-bold text-center">Edita tu producto</h3>
         <form className="col py-2" onSubmit={onSubmit}>
 
           {/* Registro nombre */}

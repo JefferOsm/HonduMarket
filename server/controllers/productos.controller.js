@@ -354,7 +354,7 @@ export const validarListaDeseo = async(req,res)=>{
 
 // Editar Producto
 // Editar Producto
-export const editarProducto = async(req, res) => {
+/*export const editarProducto = async(req, res) => {
     const { id } = req.params;
     const { nombre, descripcion, precio } = req.body;
 
@@ -373,4 +373,49 @@ export const editarProducto = async(req, res) => {
             message: "Ha Ocurrido un Error",
         });
     }
-}
+}*/
+
+
+// Editar Producto
+// Editar Producto
+export const editarProducto = async(req, res) => {
+    const {nombre, descripcion, precio, estado, categoria, departamento, fechaSubida} = req.body;
+    const imagenes = req.files;
+    const fechaProgramada = new Date(fechaSubida);
+    const productoId = req.params.id; // Asegúrate de que estás pasando el ID del producto en la URL
+  
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No se subieron imágenes' });
+      }
+  
+      // Actualizar el producto
+      await pool.query(
+        'UPDATE tbl_productos SET nombre_producto=?, descripcion_producto=?, precio_producto=?, estado_id=?, categoria_id=?, usuario_id=?, departamento_id=?, fecha_programada=? WHERE producto_id=?',
+        [nombre, descripcion, precio, estado, categoria, req.user, departamento, fechaProgramada, productoId]
+      );
+  
+      // Agregar las nuevas imágenes
+      let imageUrl;
+      let id_imagen;
+  
+      imagenes.map(async (imagen) => {
+        const result = await cloudinary.uploader.upload(imagen.path);
+        imageUrl = result.secure_url;
+        id_imagen = result.original_filename;
+  
+        await pool.query(
+          'INSERT INTO tbl_imagenesProductos(id_imagen, url_imagen, producto_id) VALUES (?,?,?)',
+          [id_imagen, imageUrl, productoId]
+        );
+      });
+  
+      res.json({ message: 'Producto actualizado con éxito' });
+  
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Ha Ocurrido un Error",
+      });
+    }
+  };

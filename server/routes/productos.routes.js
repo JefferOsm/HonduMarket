@@ -59,7 +59,7 @@ router.get('/lista_deseos',autenticacionUsuario, obtenerListaDeseos)
 router.get('/lista_deseo/validar/:id', autenticacionUsuario, validarListaDeseo)
 
 // Editar Producto
-router.put('/publicacion/editar/:id', autenticacionUsuario, editarProducto);
+router.put('/publicacion/editar/:id', autenticacionUsuario,productoParser.array('imagenes', 6), editarProducto);
 
 
 export default router
