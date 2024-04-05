@@ -12,13 +12,20 @@ function NavBar() {
 
   const{detailProduct, obtenerUsuario, obtenerPublicacionesSearch}= usarProductosContex();
   const{autenticado,logout,usuario}=  usarAutenticacion();
+  const [value, setValue] = useState('');
 
   //funcionalidades para el modal de Busqueda
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (e) => {
     setShow(true);
     obtenerPublicacionesSearch();
+    e.preventDefault();
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
   //Funcionalidades para el modal del Chat
@@ -28,7 +35,6 @@ function NavBar() {
     obtenerUsuario(detailProduct.idUsuario)
     setChat(true)
   };
-
  
 
   return (
@@ -47,7 +53,8 @@ function NavBar() {
 
                 <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
                     <div className="btn bc-secondary-body text-light me-2" onClick={handleShow}><FontAwesomeIcon icon={faSearch}/></div>
-                    <input className="form-control me-2 w-340" type="search" placeholder="Buscar" aria-label="Search" onClick={handleShow} />
+                    <input className="form-control me-2 w-340" type="search" value={value} placeholder="Buscar" aria-label="Search"
+                     onClick={handleShow} onKeyDown={handleKeyDown}/>
                 </form>
 
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">

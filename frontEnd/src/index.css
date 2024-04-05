@@ -441,3 +441,7 @@ input[type=number] { -moz-appearance:textfield; }
   background: #320623;
   cursor: pointer;
 }
+
+.bc-mensaje{
+  background-color: #f8f9fa;
+}
