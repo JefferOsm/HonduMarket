@@ -138,7 +138,6 @@ function CentroChat() {
 
   //recibir mensajes
   useEffect(()=>{
-    console.log('useefect en uso')
     socket.current.on('getMensajes', mensaje=>{
       setmensajes(prevMessages => [...prevMessages, mensaje]);
       console.log(mensaje)

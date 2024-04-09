@@ -14,7 +14,6 @@ function SearchResultsPage() {
   const query = useQuery().get('query');
   const [results, setResults] = useState([]);
   const [results_2, setResults_2] = useState([]);
-  const [results_3, setResults_3] = useState([]);
 
   // constante para saber en que pagina estamos
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,23 +24,21 @@ function SearchResultsPage() {
   const filtrosClose = () => setfiltros(false);
   const handlefiltros = () => setfiltros(true);
 
-  //funcionalidades para implementar el filtro
-  const [option1, setOption1] = useState(false);
-  const [option2, setOption2] = useState(false);
-  const [option3, setOption3] = useState(false);
-  const [option4, setOption4] = useState(false);
-  const [categoria, setCategoria] = useState(false);
-  const [departamento, setDepartamento] = useState(false);
+  //funcionalidades para implementar los filtros seleccionados
+  const [Escoger_Filtros, setEscoger_Filtros] = useState(new Array(3).fill(null));
+  const [category_anterior, setcategory_anterior] = useState("");
+  const [depto_anterior, setdepto_anterior] = useState("");
+  const [option_anterior, setoption_anterior] = useState("");
 
   useEffect(() => {
+    //setResults([]);
     const fetchProducts = async () => {
       try {
-        setResults([]); // Limpia los resultados anteriores
+         // Limpia los resultados anteriores
         const filteredProducts = await buscarProductos(query);
         console.log(filteredProducts)
-        setResults(filteredProducts); // Establece los resultados en lugar de agregar a ellos
-        setResults_2(filteredProducts);
-        setResults_3(filteredProducts);
+        setResults(filteredProducts); // arreglo que tiene los resultados de la busqueda
+        setResults_2(filteredProducts); //copia que no se modifica de los resultados de la busqueda
       } catch (error) {
         console.error(error);
       }
@@ -61,7 +58,7 @@ function SearchResultsPage() {
 
 
   // Calcular cuantas páginas se van a necesitar
-  const totalPages = Math.ceil(results.length / 8);
+  const totalPages = Math.ceil(results.length / 4);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   // Función para manejar el clic en un número de página
@@ -70,169 +67,185 @@ function SearchResultsPage() {
     setPaginacion(pageNumber);
   };
 
-  //Funcionalidad para hacer filtro por categoria
-  const handleCategorySelect = (category) =>{
-    let filteredResults = []; // Declarar filteredResults como una variable local
 
-    if (category == "Inmuebles") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 11);
-      setResults(filteredResults);
-    }
-    else if(category == "Vehiculos") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 12);
-      setResults(filteredResults);
-    }
-    else if (category == "Hogar") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 13);
-      setResults(filteredResults);
-    }
-    else if(category == "Bebes") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 14);
-      setResults(filteredResults);
-    }
-    else if (category == "Moda") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 15);
-      setResults(filteredResults);
-    }
-    else if(category == "Mascotas") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 16);
-      setResults(filteredResults);
-    }
-    else if (category == "Electronica") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 17);
-      setResults(filteredResults);
-    }
-    else if(category == "Servicios") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 18);
-      setResults(filteredResults);
-    }
-    else if (category == "Negocios") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 19);
-      setResults(filteredResults);
-    }
-    else if(category == "Empleos") {
-      filteredResults = results_2.filter((producto) => producto.categoria === 20);
-      setResults(filteredResults);
-    }
-    console.log(filteredResults);
+  //Funcionalidad para enviar con que categoria hacer el filtro
+  const handleCategorySelect = (category) =>{
+
+      //validamos si category ya se habia seleccionado para eliminarla del arreglo de filtros
+      if (Escoger_Filtros[1] !== null && category === category_anterior){
+        Escoger_Filtros[1] = null;
+        setEscoger_Filtros(Escoger_Filtros);
+        Filtros_aplicar(Escoger_Filtros);
+      }else{
+        //ya que se escoja por primera vez o sea otra categoria que no se habia seleccionado
+        setcategory_anterior(category);
+        Escoger_Filtros[1] = category;
+        setEscoger_Filtros(Escoger_Filtros);
+        Filtros_aplicar(Escoger_Filtros);
+      }
   };
 
    //Funcionalidad para hacer filtro por departamento
   const handleDeptoSelect = (depto) => {
-    let filteredResults = []; // Declarar filteredResults como una variable local
 
-    if (depto == "Atlántida") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 5);
-      setResults(filteredResults);
+    //validamos si depto ya se habia seleccionado para eliminarlo del arreglo de filtros
+    if (Escoger_Filtros[2] !== null && depto === depto_anterior){
+      Escoger_Filtros[2] = null;
+      setEscoger_Filtros(Escoger_Filtros);
+      Filtros_aplicar(Escoger_Filtros);
+    }else{
+       //ya que se escoja por primera vez o sea otro departamento que no se habia seleccionado
+      setdepto_anterior(depto);
+      Escoger_Filtros[2] = depto;
+      setEscoger_Filtros(Escoger_Filtros);
+      Filtros_aplicar(Escoger_Filtros);
     }
-    else if ( depto == "Choluteca") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 6);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Colón") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 7);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Comayagua") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 8);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Copán") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 9);
-      setResults(filteredResults);
-    }
-    else if ( depto == "El Paraíso") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 10);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Intibucá") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 11);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Islas de la Bahía") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 12);
-      setResults(filteredResults);
-    }
-    else if ( depto == "La Paz") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 13);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Ocotepeque") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 14);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Olancho") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 15);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Santa Bárbara") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 16);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Valle") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 17);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Yoro") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 18);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Francisco Morazan") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 1);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Cortes") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 2);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Lempira") {
-      filteredResults = results.filter((producto) => producto.departamento === 3);
-      setResults(filteredResults);
-    }
-    else if ( depto == "Gracias a Dios") {
-      filteredResults = results_3.filter((producto) => producto.departamento === 4);
-      setResults(filteredResults);
-    }
-    console.log(filteredResults);
   };
 
   //Funcionalidad para cambiar el orden los elemntos segun la opcion del modal
   const handleOptionSelected = (option) => {
-    
-    if (option == "Opción_1" && !option1){
-      const reversedPublicacionesUser = [...results_2].reverse();
-      setResults(reversedPublicacionesUser);
-      setOption1(true);
-      setOption2(false);
-      setOption3(false);
-      setOption4(false);
-    }else if (option == "Opción_2" && option1 && !option2){
-      const reversedPublicacionesUser = [...results_2];
-      setResults(reversedPublicacionesUser);
-      setOption2(true);
-      setOption1(false);
-      setOption3(false);
-      setOption4(false);
-    }else if (option == "Opción_3" && !option3){
-      const Demayoramenor = [...results_3].sort((a, b) => b.precio - a.precio);
-      setResults(Demayoramenor);
-      setOption3(true);
-      setOption1(false);
-      setOption2(false);
-      setOption4(false);
-    }else if (option == "Opción_4" && !option4){
-      const Demenoramayor = [...results_3].sort((a, b) => a.precio - b.precio);
-      setResults(Demenoramayor);
-      setOption4(true);
-      setOption1(false);
-      setOption2(false);
-      setOption3(false);
-    }
+
+    //validamos si option ya se habia seleccionado para eliminarlo del arreglo de filtros este es el orden
+      if (Escoger_Filtros[0] !== null && option === option_anterior){
+        Escoger_Filtros[0] = null;
+        setEscoger_Filtros(Escoger_Filtros);
+        Filtros_aplicar(Escoger_Filtros);
+      }else{
+        //ya que se escoja por primera vez o sea otro orden
+        setoption_anterior(option);
+        Escoger_Filtros[0]= option;
+        setEscoger_Filtros(Escoger_Filtros);
+        Filtros_aplicar(Escoger_Filtros);
+      }
   };
 
+  //funcion para aplicar los filtros seleccionados que estan en el arreglo
+  const Filtros_aplicar = (arreglo) => {
+
+    //validamos si un orden esta seleccionado 
+    if (arreglo[0] !== null){
+
+      //Orden_1 es del mas antiguo al mas reciente
+      if (arreglo[0] === "Orden_1") {
+        //se define una variable la cual ya tendra el orden aplicado y se remplasa el primer arreglo
+        let filtro_1 = [...results_2].sort((a, b) => new Date(a.fecha_publicacion) - new Date(b.fecha_publicacion));
+        setResults(filtro_1);
+
+        //se verifica si hay una categoria seleccionada
+        if (arreglo[1] !== null){
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
+          setResults(filtro_2);
+
+          //se verifica si hay un departamento seleccionado
+          if (arreglo[2] !== null){ 
+            let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+            setResults(filtro_3);
+          }
+        }else if (arreglo[2] !== null){
+          
+          //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
+          setResults(filtro_2);
+    
+        }
+      } 
+
+      //Orden_2 es del mas reciente al mas antiguo
+      if (arreglo[0] === "Orden_2") {
+        let filtro_1 = [...results_2].sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
+        setResults(filtro_1);
+
+        if (arreglo[1] !== null){
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
+            setResults(filtro_2);
+    
+            if (arreglo[2] !== null){
+             
+              let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+              setResults(filtro_3);
+            }
+        }else if (arreglo[2] !== null){
+
+          //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
+          setResults(filtro_2);
+    
+        }
+      } 
+
+      //Precio_1 es de mayor a menor
+      if (arreglo[0] === "Precio_1") {
+
+        let filtro_1 = [...results_2].sort((a, b) => b.precio - a.precio);
+        setResults(filtro_1);
+
+        if (arreglo[1] !== null){
+
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
+          setResults(filtro_2);
+    
+          if (arreglo[2] !== null){
+            let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+            setResults(filtro_3);
+          }
+        }else if (arreglo[2] !== null){
+
+          //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
+          setResults(filtro_2);
+        }
+      } 
+
+      //Precio_2 es de menor a mayor
+      if (arreglo[0] === "Precio_2") {
+        let filtro_1 = [...results_2].sort((a, b) => a.precio - b.precio);
+        setResults(filtro_1);
+
+        if (arreglo[1] !== null){
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
+            setResults(filtro_2);
+    
+            if (arreglo[2] !== null){
+             
+              let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+              setResults(filtro_3);
+            }
+        }else if (arreglo[2] !== null){
+          //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
+          setResults(filtro_2);
+    
+        }
+      }
+
+    }else if (arreglo[1] !== null){
+      //en caso de que orden no este seleccionado entonces colocamos que el orden sea verificar si hay alguna categoria seleccionada y se aplica por defecto
+      let filtro_1 = [...results_2].filter((producto) => producto.categoria === arreglo[1]);
+        setResults(filtro_1);
+
+        //verificamos si hay un departamento seleccionado
+        if (arreglo[2] !== null){ 
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
+          setResults(filtro_2);
+        }
+
+    }else if (arreglo[2] !== null){
+      //verificamos si hay un departamento seleccionado y porque los demas filtros no
+      let filtro_1 = [...results_2].filter((producto) => producto.departamento === arreglo[2]);
+      setResults(filtro_1);
+
+    }else{
+      //si se escogio un filtro y luego se de selecciono y el arreglo esta vacio entonces mandamos los resultados que tenemos guardados
+      let sin_filtros = [...results_2];
+      setResults(sin_filtros);
+
+    }
+  };
+  
+
     // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
-    const startIndex = (paginacion - 1) * 8;
-    const endIndex= startIndex + 8
+    const startIndex = (paginacion - 1) * 4;
+    const endIndex= startIndex + 4;
 
   const resultsForPage = results.slice(startIndex, endIndex);
 

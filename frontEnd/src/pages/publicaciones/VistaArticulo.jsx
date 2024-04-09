@@ -10,7 +10,7 @@ import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
 import io from 'socket.io-client';
 import ReactStars from "react-rating-stars-component";
-import EditarProductoModal from "../../components/EditPublicacionModal";
+import { Link } from 'react-router-dom';
 
 
 
@@ -265,11 +265,15 @@ function VistaArticulo() {
                 </div>
                 {autenticado ? (
                   <>
-                    <div className="btn bc-secondary fw-bold mt-3" onClick={handleChat}>Enviar Mensaje</div>   
+                    <td>Envía un mensaje al vendedor</td>
+                    <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                    <div className="btn bc-secondary fw-bold mt-2" onClick={handleChat}>Enviar</div>
                   </>
                 ):(
                 <>
-                  <button className="btn bc-secondary fw-bold mt-3" disabled>Enviar Mensaje</button>   
+                  <td>Envíale un mensaje al vendedor</td>
+                  <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                  <Link to={'/login'} className='btn bc-secondary fw-bold mt-2'>Enviar</Link>
                 </>
                 )}
               </div> 

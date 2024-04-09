@@ -14,6 +14,7 @@ CREATE TABLE tbl_usuarios (
     CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
 
+
 CREATE TABLE tbl_calificaciones (
     id INT(11) NOT NULL AUTO_INCREMENT,
     usuario_id INT(11) NOT NULL,
@@ -30,7 +31,7 @@ CREATE TABLE tbl_categorias (
     nombre_categoria varchar(20) NOT NULL,
     CONSTRAINT Pk_categorias PRIMARY KEY (categoria_id)
 );
-select *from tbl_productos
+
 
 -- TABLA PARA SABER SI EL PRODUCTO ES USADO, NUEVO, DAÑADO, REPARADO...
 CREATE TABLE tbl_estadoProducto(
@@ -39,13 +40,13 @@ CREATE TABLE tbl_estadoProducto(
     CONSTRAINT PKestadoProd PRIMARY KEY(id_estado)
 );
 
+
 CREATE TABLE tbl_departamentos(
 	id_departamento INT(11) NOT NULL AUTO_INCREMENT,
     nombre_departamento VARCHAR(50) NOT NULL,
     CONSTRAINT PKdepartamento PRIMARY KEY(id_departamento)
 );
 
-DROP TABLE tbl_productos
 
 CREATE TABLE tbl_productos(
 	producto_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -79,6 +80,7 @@ CREATE TABLE tbl_imagenesProductos(
     CONSTRAINT FKimagenProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE tbl_listaDeseos(
 	producto_id INT(11) NOT NULL,
     usuario_id INT(11) NOT NULL,
@@ -86,6 +88,7 @@ CREATE TABLE tbl_listaDeseos(
     CONSTRAINT FKdeseosUsuario FOREIGN KEY(usuario_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE,
     CONSTRAINT PK_ListaDeseos PRIMARY KEY (producto_id, usuario_id) 
 );
+
 
 CREATE TABLE tbl_mensajes(
 	mensaje_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -100,12 +103,13 @@ CREATE TABLE tbl_mensajes(
     CONSTRAINT FKmsjProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
 ('Vehiculos'),
 ('Hogar'),
-('Bebes'),
 ('Moda'),
+('Bebes'),
 ('Mascotas'),
 ('Electronica'),
 ('Servicios'),
