@@ -1,5 +1,4 @@
- 
--- Obtener un usuario
+ -- Obtener un usuario
 DELIMITER //
 create procedure sp_obtenerUsuario (
 	IN p_id INT
@@ -20,6 +19,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- Procedimiento para Actualizar Foto de Perfil
 DELIMITER //
 create procedure sp_actualizarFotoPerfil (
@@ -31,6 +31,7 @@ BEGIN
     UPDATE tbl_usuarios SET id_imagen= p_id_imagen, url_imagen= p_url_imagen WHERE id = p_id;
 END //
 DELIMITER ;
+
 
 -- AGREGAR PRODUCTOS
 DELIMITER //
@@ -49,6 +50,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- OBTENER PRODUCTOS DE UN USUARIO
 DELIMITER //
 create procedure sp_productosUsuario (
@@ -63,12 +65,8 @@ BEGIN
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
 	WHERE usuario_id= p_id AND (tbl_productos.fecha_programada IS NULL OR tbl_productos.fecha_programada <= NOW()) 
     ORDER BY tbl_productos.fecha_publicacion DESC;
-
 END //
 DELIMITER ;
-drop procedure sp_productosUsuario
-call sp_productosUsuario(8)
-
 
 
 -- OBTENER CATEGORIAS
@@ -80,6 +78,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- OBTENER DEPARTAMENTOS
 DELIMITER //
 create procedure sp_departamentos (
@@ -89,6 +88,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- OBTENER ESTADOS
 DELIMITER //
 create procedure sp_estados (
@@ -97,6 +97,7 @@ BEGIN
     SELECT *from tbl_estadoProducto;
 END //
 DELIMITER ;
+
 
 -- Procedimiento para Subir Video
 DELIMITER //
@@ -110,7 +111,6 @@ BEGIN
 END //
 DELIMITER ;
 
--- OBTENER Detalle de un producto
 
 -- OBTENER Detalle de un producto
 DELIMITER //
@@ -129,8 +129,8 @@ BEGIN
 	INNER JOIN tbl_departamentos ON tbl_departamentos.id_departamento = tbl_productos.departamento_id
     INNER JOIN tbl_usuarios ON tbl_usuarios.id = tbl_productos.usuario_id
 	WHERE producto_id= p_id;
-
 END //
+
 
 -- obtener imagenes de un producto
 DELIMITER //
@@ -141,6 +141,7 @@ BEGIN
     SELECT *FROM tbl_imagenesProductos WHERE producto_id= p_id ;
 END //
 DELIMITER ;
+
 
 -- OBTENER LAS PUBLICACIONES DEL CAROUSEL DEL INICIO
 DELIMITER //
@@ -163,7 +164,6 @@ END //
 DELIMITER ;
 
 
-
 -- OBTENER LAS PUBLICACIONES DEL CAROUSEL DE INICIO DISTINTAS AL USUARIO LOGEADO
 DELIMITER //
 CREATE PROCEDURE sp_todasPublicacionesAuth(IN p_user_id INT)
@@ -184,7 +184,6 @@ END //
 DELIMITER ;
 
 
-
 -- OBTENER TODOS LOS NOMBRES DE PRODUCTOS PARA SUGERENCIA
 DELIMITER //
 CREATE PROCEDURE sp_nombrePublicaciones()
@@ -199,6 +198,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
 DELIMITER //
 CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255))
@@ -210,7 +210,7 @@ BEGIN
         p.descripcion_producto AS descripcion,
 		p.categoria_id AS categoria,
         p.departamento_id AS departamento,
-        p.fecha_publicacion
+        p.fecha_publicacion AS fecha_publicacion
     FROM 
         tbl_productos p
     WHERE 
@@ -220,7 +220,6 @@ BEGIN
        ORDER BY p.fecha_publicacion desc;
 END //
 DELIMITER ;
-
 
 
 -- Eliminar de la lista de deseos
@@ -249,6 +248,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- Procedimiento para ayudar a colorear boton de lista de deseo
 DELIMITER //
 create procedure sp_listaValidacion (
@@ -261,6 +261,7 @@ BEGIN
 	WHERE usuario_id= p_usuario_id AND producto_id=p_producto_id ;
 END //
 DELIMITER ;
+
 
 -- Procedimiento para Eliminar una Publicacion
 DELIMITER //
@@ -288,7 +289,6 @@ END //
 DELIMITER ;
 
 
-
 -- PROMEDIO DE CALIFICACIONES
 DELIMITER //
 CREATE PROCEDURE sp_obtenerCalificaciones(
@@ -308,6 +308,7 @@ BEGIN
     SELECT promedio AS promedio_calificaciones;
 END//
 DELIMITER ;
+
 
 -- Obtener calificaciones y comentarios de un usuario
 DELIMITER //
@@ -339,6 +340,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- procedimiento para obtener mensajes de una conversacion general
 DELIMITER //
 create procedure sp_obtenerConversacion_general(
@@ -354,6 +356,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- procedimiento para obtener usuarios para escrbirle por chat
 DELIMITER //
 create procedure sp_usuariosChat (
@@ -362,10 +365,10 @@ create procedure sp_usuariosChat (
 BEGIN
 	SELECT id, nombre,username,url_imagen as foto
 	FROM tbl_usuarios
-	WHERE id <> p_usuario;
-    
+	WHERE id <> p_usuario;    
 END //
 DELIMITER ;
+
 
 -- procedimiento para obtener lasc conversaciones de productos
 DELIMITER //
@@ -385,9 +388,9 @@ BEGIN
 	WHERE (m.emisor_id = p_usuario OR m.receptor_id = p_usuario)
 	AND u.id != p_usuario AND m.producto_id <> ''
 	ORDER BY fecha_ultimo_mensaje DESC;
-
 END //
 DELIMITER ;
+
 
 -- procedimiento para obtener las conversaciones de usuario a usuario sin productos o canales
 DELIMITER //
@@ -414,9 +417,7 @@ DELIMITER ;
 CREATE EVENT inhabilitar_producto
 ON SCHEDULE EVERY 1 MINUTE
 DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 0;
-
-DROP EVENT inhabilitar_producto
+  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
 
 
 -- Cambiar estado del producto
@@ -431,5 +432,4 @@ BEGIN
         producto_id = p_producto_id;
 END //
 DELIMITER ;
-
 
