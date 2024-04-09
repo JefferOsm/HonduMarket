@@ -177,11 +177,11 @@ function SearchResultsPage() {
       filteredResults = results_3.filter((producto) => producto.departamento === 18);
       setResults(filteredResults);
     }
-    else if ( depto == "Francisco Morazán") {
+    else if ( depto == "Francisco Morazan") {
       filteredResults = results_3.filter((producto) => producto.departamento === 1);
       setResults(filteredResults);
     }
-    else if ( depto == "Cortés") {
+    else if ( depto == "Cortes") {
       filteredResults = results_3.filter((producto) => producto.departamento === 2);
       setResults(filteredResults);
     }

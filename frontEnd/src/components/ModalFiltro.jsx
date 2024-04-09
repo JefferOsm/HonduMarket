@@ -83,9 +83,9 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Colón')}>Colón</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Comayagua')}>Comayagua</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Copán')}>Copán</a></p>
-            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Cortés')}>Cortés</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Cortes')}>Cortés</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('El Paraíso')}>El Paraíso</a></p>
-            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Francisco Morazán')}>Francisco Morazán</a></p>
+            <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Francisco Morazan')}>Francisco Morazán</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Gracias a Dios')}>Gracias a Dios</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Intibucá')}>Intibucá</a></p>
             <p><a className="dropdown-item" href="#" onClick={() => handleDeptoSelect('Islas de la Bahía')}>Islas de la Bahía</a></p>
