@@ -1,4 +1,4 @@
-import React, {useState, useRef } from 'react'
+import React, {useState, useRef, useEffect } from 'react'
 import { Link,Navigate, useNavigate } from 'react-router-dom';
 import { usarAutenticacion } from '../context/autenticacion';
 import { usarProductosContex } from '../context/productosContext';
@@ -14,15 +14,15 @@ function NavBar() {
   const{autenticado,logout,usuario}=  usarAutenticacion();
 
   //funcionalidades para el modal de Busqueda
-  const inputRef = useRef(null);
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (e) => {
     setShow(true);
     obtenerPublicacionesSearch();
-    inputRef.current.blur();
+    e.target.blur();
   };
-
+  
 
 
   //Funcionalidades para el modal del Chat
@@ -51,7 +51,7 @@ function NavBar() {
                 <form className="d-flex mx-auto me-5 my-2 w-340" role="search">
                     <div className="btn bc-secondary-body text-light me-2" onClick={handleShow}><FontAwesomeIcon icon={faSearch}/></div>
                     <input className="form-control me-2 w-340" type="search" placeholder="Buscar" aria-label="Search"
-                      ref={inputRef} onClick={handleShow}/>
+                       onClick={handleShow}/>
                 </form>
 
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 justify-content-center px-3">
