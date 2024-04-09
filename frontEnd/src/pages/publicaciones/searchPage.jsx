@@ -127,23 +127,23 @@ function SearchResultsPage() {
       //Orden_1 es del mas antiguo al mas reciente
       if (arreglo[0] === "Orden_1") {
         //se define una variable la cual ya tendra el orden aplicado y se remplasa el primer arreglo
-        let Modificar_resultados = [...results_2].sort((a, b) => new Date(a.fecha_publicacion) - new Date(b.fecha_publicacion));
-        setResults(Modificar_resultados);
+        let filtro_1 = [...results_2].sort((a, b) => new Date(a.fecha_publicacion) - new Date(b.fecha_publicacion));
+        setResults(filtro_1);
 
         //se verifica si hay una categoria seleccionada
         if (arreglo[1] !== null){
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.categoria === arreglo[1]);
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
           setResults(filtro_2);
 
           //se verifica si hay un departamento seleccionado
           if (arreglo[2] !== null){ 
-            const filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+            let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
             setResults(filtro_3);
           }
         }else if (arreglo[2] !== null){
           
           //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.departamento === arreglo[2]);
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
           setResults(filtro_2);
     
         }
@@ -151,22 +151,22 @@ function SearchResultsPage() {
 
       //Orden_2 es del mas reciente al mas antiguo
       if (arreglo[0] === "Orden_2") {
-        let Modificar_resultados = [...results_2].sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
-        setResults(Modificar_resultados);
+        let filtro_1 = [...results_2].sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
+        setResults(filtro_1);
 
         if (arreglo[1] !== null){
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.categoria === arreglo[1]);
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
             setResults(filtro_2);
     
             if (arreglo[2] !== null){
              
-              const filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+              let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
               setResults(filtro_3);
             }
         }else if (arreglo[2] !== null){
 
           //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.departamento === arreglo[2]);
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
           setResults(filtro_2);
     
         }
@@ -175,43 +175,43 @@ function SearchResultsPage() {
       //Precio_1 es de mayor a menor
       if (arreglo[0] === "Precio_1") {
 
-        let Modificar_resultados = [...results_2].sort((a, b) => b.precio - a.precio);
-        setResults(Modificar_resultados);
+        let filtro_1 = [...results_2].sort((a, b) => b.precio - a.precio);
+        setResults(filtro_1);
 
         if (arreglo[1] !== null){
 
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.categoria === arreglo[1]);
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
           setResults(filtro_2);
     
           if (arreglo[2] !== null){
-            const filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+            let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
             setResults(filtro_3);
           }
         }else if (arreglo[2] !== null){
 
           //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.departamento === arreglo[2]);
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
           setResults(filtro_2);
         }
       } 
 
       //Precio_2 es de menor a mayor
       if (arreglo[0] === "Precio_2") {
-        let Modificar_resultados = [...results_2].sort((a, b) => a.precio - b.precio);
-        setResults(Modificar_resultados);
+        let filtro_1 = [...results_2].sort((a, b) => a.precio - b.precio);
+        setResults(filtro_1);
 
         if (arreglo[1] !== null){
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.categoria === arreglo[1]);
+          let filtro_2 = filtro_1.filter((producto) => producto.categoria === arreglo[1]);
             setResults(filtro_2);
     
             if (arreglo[2] !== null){
              
-              const filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
+              let filtro_3 = filtro_2.filter((producto) => producto.departamento === arreglo[2]);
               setResults(filtro_3);
             }
         }else if (arreglo[2] !== null){
           //se verifica si hay un departamento seleccionado en caso de que no haya una categoria seleccionada
-          let filtro_2 = Modificar_resultados.filter((producto) => producto.departamento === arreglo[2]);
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
           setResults(filtro_2);
     
         }
@@ -219,24 +219,24 @@ function SearchResultsPage() {
 
     }else if (arreglo[1] !== null){
       //en caso de que orden no este seleccionado entonces colocamos que el orden sea verificar si hay alguna categoria seleccionada y se aplica por defecto
-      let Modificar_resultados = [...results_2].filter((producto) => producto.categoria === arreglo[1]);
-        setResults(Modificar_resultados);
+      let filtro_1 = [...results_2].filter((producto) => producto.categoria === arreglo[1]);
+        setResults(filtro_1);
 
         //verificamos si hay un departamento seleccionado
         if (arreglo[2] !== null){ 
-          const filtro_2 = Modificar_resultados.filter((producto) => producto.departamento === arreglo[2]);
+          let filtro_2 = filtro_1.filter((producto) => producto.departamento === arreglo[2]);
           setResults(filtro_2);
         }
 
     }else if (arreglo[2] !== null){
       //verificamos si hay un departamento seleccionado y porque los demas filtros no
-      const Modificar_resultados = [...results_2].filter((producto) => producto.departamento === arreglo[2]);
-      setResults(Modificar_resultados);
+      let filtro_1 = [...results_2].filter((producto) => producto.departamento === arreglo[2]);
+      setResults(filtro_1);
 
     }else{
       //si se escogio un filtro y luego se de selecciono y el arreglo esta vacio entonces mandamos los resultados que tenemos guardados
-      const Modificar_resultados = [...results_2];
-      setResults(Modificar_resultados);
+      let sin_filtros = [...results_2];
+      setResults(sin_filtros);
 
     }
   };
