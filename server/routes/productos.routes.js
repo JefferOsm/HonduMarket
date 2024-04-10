@@ -3,7 +3,7 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
     editarProducto,
-    eliminarImagenProducto,cambiarEstadoPublicacion} from "../controllers/productos.controller.js";
+    eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarComentarioProducto} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -67,5 +67,16 @@ router.delete('/publicacion/imagen/delete/:id', autenticacionUsuario, eliminarIm
 //cambiar estado de publicacion
 router.put('/publicacion/estado/:id', autenticacionUsuario, cambiarEstadoPublicacion);
 
+// Agregar calificacion de un producto
+router.post('/calificacionProducto', autenticacionUsuario,productoParser.array('imagenes', 4), agregarCalificacionProducto);
+
+// Obtener promedio calificaciones de un producto
+router.get('/calificaciones-producto/:id', obtenerCalificacionesProducto);
+
+// Obtener calificaciones de un producto
+router.get('/comentarios/:id', obtenerComentariosProducto);
+
+// Editar calificacion de un producto
+router.put('/editarComentarioProducto', editarComentarioProducto);
 
 export default router

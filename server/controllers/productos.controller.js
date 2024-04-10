@@ -429,3 +429,92 @@ export const cambiarEstadoPublicacion = async(req,res)=>{
         });
     }
 }
+
+
+// Agregar Calificacion de un producto
+export const agregarCalificacionProducto = async (req, res) => {
+    try {
+      const { producto_id, calificacion, comentario, autor } = req.body;
+  
+      await pool.query("INSERT INTO tbl_calificaciones_producto (producto_id, calificacion, comentario, autor) VALUES (?, ?, ?, ?)", [
+        producto_id, calificacion, comentario, autor
+      ]);
+  
+      res.status(201).json({
+        message: "Calificación agregada exitosamente",
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: "Ha Ocurrido un Error",
+      });
+    }
+  }
+  
+  // Editar comentario de un producto
+  export const editarComentarioProducto = async (req, res) => {
+    try {
+      const { producto_id, calificacion, comentario, autor } = req.body;
+  
+      await pool.query("UPDATE tbl_calificaciones_producto SET calificacion = ?, comentario = ? WHERE producto_id = ? AND autor = ?", [
+        calificacion, comentario, producto_id, autor
+      ]);
+  
+      res.status(200).json({
+        message: "Comentario actualizado exitosamente",
+      });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: "Ha Ocurrido un Error",
+      });
+    }
+  };
+  
+  // Obtener promedio calificaciones de un producto
+  export const obtenerCalificacionesProducto = async (req, res) => {
+    try {
+      const [rows] = await pool.query("CALL sp_obtenerCalificacionesProducto(?)", [
+        req.params.id
+      ]);
+  
+      if (rows.length <= 0) {
+        return res.status(404).json({
+          message: "No se encontro el producto",
+        });
+      }
+  
+      res.send(rows[0]);
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: "Ha Ocurrido un Error",
+      });
+    }
+  }
+  
+  // Obtener calificaciones de un producto
+  export const obtenerComentariosProducto = async (req, res) => {
+    try {
+      const [rows] = await pool.query("CALL sp_obtenerComentariosProducto(?)", [
+        req.params.id
+      ]);
+  
+      if (rows.length <= 0) {
+        return res.status(404).json({
+          message: "No se encontro el producto",
+        });
+      }
+  
+      res.send(rows[0]);
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: "Ha Ocurrido un Error",
+      });
+    }
+  }
