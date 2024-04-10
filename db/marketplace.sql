@@ -145,6 +145,19 @@ VALUES
 ('Gracias a Dios');
 
 
+create table tbl_tipodenuncia(
+	id INT(11) NOT NULL AUTO_INCREMENT,
+    nombre text null,
+    CONSTRAINT PKtipodenuncia PRIMARY KEY (id)
+);
+
+INSERT INTO tbl_tipodenuncia(nombre)
+VALUES
+('engañoso'),
+('indebido'),
+('robo'),
+('posible estafa');
+
 CREATE TABLE tbl_calificaciones_producto (
     id INT(11) NOT NULL AUTO_INCREMENT,
     producto_id INT(11) NOT NULL,

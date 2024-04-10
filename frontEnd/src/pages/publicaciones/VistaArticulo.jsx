@@ -11,11 +11,25 @@ import ModalChat from "../Chat/ModalChat";
 import io from 'socket.io-client';
 import ReactStars from "react-rating-stars-component";
 import { Link } from 'react-router-dom';
+import ModalDenuncia from '../../components/DenunciaModal';
+
 import { Collapse, Button } from 'react-bootstrap';
 
 
 
 function VistaArticulo() {
+
+    //para el modal de denuncias
+    const [showDenunciaModal, setShowDenunciaModal] = useState(false);
+    const handleOpenDenunciaModal = () => {
+      setShowDenunciaModal(true);
+    };
+    
+    const handleCloseDenunciaModal = () => {
+      setShowDenunciaModal(false);
+    };
+    
+
 
   //funcionalidades para el modal de Usuario
   const [show, setShow] = useState(false);
@@ -338,6 +352,13 @@ function VistaArticulo() {
                 )}
               </div>
             </div>
+            {/* Botón para abrir el modal de denuncias */}
+            <div className="d-flex justify-content-center mt-3">
+              <button className="btn btn-danger" onClick={handleOpenDenunciaModal}>
+                Denunciar 
+              </button>
+            </div>
+
           </div>
 
 
@@ -523,6 +544,8 @@ function VistaArticulo() {
       <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id} />
       {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
       <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
+    <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} />
+
     </>
   )
 }
