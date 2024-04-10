@@ -19,7 +19,11 @@ import { obtenerCategoriasRequest, obtenerPublicacionesUsuario,obtenerPublicacio
         editarCalificacionRequest,
         editarPublicacionRequest,
         eliminarImagenProdReq,
-        cambiarEstadoPublicacionRequest
+        cambiarEstadoPublicacionRequest,
+        agregarCalificacionProductoRequest,
+        editarCalificacionProductoRequest,
+        obtenerCalificacionesProductoRequest,
+        obtenerComentariosProductoRequest,
     } from "../api/productos";
 
 
@@ -75,6 +79,14 @@ export const ProductosProvider = ({children})=>{
     const [editPublicacion, setEditarPublicacion] = useState([]);
     //Cambiar estado de la publicacion
     const [cambiarEstado, setCambiarEstado] = useState([]);
+    //calificacion de un producto
+    const [calificacionProducto, setCalificacionProducto]= useState([]);
+    //editar calificacion de un producto
+    const [editarCalificacionProductos, setEditarCalificacionProducto]= useState([]);
+    //calificaciones promedio de un producto
+    const [calificacionesProducto, setCalificacionesProducto]= useState([]);
+    //obtener comentarios de un producto
+    const [comentariosProducto, setComentariosProducto]= useState([]);
 
 
     const obtenerCategorias= async()=>{
@@ -359,7 +371,52 @@ export const ProductosProvider = ({children})=>{
         },[mensajeDeseo])
         
         
+    
+    // Agregar calificacion a un producto
+    const agregarCalificacionProducto = async(values)=>{
+        try {
+            const response = await agregarCalificacionProductoRequest(values);
+            setCalificacionProducto(response)
+            console.log(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+    // Editar calificacion de un producto
+    const editarCalificacionProducto = async(values)=>{
+        try {
+            const response = await editarCalificacionProductoRequest(values);
+            setEditarCalificacionProducto(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Obtener califiaciones de un producto
+    const obtenerCalificacionesProducto = async(id)=>{
+        try {
+            const response = await obtenerCalificacionesProductoRequest(id);
+            setCalificacionesProducto(response)
+            //console.log(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Obtener comentarios de un producto
+    const obtenerComentariosProducto = async(id)=>{
+        try {
+            const response = await obtenerComentariosProductoRequest(id);
+            setComentariosProducto(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return(
         <ProductosContext.Provider value={{
           obtenerCategorias,
@@ -404,7 +461,15 @@ export const ProductosProvider = ({children})=>{
           editPublicacion,
           eliminarImagenProd,
           cambiarEstado,
-          cambiarEstadoPublicacion
+          cambiarEstadoPublicacion,
+            obtenerCalificacionesProducto,
+            obtenerComentariosProducto,
+            agregarCalificacionProducto,
+            editarCalificacionProducto,
+            calificacionProducto,
+            calificacionesProducto,
+            comentariosProducto,
+            editarCalificacionProductos
         }}>
             {children}
         </ProductosContext.Provider>
