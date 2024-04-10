@@ -122,3 +122,23 @@ export const cambiarEstadoPublicacionRequest = async(id)=>{
   const response= await axios.put(`/productos/publicacion/estado/${id}`);
   return response.data
 }
+
+export const agregarCalificacionProductoRequest = async (values) => {
+  const response = await axios.post(`/productos/calificacionProducto/`, values);
+  return response.data;
+};
+
+export const editarCalificacionProductoRequest = async (values) => {
+  const response = await axios.put(`/productos/editarComentarioProducto/`, values);
+  return response.data;
+}
+
+export const obtenerCalificacionesProductoRequest = async (id) => {
+  const response = await axios.get(`productos/calificaciones-producto/${id}`);
+  return response.data;
+}
+
+export const obtenerComentariosProductoRequest = async (id) => {
+  const response = await axios.get(`/productos/comentarios/${id}`);
+  return response.data;
+};
