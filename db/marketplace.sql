@@ -143,3 +143,22 @@ VALUES
 ('Cortes'),
 ('Lempira'),
 ('Gracias a Dios');
+
+
+CREATE TABLE tbl_calificaciones_producto (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    producto_id INT(11) NOT NULL,
+    calificacion INT NOT NULL,
+    comentario TEXT NULL,
+    autor VARCHAR(20) NULL,
+    CONSTRAINT PKcalificacionesProducto PRIMARY KEY (id),
+    CONSTRAINT FKproductoId FOREIGN KEY (producto_id) REFERENCES tbl_productos(producto_id)
+);
+
+CREATE TABLE tbl_imagenes_calificaciones (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    calificacion_id INT(11) NOT NULL,
+    imagen_url VARCHAR(255),
+    CONSTRAINT PKimagenesCalificaciones PRIMARY KEY (id),
+    CONSTRAINT FKcalificacionId FOREIGN KEY (calificacion_id) REFERENCES tbl_calificaciones_producto(id)
+);
