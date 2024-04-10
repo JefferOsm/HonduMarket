@@ -31,9 +31,10 @@ function SearchResultsPage() {
   const [option_anterior, setoption_anterior] = useState("");
 
   useEffect(() => {
+    //setResults([]);
     const fetchProducts = async () => {
       try {
-        setResults([]); // Limpia los resultados anteriores
+         // Limpia los resultados anteriores
         const filteredProducts = await buscarProductos(query);
         console.log(filteredProducts)
         setResults(filteredProducts); // arreglo que tiene los resultados de la busqueda

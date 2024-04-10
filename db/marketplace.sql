@@ -143,3 +143,17 @@ VALUES
 ('Cortes'),
 ('Lempira'),
 ('Gracias a Dios');
+
+
+create table tbl_tipodenuncia(
+	id INT(11) NOT NULL AUTO_INCREMENT,
+    nombre text null,
+    CONSTRAINT PKtipodenuncia PRIMARY KEY (id)
+);
+
+INSERT INTO tbl_tipodenuncia(nombre)
+VALUES
+('engañoso'),
+('indebido'),
+('robo'),
+('posible estafa');

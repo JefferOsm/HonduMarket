@@ -138,7 +138,6 @@ function CentroChat() {
 
   //recibir mensajes
   useEffect(()=>{
-    console.log('useefect en uso')
     socket.current.on('getMensajes', mensaje=>{
       setmensajes(prevMessages => [...prevMessages, mensaje]);
       console.log(mensaje)
@@ -254,7 +253,7 @@ function CentroChat() {
                   Productos
                 </a>
 
-                <a
+                {/* <a
                   className={`nav-link text-light fs-6 mx-2  ${
                     activo === "Canales" ? "nav-chat-active" : ""
                   }`}
@@ -264,7 +263,7 @@ function CentroChat() {
                   }}
                 >
                   Canales
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
@@ -320,7 +319,7 @@ function CentroChat() {
                     ></div>
                     <div className="title d-flex flex-column">
                       <div className="fw-bold">@{conversacion.username}</div>
-                      <div className="subtitle">{"¿Qué estás haciendo?"}</div>
+                      <div className="subtitle"></div>
                     </div>
                     <div className="d-felex flex-column ms-auto text-center">
                       <div>{horaFormateada}</div>
@@ -370,7 +369,7 @@ function CentroChat() {
                         {conversacion.nombre_producto} (@{conversacion.username}
                         )
                       </div>
-                      <div className="subtitle">{"¿Qué estás haciendo?"}</div>
+                      <div className="subtitle"></div>
                     </div>
                     <div className="d-felex flex-column ms-auto text-center">
                       <div>{horaFormateada}</div>

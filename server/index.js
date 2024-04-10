@@ -33,7 +33,7 @@ io.on('connection', socket =>{
     }
   
     // Agregar el nuevo registro a la sala si no existe
-    if (!salaProductos.some(sala => sala.usuarioId === usuarioId && sala.socketId === socket.id)) {
+    if (!salaProductos.some(sala => sala.usuarioId === usuarioId)) {
       salaProductos.push({
         usuarioId,
         socketId: socket.id
