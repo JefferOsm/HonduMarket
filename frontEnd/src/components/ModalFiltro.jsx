@@ -91,43 +91,45 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
       <Modal.Header closeButton  className=''>
         <Modal.Title className='fw-bold'>Filtros de búsqueda</Modal.Title>
       </Modal.Header>
-      <Modal.Body className='d-flex flex-row justify-content-between align-items-start text-body'>
+      <Modal.Body>
 
-        {/*Parte para hacer filtro por un orden de publicacion*/}
-        <ul className="list-group list-group-flush">
-            <li className="list-group-item mx-auto">Ordenar del</li>
-            <li className="list-group-item">
+        <div className='d-flex'>
+          {/*Parte para hacer filtro por un orden de publicacion*/}
+          <ul className="list-group list-group-flush">
+              <li className="list-group-item ">Ordenar del</li>
+              <li className="list-group-item d-flex justify-content-center">
 
-              <button type="button" className={activoOrden[0] ? "btn btn-light active mt-3" : "btn btn-light mt-3"} 
-                onClick={() => handleOptionSelect('Orden_1')}>más antiguo al más reciente</button><br />
+                <button type="button" className={activoOrden[0] ? "btn btn-light active mt-3 me-md-2" : "btn btn-light mt-3 me-md-2"} 
+                  onClick={() => handleOptionSelect('Orden_1')}>más antiguo al más reciente</button>
 
-              <button type="button" className={activoOrden[1] ? "btn btn-light active mt-3" : "btn btn-light mt-3"}
-                onClick={() => handleOptionSelect('Orden_2')}>más reciente al más antiguo</button><br />
+                <button type="button" className={activoOrden[1] ? "btn btn-light active mt-3" : "btn btn-light mt-3"}
+                  onClick={() => handleOptionSelect('Orden_2')}>más reciente al más antiguo</button>
+              </li>
+          </ul>
+
+          {/*Parte para hacer filtro por un orden del precio*/}
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">Precio</li>
+            <li className="list-group-item d-flex justify-content-center">
+
+              <button type="button" className={activoOrden[2] ? "btn btn-light active mt-3 me-md-2" : "btn btn-light mt-3 me-md-2"} 
+              onClick={() => handleOptionSelect('Precio_1')}>De mayor a menor</button>
+
+              <button type="button" className={activoOrden[3] ? "btn btn-light active mt-3" : "btn btn-light mt-3"} 
+              onClick={() => handleOptionSelect('Precio_2')}>De menor a mayor</button>
             </li>
-        </ul>
-
-        {/*Parte para hacer filtro por un orden del precio*/}
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item mx-auto">Precio</li>
-          <li className="list-group-item">
-
-            <button type="button" className={activoOrden[2] ? "btn btn-light active mt-3" : "btn btn-light mt-3"} 
-            onClick={() => handleOptionSelect('Precio_1')}>De mayor a menor</button><br />
-
-            <button type="button" className={activoOrden[3] ? "btn btn-light active mt-3" : "btn btn-light mt-3"} 
-            onClick={() => handleOptionSelect('Precio_2')}>De menor a mayor</button><br />
-          </li>
-        </ul>
+          </ul>
+        </div>
 
         {/*Parte para hacer filtro por Categoría*/}
         <ul className="list-group list-group-flush">
-          <li className="list-group-item mx-auto">Categoría</li>
-          <li className="list-group-item">
+          <li className="list-group-item">Categoría</li>
+          <li className="list-group-item ">
             {categorias.map((categoria,index) => (
               <React.Fragment key={index}>
-              <button type="button" className={activoCategoria[categoria.categoria_id - 1] ? "btn btn-light active mt-3" : "btn btn-light mt-3"}
+              <button type="button" className={activoCategoria[categoria.categoria_id - 1] ? "btn btn-light active mt-3 me-md-2" : "btn btn-light mt-3 me-md-2"}
               onClick={() => handleCategorySelect(categoria.categoria_id)}>{categoria.nombre_categoria}</button>
-              <br />
+              
               </React.Fragment>
             ))}
           </li>
@@ -135,13 +137,13 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
 
         {/*Parte para hacer filtro por Departamento*/}
         <ul className="list-group list-group-flush">
-          <li className="list-group-item mx-auto">Departamento</li>
+          <li className="list-group-item ">Departamento</li>
           <li className="list-group-item">
             {departamentos.map((departamento,index) => (
               <React.Fragment key={index}>
-              <button type="button" className={activoDepartamento[departamento.id_departamento - 1] ? "btn btn-light active mt-3" : "btn btn-light mt-3"}
+              <button type="button" className={activoDepartamento[departamento.id_departamento - 1] ? "btn btn-light active mt-3 me-md-2" : "btn btn-light mt-3 me-md-2"}
               onClick={() => handleDeptoSelect(departamento.id_departamento)}>{departamento.nombre_departamento}</button>
-              <br />
+              
               </React.Fragment>
             ))}
           </li>
