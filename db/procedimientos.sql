@@ -433,3 +433,12 @@ BEGIN
 END //
 DELIMITER ;
 
+
+-- OBTENER tipos de denuncia
+DELIMITER //
+create procedure sp_tiposdenuncia (
+)
+BEGIN
+    SELECT *from tbl_tipodenuncia;
+END //
+DELIMITER ;
