@@ -3,7 +3,7 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
     editarProducto,
-    eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarComentarioProducto} from "../controllers/productos.controller.js";
+    eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarCalificacionProducto} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -77,6 +77,6 @@ router.get('/calificaciones-producto/:id', obtenerCalificacionesProducto);
 router.get('/comentarios/:id', obtenerComentariosProducto);
 
 // Editar calificacion de un producto
-router.put('/editarComentarioProducto', editarComentarioProducto);
+router.put('/editarComentarioProducto/:id',productoParser.array('imagenes', 4), editarCalificacionProducto);
 
 export default router

@@ -128,8 +128,8 @@ export const agregarCalificacionProductoRequest = async (values) => {
   return response.data;
 };
 
-export const editarCalificacionProductoRequest = async (values) => {
-  const response = await axios.put(`/productos/editarComentarioProducto/`, values);
+export const editarCalificacionProductoRequest = async (values,id) => {
+  const response = await axios.put(`/productos/editarComentarioProducto/${id}`, values);
   return response.data;
 }
 

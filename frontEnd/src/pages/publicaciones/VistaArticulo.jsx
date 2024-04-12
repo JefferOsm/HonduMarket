@@ -14,21 +14,21 @@ import { Link } from 'react-router-dom';
 import ModalDenuncia from '../../components/DenunciaModal';
 
 import { Collapse, Button } from 'react-bootstrap';
-
+import ImageModal from '../../components/ImageModal';
 
 
 function VistaArticulo() {
 
-    //para el modal de denuncias
-    const [showDenunciaModal, setShowDenunciaModal] = useState(false);
-    const handleOpenDenunciaModal = () => {
-      setShowDenunciaModal(true);
-    };
-    
-    const handleCloseDenunciaModal = () => {
-      setShowDenunciaModal(false);
-    };
-    
+  //para el modal de denuncias
+  const [showDenunciaModal, setShowDenunciaModal] = useState(false);
+  const handleOpenDenunciaModal = () => {
+    setShowDenunciaModal(true);
+  };
+
+  const handleCloseDenunciaModal = () => {
+    setShowDenunciaModal(false);
+  };
+
 
 
   //funcionalidades para el modal de Usuario
@@ -147,16 +147,23 @@ function VistaArticulo() {
   const [comentarios, setComentarios] = useState(null);
   const [calificacionesProducto, setCalificacionesProducto] = useState(null);
   const [calificacionProducto, setCalificacionProducto] = useState(null);
-  const [formValues, setFormValues] = useState({ calificacion: 0, comentario: '' });
+  const [formValues, setFormValues] = useState({
+    calificacion: 0,
+    comentario: '',
+    imagenes: [],
+  });
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Función para verificar si un usuario ya comentó
-  const usuarioYaComento = (username) => {
+  // Funciones para verificar si un usuario ya comentó o es el propietario del producto
+  const esPropietarioDelProducto = (username) => {
     // Verificar si el usuario es el propietario del producto
-    if (usuario && detailProduct && usuario.id === detailProduct.idUsuario) {
-      return true;
-    }
+    return usuario && detailProduct && usuario.id === detailProduct.idUsuario;
+  };
+
+  const usuarioYaComento = (username) => {
     // Buscar en la lista de comentarios si ya existe un comentario de este usuario
     if (comentarios) {
       const comentarioExistente = comentarios.find(comentario => comentario.autor === username);
@@ -192,6 +199,19 @@ function VistaArticulo() {
 
     fetchCalificacionesProductos();
   }, [detailProduct]);
+
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openModal = (image) => {
+    setSelectedImage(image);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
 
   // Convertir el número del precio con formato con comas
@@ -355,7 +375,7 @@ function VistaArticulo() {
             {/* Botón para abrir el modal de denuncias */}
             <div className="d-flex justify-content-center mt-3">
               <button className="btn btn-danger" onClick={handleOpenDenunciaModal}>
-                Denunciar 
+                Denunciar
               </button>
             </div>
 
@@ -403,8 +423,8 @@ function VistaArticulo() {
           )}
           <div>
             {comentarios && comentarios.map((comentario, index) => (
-              <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2" key={index}>
-                <div className="card-body" style={{ height: '10rem' }}>
+              <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2" key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div className="card-body" style={{ flex: '1 0 auto' }}>
                   <h5 className="card-title fw-semibold" style={{ fontSize: '0.9rem' }}>{comentario.autor}</h5>
                   <ReactStars
                     count={5}
@@ -419,14 +439,33 @@ function VistaArticulo() {
                       <p>{comentario.comentario}</p>
                     </div>
                   </div>
+                  {comentario.imagenes && comentario.imagenes.split(',').map((imagenUrl, imagenIndex) => (
+                    <img
+                      src={imagenUrl}
+                      alt={`Imagen ${imagenIndex + 1}`}
+                      key={imagenIndex}
+                      onClick={() => openModal(imagenUrl)}
+                      style={{
+                        width: '100px', // Ajusta este valor para cambiar el ancho de la imagen
+                        height: '100px', // Ajusta este valor para cambiar la altura de la imagen
+                        objectFit: 'cover',
+                        margin: '10px' // Añade un margen alrededor de la imagen
+                      }}
+                    />
+                  ))}
                 </div>
               </div>
             ))}
+            <ImageModal
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              selectedImage={selectedImage}
+            />
 
             <div className="container p-4">
               <div className="row justify-content-center">
                 <div className="col-md-12">
-                  {usuario && detailProduct && usuario.id !== detailProduct.idUsuario && (
+                  {usuario && detailProduct && !usuarioYaComento(usuario.username) && !esPropietarioDelProducto(usuario.username) && (
                     <Button
                       onClick={() => setOpen(!open)}
                       aria-controls="example-collapse-text"
@@ -434,6 +473,16 @@ function VistaArticulo() {
                       className="mb-3"
                     >
                       Envia tu opinión
+                    </Button>
+                  )}
+                  {usuario && detailProduct && usuarioYaComento(usuario.username) && (
+                    <Button
+                      onClick={() => setEditOpen(!editOpen)}
+                      aria-controls="example-collapse-text"
+                      aria-expanded={editOpen}
+                      className="mb-3"
+                    >
+                      Editar opinión
                     </Button>
                   )}
                   {submitSuccess && (
@@ -456,28 +505,25 @@ function VistaArticulo() {
                       <div className="card-body">
                         <form className="p-4" onSubmit={async (e) => {
                           e.preventDefault();
+                          setIsLoading(true);
 
-                          if (usuarioYaComento(usuario.username)) {
-                            await editarCalificacionProducto({
-                              producto_id: detailProduct.id,
-                              autor: usuario.username,
-                              calificacion: formValues.calificacion,
-                              comentario: formValues.comentario
-                            });
-                          } else {
-                            await agregarCalificacionProducto({
-                              producto_id: detailProduct.id,
-                              autor: usuario.username,
-                              calificacion: formValues.calificacion,
-                              comentario: formValues.comentario
-                            });
+                          const data = new FormData();
+                          data.append('producto_id', detailProduct.id);
+                          data.append('autor', usuario.username);
+                          data.append('calificacion', formValues.calificacion);
+                          data.append('comentario', formValues.comentario);
+
+
+                          // Añadir las imágenes al objeto FormData
+                          for (let i = 0; i < formValues.imagenes.length; i++) {
+                            data.append(`imagenes`, formValues.imagenes[i]);
                           }
-                          if (formValues.imagen) {
-                            await subirImagen(formValues.imagen);
-                          }
+
+                          const response = await agregarCalificacionProducto(data);
+
 
                           // Restablecer formValues después de enviar el formulario
-                          setFormValues({ calificacion: 0, comentario: '' });
+                          setFormValues({ calificacion: 0, comentario: '', imagenes: [] });
 
                           // Actualizar las calificaciones y comentarios
                           const calificacionesResult = await obtenerCalificacionesProducto(detailProduct.id);
@@ -490,6 +536,7 @@ function VistaArticulo() {
 
                           // Cerrar el formulario
                           setOpen(false);
+                          setIsLoading(false);
                         }}>
                           <h2 className="text-center fw-bold">Envia tu opinión</h2>
 
@@ -522,17 +569,150 @@ function VistaArticulo() {
                             <label className="form-label">Imagen</label>
                             <input
                               type="file"
-                              name="imagen"
+                              name="imagenes"
                               className="form-control"
-                              onChange={(e) => setFormValues({ ...formValues, imagen: e.target.files[0] })}
+                              multiple
+                              onChange={(e) => {
+                                const files = Array.from(e.target.files);
+
+                                // Verificar el tamaño de los archivos
+                                const maxSize = 10 * 1024 * 1024; // 10MB
+                                for (let file of files) {
+                                  if (file.size > maxSize) {
+                                    alert('El tamaño de una imagen no puede superar los 10MB');
+                                    e.target.value = null; // Borrar la selección de archivos
+                                    return;
+                                  }
+                                }
+
+                                // Verificar el número de archivos
+                                if (files.length > 4) {
+                                  alert('No puedes seleccionar más de 4 imágenes');
+                                  e.target.value = null; // Borrar la selección de archivos
+                                  return;
+                                }
+
+                                setFormValues({ ...formValues, imagenes: files });
+                              }}
                             />
                           </div>
 
-                          <button type="submit" className="btn fw-bold bc-secondary">Enviar</button>
+                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading}>Enviar</button>
                         </form>
                       </div>
                     </div>
                   </Collapse>
+
+                  <Collapse in={editOpen}>
+                    <div className="card bc-degrate text-light shadow">
+                      <div className="card-body">
+                        <form className="p-4" onSubmit={async (e) => {
+                          e.preventDefault();
+                          setIsLoading(true);
+
+                          // Obtener los comentarios del producto
+                          const comentariosResultado = await obtenerComentariosProducto(detailProduct.id);
+
+                          // Buscar el comentario que quieres editar
+                          const comentarioAEditar = comentariosResultado.find(comentario => comentario.autor === usuario.username);
+
+                          const data = new FormData();
+                          data.append('producto_id', detailProduct.id);
+                          data.append('autor', usuario.username);
+                          data.append('calificacion', formValues.calificacion);
+                          data.append('comentario', formValues.comentario);
+                          data.append('id', comentarioAEditar.id);
+
+
+                          // Añadir las imágenes al objeto FormData
+                          for (let i = 0; i < formValues.imagenes.length; i++) {
+                            data.append(`imagenes`, formValues.imagenes[i]);
+                          }
+
+                          const response = await editarCalificacionProducto(data);
+
+
+                          // Restablecer formValues después de enviar el formulario
+                          setFormValues({ calificacion: 0, comentario: '', imagenes: [] });
+
+                          // Actualizar las calificaciones y comentarios
+                          const calificacionesResult = await obtenerCalificacionesProducto(detailProduct.id);
+                          setCalificacionProducto(calificacionesResult);
+                          const comentariosResult = await obtenerComentariosProducto(detailProduct.id);
+                          setComentarios(comentariosResult);
+
+                          // Establecer submitSuccess en true para mostrar el mensaje de éxito
+                          setSubmitSuccess(true);
+
+                          // Cerrar el formulario
+                          setEditOpen(false);
+                          setIsLoading(false);
+                        }}>
+                          <h2 className="text-center fw-bold">Envia tu opinión</h2>
+
+                          <div className="mb-3">
+                            <label className="form-label">Calificación</label>
+                            <ReactStars
+                              count={5}
+                              value={formValues.calificacion ? Number(formValues.calificacion) : 0}
+                              onChange={(newRating) => {
+                                setFormValues({ ...formValues, calificacion: newRating });
+                              }}
+                              size={24}
+                              activeColor="#ffd700"
+                            />
+                          </div>
+
+                          <div className="mb-3">
+                            <label className="form-label">Comentario</label>
+                            <input
+                              type="text"
+                              name="comentario"
+                              className="form-control"
+                              placeholder="Comentario"
+                              value={formValues.comentario}
+                              onChange={(e) => setFormValues({ ...formValues, comentario: e.target.value })}
+                            />
+                          </div>
+
+                          <div className="mb-3">
+                            <label className="form-label">Imagen</label>
+                            <input
+                              type="file"
+                              name="imagenes"
+                              className="form-control"
+                              multiple
+                              onChange={(e) => {
+                                const files = Array.from(e.target.files);
+
+                                // Verificar el tamaño de los archivos
+                                const maxSize = 10 * 1024 * 1024; // 10MB
+                                for (let file of files) {
+                                  if (file.size > maxSize) {
+                                    alert('El tamaño de una imagen no puede superar los 10MB');
+                                    e.target.value = null; // Borrar la selección de archivos
+                                    return;
+                                  }
+                                }
+
+                                // Verificar el número de archivos
+                                if (files.length > 4) {
+                                  alert('No puedes seleccionar más de 4 imágenes');
+                                  e.target.value = null; // Borrar la selección de archivos
+                                  return;
+                                }
+
+                                setFormValues({ ...formValues, imagenes: files });
+                              }}
+                            />
+                          </div>
+
+                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading}>Enviar</button>
+                        </form>
+                      </div>
+                    </div>
+                  </Collapse>
+
                 </div>
               </div>
             </div>
@@ -544,7 +724,7 @@ function VistaArticulo() {
       <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id} />
       {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
       <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
-    <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} />
+      <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} />
 
     </>
   )
