@@ -491,15 +491,16 @@ DELIMITER ;
 
 
 -- Obtener calificaciones y comentarios de un producto
-DELIMITER //
 CREATE PROCEDURE sp_obtenerComentariosProducto(
     IN p_producto_id INT
 )
 BEGIN
-    -- Seleccionar las calificaciones y comentarios del producto especificado
-    SELECT c.calificacion, c.comentario, c.autor
+    -- Seleccionar las calificaciones, comentarios, autor, id e imágenes del producto especificado
+    SELECT c.id, c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
     FROM tbl_calificaciones_producto c
-    WHERE c.producto_id = p_producto_id;
+    LEFT JOIN tbl_imagenes_calificaciones i ON c.id = i.calificacion_id
+    WHERE c.producto_id = p_producto_id
+    GROUP BY c.id;
 END//
 DELIMITER ;
 
