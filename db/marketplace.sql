@@ -171,7 +171,8 @@ CREATE TABLE tbl_calificaciones_producto (
 CREATE TABLE tbl_imagenes_calificaciones (
     id INT(11) NOT NULL AUTO_INCREMENT,
     calificacion_id INT(11) NOT NULL,
-    imagen_url VARCHAR(255),
+    imagen_url TEXT,
+    id_imagen TEXT,
     CONSTRAINT PKimagenesCalificaciones PRIMARY KEY (id),
     CONSTRAINT FKcalificacionId FOREIGN KEY (calificacion_id) REFERENCES tbl_calificaciones_producto(id)
 );
