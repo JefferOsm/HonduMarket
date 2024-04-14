@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import { usarChatContext } from '../../context/chatContext';
 import { usarAutenticacion } from '../../context/autenticacion';
 import { faPaperPlane, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,7 @@ function CentroChat() {
       const convProd= await obtenerConvProd()
       setConversaciones(convProd);
     }else if(opcion === 'Canales'){
-
+      return
     }
   }
 
@@ -184,13 +184,13 @@ function CentroChat() {
 
   //funcionalidades para hacer la busqueda del chat
   const [busqueda,setBusqueda]= useState('');
-  const [matchPublicaciones, setMatchPublicaciones]=useState([]);
+  //const [matchPublicaciones, setMatchPublicaciones]=useState([]);
 
   //filtrar publicaciones para mostrar los nombres
   const handleChange= e=>{
     setMostrarMsj(false);
     if (e.target.value.trim() == ''){
-        setMatchPublicaciones([])
+        //setMatchPublicaciones([])
         setConversaciones(convGen);
         setBusqueda(e.target.value)
     }else{
@@ -205,7 +205,7 @@ function CentroChat() {
             return publicacion
         }
     })
-    setMatchPublicaciones(resultado);
+    //setMatchPublicaciones(resultado);
     setConversaciones(resultado)
     document.getElementById('buscarUser').value=''
   }

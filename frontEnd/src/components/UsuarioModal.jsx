@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react'
+/* eslint-disable react/prop-types */
+import  {useEffect, useState} from 'react'
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMap, faPhone, faEnvelope, faImage, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
 import { usarAutenticacion } from '../context/autenticacion';
@@ -12,7 +13,7 @@ import { Collapse } from 'react-bootstrap';
 
 function UsuarioModal ({show,handleClose}) {
   const {autenticado,usuario} = usarAutenticacion();
-  const {obtenerUsuario, usuarioProduct,obtenerCalificaciones,detailProduct,obtenerComentarios,agregarCalificacion,editarCalificacion} = usarProductosContex();
+  const {usuarioProduct,obtenerCalificaciones,detailProduct,obtenerComentarios,agregarCalificacion,editarCalificacion} = usarProductosContex();
  
 
 
@@ -49,6 +50,7 @@ function UsuarioModal ({show,handleClose}) {
     }
     
     fetchCalificaciones();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[detailProduct.idUsuario])
 
   //ACTUALIZAR PROMEDIO DE CALIFICACIONES
@@ -82,7 +84,6 @@ function UsuarioModal ({show,handleClose}) {
   return (
     <Modal show={show} onHide={handleClose} className='modal-dialog-centered'>
       <Modal.Header closeButton>
-        <Modal.Title className='ms-auto'>Contacto</Modal.Title>
       </Modal.Header>
       <Modal.Body>
 

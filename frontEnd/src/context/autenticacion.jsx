@@ -3,6 +3,7 @@ import {registroRequest, loginRequest, verificarTokenRequest,
         actualizarUsuarioRequest, eliminarUsuarioRequest, actualizarFotoReques,
         actualizarPasswordRequest} from '../api/auth/registrar'
 import Cookies from 'js-cookie';
+import { obtenerTipoDenunciasReq } from "../api/denuncias";
 
 export const AutenticacionContext = createContext()
 
@@ -94,7 +95,7 @@ export const AutenticacionProvider = ({children}) =>{
     //Actualizar Password
     const actualizarPassword=  async(values)=>{
         try {
-            const response = await actualizarPasswordRequest(values)
+            await actualizarPasswordRequest(values)
             return true
         } catch (error) {
             setErroresAut(error.response.data);
@@ -112,6 +113,18 @@ export const AutenticacionProvider = ({children}) =>{
             setPassw(null)
         }
     }
+
+       //obnener tipos de denuncias
+    const tiposDenuncias=async()=>{
+         try {
+             const response = await obtenerTipoDenunciasReq()
+             return response
+         } catch (error) {
+             setErroresAut(error.response.data);
+             return false
+         }
+     }
+
 
     //Eliminar los errores despues de 5 segundos
     useEffect(()=>{
@@ -172,7 +185,8 @@ export const AutenticacionProvider = ({children}) =>{
             fotoPerfil,
             actualizarPassword,
             passw,
-            erroresAut
+            erroresAut,
+            tiposDenuncias
         }}>
             {children}
         </AutenticacionContext.Provider>

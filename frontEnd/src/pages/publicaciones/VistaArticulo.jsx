@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react"
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react"
 import { useParams, useNavigate } from 'react-router-dom';
 import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faCloud, faCloudArrowDown, faCloudArrowUp, faHeart, faSquare, faSquarePen, faSquarePersonConfined, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle,  faCloudArrowUp, faHeart,  faPhone,  faSquarePen,  faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
-import io from 'socket.io-client';
 import ReactStars from "react-rating-stars-component";
 import { Link } from 'react-router-dom';
 import ModalDenuncia from '../../components/DenunciaModal';
@@ -54,9 +55,6 @@ function VistaArticulo() {
     setShowDelete(true)
   };
 
-  //funcionalidades para el modal de Editar Publicacion
-  const [showEdit, setShowEdit] = useState(false);
-  const handleCloseEdit = () => setShowEdit(false);
   const navigate = useNavigate();
   const handleShowEdit = () => {
     navigate(`/Editar_articulo/${detailProduct.nombre}/${detailProduct.id}`);
@@ -355,18 +353,26 @@ function VistaArticulo() {
                       )}
                     </div>
                   </div>
-                  <div className="btn bc-primary text-light" onClick={handleShow}>Información</div>
+                  <div className="d-flex flex-column">
+                  <div className="btn bc-primary text-light mx-auto" onClick={handleShow}>
+                    <FontAwesomeIcon icon={faPhone}/> Informacion
+                  </div>
+                  <button className="btn btn-danger my-2 mx-auto" onClick={handleOpenDenunciaModal}>
+                    <FontAwesomeIcon icon={faTriangleExclamation}/> Reportar
+                  </button>
+                  </div>
+                  
                 </div>
                 {autenticado ? (
                   <>
-                    <td>Envía un mensaje al vendedor</td>
-                    <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                    <div>Envía un mensaje al vendedor</div>
+                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
                     <div className="btn bc-secondary fw-bold mt-2" onClick={handleChat}>Enviar</div>
                   </>
                 ) : (
                   <>
-                    <td>Envíale un mensaje al vendedor</td>
-                    <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                    <div>Envíale un mensaje al vendedor</div>
+                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
                     <Link to={'/login'} className='btn bc-secondary fw-bold mt-2'>Enviar</Link>
                   </>
                 )}
@@ -374,9 +380,7 @@ function VistaArticulo() {
             </div>
             {/* Botón para abrir el modal de denuncias */}
             <div className="d-flex justify-content-center mt-3">
-              <button className="btn btn-danger" onClick={handleOpenDenunciaModal}>
-                Denunciar
-              </button>
+             
             </div>
 
           </div>
@@ -731,4 +735,3 @@ function VistaArticulo() {
 }
 
 export default VistaArticulo
-const imagen = 'https://img.freepik.com/foto-gratis/retrato-abstracto-ojo-elegancia-mujeres-jovenes-generado-ai_188544-9712.jpg?size=626&ext=jpg&ga=GA1.1.117944100.1710115200&semt=ais';
