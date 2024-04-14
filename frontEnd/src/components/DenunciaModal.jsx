@@ -7,8 +7,8 @@ import { usarAutenticacion } from '../context/autenticacion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleArrowRight, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
-function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
-    const{tiposDenuncias} = usarAutenticacion()
+function ModalDenuncia({ show, handleClose, usuario }) {
+    const{tiposDenuncias, reportarUsuario} = usarAutenticacion()
 
     const[denunciasType,setDenunciasType]= useState([])
     const[render, setRender]= useState(true)
@@ -27,6 +27,8 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
     },[show])
 
     const envioDenuncia=(data)=>{
+        const response = reportarUsuario(data)
+        console.log(response)
         setRender(false)
         setReporte(data)
     }
@@ -36,7 +38,7 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
     }
 
     return (
-        <Modal show={show} onHide={cerrar}>
+        <Modal show={show} onHide={cerrar} backdrop='static'>
             <Modal.Body>
                 {render ? (
                     <>
@@ -46,8 +48,9 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
                             <div className='btn p-2 d-flex my-2 rounded shadow-sm justify-content-between'
                             key={tipo.id}
                             onClick={()=>{envioDenuncia({
-                                id: tipo.id,
-                                nombre: tipo.nombre
+                                denuncia: tipo.id,
+                                nombre: tipo.nombre,
+                                usuario
                             })}}>
                                 <div className='text-bold'>{tipo.nombre}</div>
                                 <div>
@@ -55,6 +58,11 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
                                 </div>
                             </div>
                         ))}
+                        <Modal.Footer className='mt-2'>
+                            <Button className='btn bc-primary text-light' onClick={cerrar}>
+                                Cancelar
+                            </Button>
+                        </Modal.Footer>
                     </>
                 ) : (
                     <>
@@ -63,6 +71,7 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
                                 <FontAwesomeIcon icon={faCircleCheck} />
                             </div>
                             <p className='fs-3 fw-bold'>Gracias por ayudarnos</p>
+                            <p className='text-secondary'>Tu problema fue enviado</p>
                             <div className='text-light p-2 rounded bc-primary mx-auto' style={{ display:'inline-block',maxWidth:'80%'}}>
                                 {reporte.nombre}
                             </div>
@@ -70,20 +79,17 @@ function ModalDenuncia({ show, handleClose, tiposDenuncia }) {
                                 Tus reportes nos ayudan a crear un mejor ambiente entre la comunidad
                                 de compradores y vendedores en nuestro sistema. ¡Muchas Gracias! 
                             </p>
+
+                            <button className='btn bc-secondary w-100 my-2'
+                            onClick={cerrar}>
+                                Listo
+                            </button>
                             
                         </div>
                     </>
                 )}
 
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={cerrar}>
-                    Cerrar
-                </Button>
-                <Button variant="primary" disabled={true}>
-                    Enviar
-                </Button>
-            </Modal.Footer>
         </Modal>
     );
 }

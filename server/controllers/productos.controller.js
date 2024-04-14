@@ -238,7 +238,7 @@ export const obtenerImagenesPublicacion = async (req, res) => {
 
     const [video] = await pool.query('Select id_video, url_video FROM tbl_productos WHERE producto_id=?', [req.params.id])
 
-    console.log(video[0])
+    //console.log(video[0])
     rows.imagenes = rows[0]
     rows.video = video[0]
     rows[0].push(video[0])
@@ -319,32 +319,6 @@ export const validarListaDeseo = async (req, res) => {
     console.log(error);
   }
 }
-
-
-// Editar Producto
-// Editar Producto
-/*export const editarProducto = async(req, res) => {
-    const { id } = req.params;
-    const { nombre, descripcion, precio } = req.body;
-
-    try {
-        // Actualizar datos del producto en la base de datos
-        const [rows] = await pool.query(
-            'UPDATE tbl_productos SET nombre_producto = ?, descripcion_producto = ?, precio_producto = ? WHERE producto_id = ?',
-            [nombre, descripcion, precio, id]
-        );
-
-        res.json({ message: 'Producto actualizado correctamente' });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Ha Ocurrido un Error",
-        });
-    }
-}*/
-
-
 // Editar Producto
 // Editar Producto
 export const editarProducto = async (req, res) => {
@@ -394,7 +368,7 @@ export const eliminarImagenProducto = async (req, res) => {
   try {
 
     const [result] = await pool.query(
-      'DELETE FROM tbl_imagenesProductos WHERE id_imagen = ?',
+      'DELETE FROM tbl_imagenesProductos WHERE id_imagenesProd = ?',
       [req.params.id]
     );
 
@@ -482,19 +456,20 @@ export const editarCalificacionProducto = async (req, res) => {
       [calificacion, comentario, id, producto_id, autor]
     );
 
+    // Eliminar las imágenes antiguas
+    await pool.query(
+      'DELETE FROM tbl_imagenes_calificaciones WHERE calificacion_id = ?',
+      [id]
+    );
+
+    console.log(imagenes);
     // Si se proporcionan nuevas imágenes, eliminar las antiguas y subir las nuevas
     if (imagenes && imagenes.length > 0) {
-      // Eliminar las imágenes antiguas
-      await pool.query(
-        'DELETE FROM tbl_imagenes_calificaciones WHERE calificacion_id = ?',
-        [id]
-      );
-
       // Subir las nuevas imágenes y guardar las URLs en la base de datos
-      await Promise.all(imagenes.map(async (imagen) => {
-        const result = await cloudinary.uploader.upload(imagen.path);
+      await Promise.all(imagenes.map(async (imagen, index) => {
+        const result = await cloudinary.uploader.upload(imagen.path, { public_id: `Imagenes_Productos/${imagen.originalname}_${Date.now()}_${index}` });
         const imageUrl = result.secure_url;
-        const id_imagen = result.original_filename;
+        const id_imagen = imagen.originalname;
 
         await pool.query(
           'INSERT INTO tbl_imagenes_calificaciones(calificacion_id, imagen_url, id_imagen) VALUES (?,?,?)',

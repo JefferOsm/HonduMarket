@@ -466,3 +466,21 @@ export const obtenertiposDenuncias= async(req,res)=>{
         });
   }
 }
+
+export const reportarUsuario= async(req,res)=>{
+  const {denuncia,usuario}= req.body
+  try {
+    await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario) VALUES (?, ?)", [
+      denuncia, usuario
+    ]);
+
+    res.status(201).json({
+      message: "Reporte realizado exitosamente",
+    });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+        message: "Ha Ocurrido un Error al enviar tu reporte",
+      });
+  }
+}

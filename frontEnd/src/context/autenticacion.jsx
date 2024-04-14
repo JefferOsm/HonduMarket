@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { createContext,useState,useContext, useEffect } from "react";
 import {registroRequest, loginRequest, verificarTokenRequest,
         actualizarUsuarioRequest, eliminarUsuarioRequest, actualizarFotoReques,
         actualizarPasswordRequest} from '../api/auth/registrar'
 import Cookies from 'js-cookie';
-import { obtenerTipoDenunciasReq } from "../api/denuncias";
+import { envioReporteReq, obtenerTipoDenunciasReq } from "../api/denuncias";
 
 export const AutenticacionContext = createContext()
 
@@ -125,6 +126,17 @@ export const AutenticacionProvider = ({children}) =>{
          }
      }
 
+    //Enviar reporte de usuario
+    const reportarUsuario=async(data)=>{
+        try {
+            const response = await envioReporteReq(data)
+            return response
+        } catch (error) {
+            setErroresAut(error.response.data);
+            return false
+        }
+    }
+
 
     //Eliminar los errores despues de 5 segundos
     useEffect(()=>{
@@ -186,7 +198,8 @@ export const AutenticacionProvider = ({children}) =>{
             actualizarPassword,
             passw,
             erroresAut,
-            tiposDenuncias
+            tiposDenuncias,
+            reportarUsuario
         }}>
             {children}
         </AutenticacionContext.Provider>

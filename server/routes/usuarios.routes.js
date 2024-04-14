@@ -1,6 +1,7 @@
 import {Router} from 'express'
 import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
-        verificarToken,actualizarImagen,actualizarPassword, obtenerUsuario,agregarCalificacion, obtenerCalificaciones, obtenerComentarios,editarComentario, obtenertiposDenuncias} from '../controllers/user.controllers.js'
+        verificarToken,actualizarImagen,actualizarPassword, obtenerUsuario,agregarCalificacion, obtenerCalificaciones, obtenerComentarios,editarComentario, obtenertiposDenuncias,
+        reportarUsuario} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import {parserUsuarios} from '../middlewares/multer.js';
 
@@ -54,6 +55,9 @@ router.get('/comentarios/:id', obtenerComentarios);
 router.put('/editarComentario',editarComentario);
 
 //Obtener tipos de enuncia
-router.get('/denuncias/tipos', obtenertiposDenuncias);
+router.get('/denuncias/tipos',autenticacionUsuario, obtenertiposDenuncias);
+
+//Reportar o denunciar un usuario
+router.post('/denuncias/reporte', autenticacionUsuario, reportarUsuario)
 
 export default router;

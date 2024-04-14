@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react"
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { usarAutenticacion } from "../../context/autenticacion";
 import { useForm } from 'react-hook-form';
 import { usarProductosContex } from "../../context/productosContext";
-import SeleccionFechaHora from "../../components/SeleccionFechaHora";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player';
@@ -34,7 +33,7 @@ function EditarArticulo (){
       await obtenerImagenes(id);
     };
     cargarDatos();
-  }, [id]);
+  }, [id, usuario]);
 
   //Vista Previa
   const [text, setText] = useState("");
@@ -47,12 +46,15 @@ function EditarArticulo (){
 
     //imagenes que se enviaran al backend
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
+    const[botonActive, setBotonActive]=useState(false);
+    const[botonText, setBotonText]=useState('Actualizar');
+    const [imagenes_eliminar, setimagenes_eliminar] = useState([]);
 
 
   // Convertir el número a cadena y aplicar el formato con comas
   const comas = (value) => {
     if (typeof value === 'undefined') {
-        return 'No sirve esta chanchada';
+        return 'No hay precio actual';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
@@ -75,6 +77,8 @@ function EditarArticulo (){
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
+    setBotonActive(true)
+    setBotonText('Actualizando ...')
     console.log(values)
     try {
       //DATOS Y FOTOS
@@ -85,7 +89,11 @@ function EditarArticulo (){
       formData.append('categoria', categoria !== "" ? values.categoria : detailProduct.categoria_id);
       formData.append('estado', estado !== "" ? values.estado : detailProduct.id_estado);
       formData.append('departamento', departamento !== "" ? values.departamento : detailProduct.id_departamento);
-  
+
+      for (let i = 0; i < imagenes_eliminar.length; i++) {
+        eliminarImagenProd(imagenes_eliminar[i]);
+      }
+
       for (let i = 0; i < imagenesSeleccionadas.length; i++) {
           formData.append('imagenes', imagenesSeleccionadas[i]);
       }
@@ -111,7 +119,7 @@ function EditarArticulo (){
     } catch (error) {
       console.log(error)
     } finally{
-      navegacion(`/Vista_del_articulo/${values.nombre}/${detailProduct.id}`)
+      navegacion(`/Vista_del_articulo/${values.nombre}/${detailProduct.id}`);
     }
   })
 
@@ -173,8 +181,6 @@ function EditarArticulo (){
           return
         }
 
-        alert("las imagenes actuales son " + imagenesSeleccionadas.length);
-
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           const reader = new FileReader();
@@ -187,6 +193,7 @@ function EditarArticulo (){
         }
         setImagenesSeleccionadas([...imagenesSeleccionadas, ...imagenesForm]);
         console.log(imagenesSeleccionadas)
+        setBotonActive(false);
       };
       
         // Función para generar la vista previa del video seleccionado
@@ -202,7 +209,7 @@ function EditarArticulo (){
         <div className={`carousel-item ${index === 0 ? 'active' : ''} text-center`} key={index}>
            <img className="d-block w-100"  src={data.url_imagen ? data.url_imagen : data } alt={`Imagen ${index}`} />
            <button type="button" className="btn-delete p-2 rounded mx-auto"  
-           onClick={() => eliminarImagen(index, data.id_imagen ? data.id_imagen : null)}><FontAwesomeIcon icon={faTrash}/></button>
+           onClick={() => eliminarImagen(index, data.id_imagenesProd ? data.id_imagenesProd : null)}><FontAwesomeIcon icon={faTrash}/></button>
         </div>
       ));
 
@@ -216,7 +223,7 @@ function EditarArticulo (){
 
       //Funcion para eliminar imagen del carousel y del arreglo de archivos enviado al backend
       const eliminarImagen = (index,idImagen) => {
-
+        
           const nuevasImagenesPreview = [...imagenesPreview.slice(0, index), ...imagenesPreview.slice(index + 1)];
           setImagenesPreview(nuevasImagenesPreview);
           // Verificar si se eliminó la última imagen y no hay otras imágenes
@@ -225,21 +232,28 @@ function EditarArticulo (){
             document.querySelector('.carousel-item:first-child').classList.add('active');
           }
           if(idImagen){
-            eliminarImagenProd(idImagen)
+            setimagenes_eliminar(prevState => [...prevState, idImagen]);
+            if(imagenesPreview.length === 1 ){
+              alert("Se necesita una imagen seleccionada")
+              setBotonActive(true);
+            }
           }
+
 
 
           vistaPreviaImagenes = imagenesPreview.map((data, index) => (
           <div className={`carousel-item text-center`} key={index}>
             <img className="d-block w-100"  src={data.url_imagen ? data.url_imagen : data} alt={`Imagen ${index}`} />
             <button type="button" className="btn-delete p-2 rounded mx-auto"  
-            onClick={() => eliminarImagen(index, data.id_imagen ? data.id_imagen : null)}><FontAwesomeIcon icon={faTrash}/></button>
+            onClick={() => eliminarImagen(index, data.id_imagenesProd ? data.id_imagenesProd : null)}><FontAwesomeIcon icon={faTrash}/></button>
           </div>
         ));
 
         const nuevasImagenesSeleccionadas = [...imagenesSeleccionadas.slice(0, index), ...imagenesSeleccionadas.slice(index + 1)];
         setImagenesSeleccionadas(nuevasImagenesSeleccionadas);
       };
+
+
   return (
     <div className="contenedor-publicar">
       <div className="card py-3 px-3 contenedor-publicar-content">
@@ -299,7 +313,7 @@ function EditarArticulo (){
             <label className="input-group-text" htmlFor="inputGroupSelect01">Departamento</label>
 
             <select className="form-select" id="inputGroupSelect01" onChange={Departamento}
-              {...register('departamento', { onChange: (e) => { Departamento(e) } })}
+              {...register('departamento', { onChange: (e) => { Departamento(e)} })}
               defaultValue={detailProduct.id_departamento}>
               <option value="">{detailProduct.departamento}</option>
               {departamentos.map(departamento => (
@@ -357,7 +371,7 @@ function EditarArticulo (){
 
           {/*Boton para guardar el producto en la BD */}
           <div className="vstack gap-2 col-md-5 mx-auto">
-          <button type="submit" className="btn btn-primary my-4">Actualizar</button>
+          <button type="submit" className="btn btn-primary my-4" disabled={botonActive}>{botonText}</button>
           </div>
 
         </form>

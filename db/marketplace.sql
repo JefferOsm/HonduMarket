@@ -163,15 +163,34 @@ CREATE TABLE tbl_imagenes_calificaciones (
     CONSTRAINT FKcalificacionId FOREIGN KEY (calificacion_id) REFERENCES tbl_calificaciones_producto(id)
 );
 
-create table tbl_tipodenuncia(
+CREATE TABLE tbl_tipodenuncia(
 	id INT(11) NOT NULL AUTO_INCREMENT,
     nombre text null,
     CONSTRAINT PKtipodenuncia PRIMARY KEY (id)
 );
 
+CREATE TABLE tbl_denuncia_usuario(
+    tipoDenuncia INT(11) NOT NULL,
+    usuario INT(11) NOT NULL,
+    detalle VARCHAR(100) NULL,
+    CONSTRAINT FKdenuncia_tipo FOREIGN KEY(tipoDenuncia) REFERENCES tbl_tipodenuncia(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FKdenuncia_usuario FOREIGN KEY(usuario) REFERENCES tbl_usuarios(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 INSERT INTO tbl_tipodenuncia(nombre)
 VALUES
-('engañoso'),
-('indebido'),
-('robo'),
-('posible estafa');
+('Lenguaje que incita al odio'),
+('Acoso'),
+('Dejo de Responder'),
+('No recibí el artículo'),
+('No se presentó'),
+('Ventas no autorizadas'),
+('Fraude o estafa'),
+('Se hace pasar por alguien mas'),
+('Cuenta falsa'),
+('Otro problema');
+
+

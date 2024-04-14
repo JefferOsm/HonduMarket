@@ -72,7 +72,9 @@ function VistaArticulo() {
   //constante que recibe todas las publicaciones que existen
   const { autenticado, usuario } = usarAutenticacion();
   const { obtenerImagenes, obtenerDetalles, detailProduct, imagenesProduct,
-    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo, validarListaDeseo, validarLista, obtenerCalificaciones, cambiarEstadoPublicacion, obtenerCalificacionesProducto, obtenerComentariosProducto, agregarCalificacionProducto, editarCalificacionProducto, usuarioProduct } = usarProductosContex();
+    videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo, validarListaDeseo, validarLista,
+    obtenerCalificaciones, cambiarEstadoPublicacion, obtenerCalificacionesProducto, obtenerComentariosProducto,
+    agregarCalificacionProducto, editarCalificacionProducto, usuarioProduct } = usarProductosContex();
 
 
 
@@ -100,8 +102,8 @@ function VistaArticulo() {
         await validarListaDeseo(id);
         if (usuario.id === detailProduct.idUsuario) {
           setBotonListaUsuario(true);
-          console.log(usuario);
-          console.log(id);
+          //console.log(usuario);
+          //console.log(id);
         } else {
           setBotonListaUsuario(false);
         }
@@ -728,7 +730,7 @@ function VistaArticulo() {
       <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id} />
       {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
       <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
-      <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} />
+      <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} usuario={detailProduct.idUsuario}/>
 
     </>
   )
