@@ -434,27 +434,6 @@ END //
 DELIMITER ;
 
 
--- PROMEDIO DE CALIFICACIONES DE PRODUCTO
-DELIMITER //
-CREATE PROCEDURE sp_obtenerCalificacionesProducto(
-    IN p_producto_id INT
-)
-BEGIN
-    -- Declarar variable para almacenar el promedio
-    DECLARE promedio DECIMAL(2,1);
-    
-    -- Obtener el promedio de las calificaciones del producto
-    SELECT COALESCE(AVG(calificacion), 0)
-    INTO promedio
-    FROM tbl_calificaciones_producto
-    WHERE producto_id = p_producto_id;
-    
-    -- Devolver el resultado
-    SELECT promedio AS promedio_calificacionesProductos;
-END//
-DELIMITER ;
-
-
 -- Obtener calificaciones y comentarios de un producto
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentariosProducto(
