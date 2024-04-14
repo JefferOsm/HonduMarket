@@ -434,18 +434,6 @@ END //
 DELIMITER ;
 
 
--- Obtener calificaciones y comentarios de un producto
-DELIMITER //
-CREATE PROCEDURE sp_obtenerComentariosProducto(
-    IN p_producto_id INT
-)
-BEGIN
-    -- Seleccionar las calificaciones y comentarios del producto especificado
-    SELECT c.calificacion, c.comentario, c.autor
-    FROM tbl_calificaciones_producto c
-    WHERE c.producto_id = p_producto_id;
-END//
-DELIMITER ;
 
 
 -- PROMEDIO DE CALIFICACIONES DE PRODUCTO
