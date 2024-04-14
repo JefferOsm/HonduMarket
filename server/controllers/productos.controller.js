@@ -482,19 +482,20 @@ export const editarCalificacionProducto = async (req, res) => {
       [calificacion, comentario, id, producto_id, autor]
     );
 
+    // Eliminar las imágenes antiguas
+    await pool.query(
+      'DELETE FROM tbl_imagenes_calificaciones WHERE calificacion_id = ?',
+      [id]
+    );
+
+    console.log(imagenes);
     // Si se proporcionan nuevas imágenes, eliminar las antiguas y subir las nuevas
     if (imagenes && imagenes.length > 0) {
-      // Eliminar las imágenes antiguas
-      await pool.query(
-        'DELETE FROM tbl_imagenes_calificaciones WHERE calificacion_id = ?',
-        [id]
-      );
-
       // Subir las nuevas imágenes y guardar las URLs en la base de datos
-      await Promise.all(imagenes.map(async (imagen) => {
-        const result = await cloudinary.uploader.upload(imagen.path);
+      await Promise.all(imagenes.map(async (imagen, index) => {
+        const result = await cloudinary.uploader.upload(imagen.path, { public_id: `Imagenes_Productos/${imagen.originalname}_${Date.now()}_${index}` });
         const imageUrl = result.secure_url;
-        const id_imagen = result.original_filename;
+        const id_imagen = imagen.originalname;
 
         await pool.query(
           'INSERT INTO tbl_imagenes_calificaciones(calificacion_id, imagen_url, id_imagen) VALUES (?,?,?)',

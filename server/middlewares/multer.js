@@ -27,7 +27,7 @@ const productoStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'Imagenes_Productos', 
-    public_id: (req, file) => `${req.user}_${Date.now()}`,
+    public_id: (req, file) => `${req.user}_${file.originalname}`,
   },
 });
 
