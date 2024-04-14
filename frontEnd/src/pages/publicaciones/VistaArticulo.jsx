@@ -360,13 +360,13 @@ function VistaArticulo() {
                 {autenticado ? (
                   <>
                     <td>Envía un mensaje al vendedor</td>
-                    <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
                     <div className="btn bc-secondary fw-bold mt-2" onClick={handleChat}>Enviar</div>
                   </>
                 ) : (
                   <>
                     <td>Envíale un mensaje al vendedor</td>
-                    <input type="text" class="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
                     <Link to={'/login'} className='btn bc-secondary fw-bold mt-2'>Enviar</Link>
                   </>
                 )}

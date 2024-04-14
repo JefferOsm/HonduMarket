@@ -28,7 +28,7 @@ function MisPublicaciones() {
     };
 
     // Calcular cuantas páginas se van a necesitar para cada conjunto
-    const totalPagesActivas = Math.ceil(publicacionesActivas.length / 8);
+    const totalPagesActivas = Math.ceil(publicacionesActivas.length / 5);
     const totalPagesInactivas = Math.ceil(publicacionesInactivas.length / 8);
     const pagesActivas = Array.from({ length: totalPagesActivas }, (_, i) => i + 1);
     const pagesInactivas = Array.from({ length: totalPagesInactivas }, (_, i) => i + 1);
@@ -43,8 +43,8 @@ function MisPublicaciones() {
     };
 
     // Calcular el índice inicial y final para la porción de resultados que se mostrará en la página actual
-    const startIndexActivas = (currentPageActivas - 1) * 8;
-    const endIndexActivas = Math.min(startIndexActivas + 8, publicacionesActivas.length);
+    const startIndexActivas = (currentPageActivas - 1) * 5;
+    const endIndexActivas = Math.min(startIndexActivas + 5, publicacionesActivas.length);
     const startIndexInactivas = (currentPageInactivas - 1) * 8;
     const endIndexInactivas = Math.min(startIndexInactivas + 8, publicacionesInactivas.length);
 
