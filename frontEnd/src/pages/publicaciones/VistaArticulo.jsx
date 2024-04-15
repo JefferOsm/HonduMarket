@@ -94,6 +94,7 @@ function VistaArticulo() {
 
 
 
+
   //al cargar la pantalla
   useEffect(() => {
     const cargarDatos = async () => {
@@ -116,14 +117,20 @@ function VistaArticulo() {
     cargarDatos();
   }, [autenticado, id, usuario, detailProduct.idUsuario]);
 
-//CALIFICACIONES DEL VENDEDOR
+  const handleButtonClick = async () => {
+    await obtenerImagenes(id);
+  };
+
+
+
+  //CALIFICACIONES DEL VENDEDOR
   const fetchCalificaciones = async () => {
     if (detailProduct.idUsuario) {
       const result = await obtenerCalificaciones(detailProduct.idUsuario);
       setCalificaciones(result);
     }
   }
-  
+
   useEffect(() => {
     fetchCalificaciones();
   }, [detailProduct.idUsuario])
@@ -235,7 +242,7 @@ function VistaArticulo() {
       return '';
     }
   };
-  
+
 
   return (
     <>
@@ -264,11 +271,11 @@ function VistaArticulo() {
 
 
             </div>
-            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" onClick={handleButtonClick}>
               <span className="carousel-control-prev-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Previous</span>
             </button>
-            <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" onClick={handleButtonClick}>
               <span className="carousel-control-next-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Next</span>
             </button>
