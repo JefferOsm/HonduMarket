@@ -316,8 +316,8 @@ CREATE PROCEDURE sp_obtenerComentariosProducto(
     IN p_producto_id INT
 )
 BEGIN
-    -- Seleccionar las calificaciones, comentarios e imágenes del producto especificado
-    SELECT c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
+    -- Seleccionar las calificaciones, comentarios, autor, id e imágenes del producto especificado
+    SELECT c.id, c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
     FROM tbl_calificaciones_producto c
     LEFT JOIN tbl_imagenes_calificaciones i ON c.id = i.calificacion_id
     WHERE c.producto_id = p_producto_id
