@@ -117,10 +117,10 @@ function VistaArticulo() {
     cargarDatos();
   }, [autenticado, id, usuario, detailProduct.idUsuario]);
 
+  //Actualizar las imagesnes
   const handleButtonClick = async () => {
     await obtenerImagenes(id);
   };
-
 
 
   //CALIFICACIONES DEL VENDEDOR

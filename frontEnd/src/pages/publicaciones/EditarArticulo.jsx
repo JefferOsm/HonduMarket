@@ -108,7 +108,6 @@ function EditarArticulo (){
   
         await subirVideoPublicacion(idProdAct, dataVideo);
       }
-  
       reset();
       setText("");
       setDescipcion("");
@@ -119,6 +118,7 @@ function EditarArticulo (){
     } catch (error) {
       console.log(error)
     } finally{
+      //await obtenerImagenes(id)
       navegacion(`/Vista_del_articulo/${values.nombre}/${detailProduct.id}`);
     }
   })

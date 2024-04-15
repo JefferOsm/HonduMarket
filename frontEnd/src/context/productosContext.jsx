@@ -212,6 +212,7 @@ export const ProductosProvider = ({ children }) => {
             const video = response.filter(item => item.id_video != null)
 
             setImagenesProduct(imagenes)
+            //console.log(imagenes)
             setVideoProduct(video)
         } catch (error) {
             console.log(error)
