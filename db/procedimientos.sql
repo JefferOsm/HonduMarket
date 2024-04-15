@@ -311,20 +311,6 @@ DELIMITER ;
 
 
 
--- PROCEDIMIENTO PARA OBTENER LAS CALIFICACIONES DE UN USUARIO
-CREATE PROCEDURE sp_obtenerComentariosProducto(
-    IN p_producto_id INT
-)
-BEGIN
-    -- Seleccionar las calificaciones, comentarios e imágenes del producto especificado
-    SELECT c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
-    FROM tbl_calificaciones_producto c
-    LEFT JOIN tbl_imagenes_calificaciones i ON c.id = i.calificacion_id
-    WHERE c.producto_id = p_producto_id
-    GROUP BY c.id;
-END//
-DELIMITER ;
-
 
 
 -- procedimiento para obtener  mensajes de una conversacion de productos
@@ -428,6 +414,44 @@ BEGIN
 END //
 DELIMITER ;
 
+-- PROMEDIO DE CALIFICACIONES DE PRODUCTO
+DELIMITER //
+CREATE PROCEDURE sp_obtenerCalificacionesProducto(
+    IN p_producto_id INT
+)
+BEGIN
+    -- Declarar variable para almacenar el promedio
+    DECLARE promedio DECIMAL(2,1);
+    
+    -- Obtener el promedio de las calificaciones del producto
+    SELECT COALESCE(AVG(calificacion), 0)
+    INTO promedio
+    FROM tbl_calificaciones_producto
+    WHERE producto_id = p_producto_id;
+    
+    -- Devolver el resultado
+    SELECT promedio AS promedio_calificacionesProductos;
+END//
+DELIMITER ;
+
+
+-- Obtener calificaciones y comentarios de un producto
+DELIMITER //
+CREATE PROCEDURE sp_obtenerComentariosProducto(
+    IN p_producto_id INT
+)
+BEGIN
+    -- Seleccionar las calificaciones, comentarios e imágenes del producto especificado
+    SELECT c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
+    FROM tbl_calificaciones_producto c
+    LEFT JOIN tbl_imagenes_calificaciones i ON c.id = i.calificacion_id
+    WHERE c.producto_id = p_producto_id
+    GROUP BY c.id;
+END//
+DELIMITER ;
+
+--                PROCEDIMIENTOS DEL APARTADO DE DENUNCIAS                       --
+
 -- OBTENER tipos de denuncia
 DELIMITER //
 create procedure sp_tiposdenuncia (
@@ -437,6 +461,56 @@ BEGIN
 END //
 DELIMITER ;
 
+-- OBTENER LOS USUARIOS DENUNCIADOS
+DELIMITER //
+create procedure sp_usuarios_denunciados (
+)
+BEGIN
+    SELECT DISTINCT u.id, u.nombre, u.username, u.url_imagen, url_imagen, u.correo
+	from tbl_denuncia_usuario INNER JOIN tbl_usuarios u 
+    ON tbl_denuncia_usuario.usuario= u.id
+    WHERE u.inactivo <> 1;
+END //
+DELIMITER ;
+
+drop procedure sp_usuarios_denunciados
+
+-- OBTENER LA CANTIDAD DE PERSONAS QUE REPORTARON A UN USUARIO
+DELIMITER //
+create procedure sp_cantidad_reportadores (
+    IN p_usuario_id INT
+)
+BEGIN
+	SELECT COUNT(DISTINCT reportador) AS cantidad_reportadores
+	FROM tbl_denuncia_usuario
+	WHERE usuario = p_usuario_id;
+
+END //
+DELIMITER ;
+
+-- OBTENER LA CANTIDAD DE REPORTES QUE TIENE EL USUARIO
+DELIMITER //
+create procedure sp_detalle_reportes (
+    IN p_usuario_id INT
+)
+BEGIN
+	SELECT d.usuario, t.id, t.nombre, COUNT(*) AS cantidad_denuncias
+	FROM tbl_denuncia_usuario d
+	INNER JOIN tbl_tipodenuncia t ON
+	t.id=d.tipoDenuncia WHERE d.usuario=p_usuario_id
+	GROUP BY d.usuario, t.id;
+END //
+DELIMITER ;
+
+-- OBTENER LA CANTIDAD DE REPORTES QUE TIENE EL USUARIO
+DELIMITER //
+create procedure sp_inhabilitarCuenta (
+    IN p_usuario_id INT
+)
+BEGIN
+	UPDATE tbl_usuarios SET inactivo=1 WHERE id=p_usuario_id;
+END //
+DELIMITER ;
 
 -- Inhabilitar Productos
 CREATE EVENT inhabilitar_producto
