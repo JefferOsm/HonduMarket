@@ -11,6 +11,7 @@ CREATE TABLE tbl_usuarios (
     pass VARCHAR(100) NOT NULL,
     id_imagen TEXT null,
     url_imagen TEXT NULL ,
+    inactivo TINYINT(1) NOT NULL DEFAULT 0,
     CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
 
@@ -173,11 +174,16 @@ CREATE TABLE tbl_denuncia_usuario(
     tipoDenuncia INT(11) NOT NULL,
     usuario INT(11) NOT NULL,
     detalle VARCHAR(100) NULL,
+    reportador INT(11) NULL,
     CONSTRAINT FKdenuncia_tipo FOREIGN KEY(tipoDenuncia) REFERENCES tbl_tipodenuncia(id) 
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKdenuncia_usuario FOREIGN KEY(usuario) REFERENCES tbl_usuarios(id) 
     ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- AGREGAR CAMPO INACTIVO PARA NO BORRAR TBL_USUARIOS
+ALTER TABLE tbl_usuarios
+ADD COLUMN inactivo TINYINT(1) NOT NULL DEFAULT 0;
 
 
 INSERT INTO tbl_tipodenuncia(nombre)

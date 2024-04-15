@@ -79,4 +79,5 @@ router.get('/comentarios/:id', obtenerComentariosProducto);
 // Editar calificacion de un producto
 router.put('/editarComentarioProducto/:id',productoParser.array('imagenes', 4), editarCalificacionProducto);
 
+
 export default router

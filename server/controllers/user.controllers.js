@@ -222,6 +222,10 @@ export const loginUser = async(req,res) => {
     const comparacionPassword = await compare(pass,rows[0].pass);
     if(!comparacionPassword) return res.status(400).json([ "Contraseña Incorrecta" ]);
 
+    if(rows[0].inactivo === 1){
+      return res.status(400).json([ "Tu cuenta ha sido bloqueada por incumplir las politicas del sistema" ]);
+    }
+
     //Crear token de autenticacion
     const token= await createToken({id: rows[0].id});
     res.cookie('token', token,{
@@ -470,8 +474,8 @@ export const obtenertiposDenuncias= async(req,res)=>{
 export const reportarUsuario= async(req,res)=>{
   const {denuncia,usuario}= req.body
   try {
-    await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario) VALUES (?, ?)", [
-      denuncia, usuario
+    await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario,reportador) VALUES (?, ?,? )", [
+      denuncia, usuario, req.user
     ]);
 
     res.status(201).json({
@@ -481,6 +485,64 @@ export const reportarUsuario= async(req,res)=>{
     console.log(error)
     return res.status(500).json({
         message: "Ha Ocurrido un Error al enviar tu reporte",
+      });
+  }
+}
+
+
+export const obtenerCantidadReportadores= async(req,res)=>{
+  try {
+    const [rows]= await pool.query('CALL sp_cantidad_reportadores(?)',[req.params.id])
+
+    res.send(rows[0])
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message: "Ha ocurrido un error al obtener los reportadores",
+    });
+  }
+}
+
+
+export const obtenerDetalleReportes= async(req,res)=>{
+  try {
+    const [rows]= await pool.query('CALL sp_detalle_reportes(?)',[req.params.id])
+
+    res.send(rows[0])
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message: "Ha ocurrido un error al obtener el detalle de los reportes",
+    });
+  }
+}
+
+
+export const usuariosDenunciados= async(req,res)=>{
+  try {
+    const [rows] = await pool.query('CALL sp_usuarios_denunciados')
+    res.send(rows[0])
+} catch (error) {
+    console.log(error)
+    return res.status(500).json({
+        message: "Ha ocurrido un error al obtener los usuarios con denuncias",
+      });
+}
+}
+
+export const inhabilitarCuenta= async(req,res)=>{
+  try {
+    await pool.query("CALL sp_inhabilitarCuenta(?)", [
+      req.params.id
+    ]);
+
+    res.status(200).json({
+      message: "Cuenta inhabilitada exitosamente",
+    });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+        message: "Ha Ocurrido un Error al inhabilitar la cuenta",
       });
   }
 }
