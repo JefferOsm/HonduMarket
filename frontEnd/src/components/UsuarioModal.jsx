@@ -114,6 +114,7 @@ function UsuarioModal ({show,handleClose}) {
             {calificaciones && calificaciones.length > 0 && (
                 <div className='d-flex'>
                   <ReactStars
+                    key={promedioCalificaciones}
                     count={5}
                     value={promedioCalificaciones ? promedioCalificaciones : 0}
                     size={24}
@@ -137,6 +138,7 @@ function UsuarioModal ({show,handleClose}) {
                   <div className="card-body"  style={{ height: '10rem'}}>
                     <h5 className="card-title fw-semibold" style={{ fontSize: '0.9rem' }}>{comentario.autor}</h5>
                     <ReactStars
+                      key={comentario.calificacion}
                       count={5}
                       value={comentario.calificacion}
                       size={24}

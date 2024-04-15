@@ -6,7 +6,7 @@ import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle,  faCloudArrowUp, faHeart,  faPhone,  faSquarePen,  faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCloudArrowUp, faHeart, faPhone, faSquarePen, faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ModalChat from "../Chat/ModalChat";
@@ -35,7 +35,6 @@ function VistaArticulo() {
   //funcionalidades para el modal de Usuario
   const [show, setShow] = useState(false);
   const [Chat, setChat] = useState(false);
-  const handleClose = () => setShow(false);
   const ChatClose = () => setChat(false);
 
   const handleShow = () => {
@@ -89,6 +88,9 @@ function VistaArticulo() {
 
   // Nuevo estado para almacenar las calificaciones
   const [calificaciones, setCalificaciones] = useState(null);
+  const [comentarios, setComentarios] = useState([]);
+  //ACTUALIZAR PROMEDIO DE CALIFICACIONES
+  const [promedioCalificaciones, setPromedioCalificaciones] = useState(0);
 
 
 
@@ -114,37 +116,36 @@ function VistaArticulo() {
     cargarDatos();
   }, [autenticado, id, usuario, detailProduct.idUsuario]);
 
-
-  useEffect(() => {
-    const fetchCalificaciones = async () => {
-      if (detailProduct.idUsuario) {
-        const result = await obtenerCalificaciones(detailProduct.idUsuario);
-        setCalificaciones(result);
-        //console.log(result);
-      }
+//CALIFICACIONES DEL VENDEDOR
+  const fetchCalificaciones = async () => {
+    if (detailProduct.idUsuario) {
+      const result = await obtenerCalificaciones(detailProduct.idUsuario);
+      setCalificaciones(result);
     }
-
+  }
+  
+  useEffect(() => {
     fetchCalificaciones();
   }, [detailProduct.idUsuario])
 
   useEffect(() => {
-    setCalificaciones([]); // Borra las calificaciones actuales
-    const fetchCalificaciones = async () => {
-      if (detailProduct.idUsuario) {
-        const result = await obtenerCalificaciones(detailProduct.idUsuario);
-        setCalificaciones(result);
-      }
+    if (calificaciones && calificaciones.length > 0) {
+      setPromedioCalificaciones(Number(calificaciones[0].promedio_calificaciones));
     }
+  }, [calificaciones]);
 
+  //CERRAR MODAL DE USUARIO
+
+  const handleClose = () => {
+    setShow(false);
     fetchCalificaciones();
-  }, [detailProduct]);
+  };
 
 
 
   //PRODUCTO CALIFICACIONES
 
   // Nuevo estado para almacenar los comentarios
-  const [comentarios, setComentarios] = useState(null);
   const [calificacionesProducto, setCalificacionesProducto] = useState(null);
   const [calificacionProducto, setCalificacionProducto] = useState(null);
   const [formValues, setFormValues] = useState({
@@ -156,6 +157,8 @@ function VistaArticulo() {
   const [editOpen, setEditOpen] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
 
   // Funciones para verificar si un usuario ya comentó o es el propietario del producto
   const esPropietarioDelProducto = (username) => {
@@ -181,24 +184,34 @@ function VistaArticulo() {
         //console.log(result);
 
         const resultComentarios = await obtenerComentariosProducto(detailProduct.id);
-        setComentarios(resultComentarios);
+        const sortedComentarios = resultComentarios.sort((a, b) => b.calificacion - a.calificacion);
+        setComentarios(sortedComentarios);
       }
     }
 
     fetchCalificacionesYComentarios();
-  }, [detailProduct.id]);
+  }, [detailProduct.id, calificacionProducto]);
 
-  useEffect(() => {
-    setCalificacionesProducto([]); // Borra las calificaciones actuales
-    const fetchCalificacionesProductos = async () => {
-      if (detailProduct.id) {
-        const result = await obtenerCalificacionesProducto(detailProduct.id);
-        setCalificacionesProducto(result);
-      }
-    }
 
-    fetchCalificacionesProductos();
-  }, [detailProduct]);
+  const COMMENTS_PER_PAGE = 3; // Cambia este valor para ajustar el número de comentarios por página
+  const startIndex = (currentPage - 1) * COMMENTS_PER_PAGE;
+  const endIndex = startIndex + COMMENTS_PER_PAGE;
+  const commentsForPage = comentarios.slice(startIndex, endIndex);
+
+  // Función para generar los numeros de páginas que hay
+  const renderPaginationItems = () => {
+    const totalPages = Math.ceil(comentarios.length / COMMENTS_PER_PAGE);
+    const pages = [...Array(totalPages).keys()].map(i => i + 1);
+
+    return pages.map((pageNumber) => (
+      <li key={pageNumber} className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}>
+        <a className="page-link btn" onClick={() => setCurrentPage(pageNumber)}>
+          {pageNumber}
+        </a>
+      </li>
+    ));
+  };
+
 
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -222,6 +235,7 @@ function VistaArticulo() {
       return '';
     }
   };
+  
 
   return (
     <>
@@ -339,31 +353,33 @@ function VistaArticulo() {
                       {calificaciones && calificaciones.length > 0 && (
                         <div className='d-flex'>
                           <ReactStars
+                            key={promedioCalificaciones}
                             count={5}
-                            value={calificaciones[0].promedio_calificaciones ? Number(calificaciones[0].promedio_calificaciones) : 0}
+                            value={promedioCalificaciones ? promedioCalificaciones : 0}
                             size={24}
                             isHalf={true} // Permite medias estrellas
                             edit={false} // Hace que las estrellas sean solo de lectura
                             activeColor="#ffd700"
                           />
+
                           <p className='ms-2' style={{ marginTop: '6px' }}>
-                            {typeof calificaciones[0].promedio_calificaciones === 'number'
-                              ? calificaciones[0].promedio_calificaciones.toFixed(1)
-                              : calificaciones[0].promedio_calificaciones}
+                            {typeof promedioCalificaciones === 'number'
+                              ? promedioCalificaciones.toFixed(1)
+                              : promedioCalificaciones}
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
                   <div className="d-flex flex-column">
-                  <div className="btn bc-primary text-light mx-auto" onClick={handleShow}>
-                    <FontAwesomeIcon icon={faPhone}/> Informacion
+                    <div className="btn bc-primary text-light mx-auto" onClick={handleShow}>
+                      <FontAwesomeIcon icon={faPhone} /> Informacion
+                    </div>
+                    <button className="btn btn-danger my-2 mx-auto" onClick={handleOpenDenunciaModal}>
+                      <FontAwesomeIcon icon={faTriangleExclamation} /> Reportar
+                    </button>
                   </div>
-                  <button className="btn btn-danger my-2 mx-auto" onClick={handleOpenDenunciaModal}>
-                    <FontAwesomeIcon icon={faTriangleExclamation}/> Reportar
-                  </button>
-                  </div>
-                  
+
                 </div>
                 {autenticado ? (
                   <>
@@ -382,7 +398,7 @@ function VistaArticulo() {
             </div>
             {/* Botón para abrir el modal de denuncias */}
             <div className="d-flex justify-content-center mt-3">
-             
+
             </div>
 
           </div>
@@ -412,6 +428,7 @@ function VistaArticulo() {
           {calificacionesProducto && calificacionesProducto.length > 0 && (
             <div className='d-flex'>
               <ReactStars
+                key={calificacionesProducto[0].promedio_calificacionesProductos}
                 count={5}
                 value={calificacionesProducto[0].promedio_calificacionesProductos ? Number(calificacionesProducto[0].promedio_calificacionesProductos) : 0}
                 size={24}
@@ -428,11 +445,12 @@ function VistaArticulo() {
             </div>
           )}
           <div>
-            {comentarios && comentarios.map((comentario, index) => (
+            {commentsForPage.map((comentario, index) => (
               <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2" key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div className="card-body" style={{ flex: '1 0 auto' }}>
                   <h5 className="card-title fw-semibold" style={{ fontSize: '0.9rem' }}>{comentario.autor}</h5>
                   <ReactStars
+                    key={comentario.calificacion}
                     count={5}
                     value={comentario.calificacion}
                     size={24}
@@ -462,6 +480,18 @@ function VistaArticulo() {
                 </div>
               </div>
             ))}
+            {/*Botones para pasar de pagina */}
+            <div className="pagination-container d-flex justify-content-center">
+              <nav aria-label="...">
+                <ul className="pagination">
+                  <li className="page-item disabled">
+                  </li>
+                  {renderPaginationItems()}
+                  <li className="page-item">
+                  </li>
+                </ul>
+              </nav>
+            </div>
             <ImageModal
               isOpen={modalIsOpen}
               onRequestClose={closeModal}
@@ -730,7 +760,7 @@ function VistaArticulo() {
       <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id} />
       {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
       <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
-      <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} usuario={detailProduct.idUsuario}/>
+      <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} usuario={detailProduct.idUsuario} />
 
     </>
   )
