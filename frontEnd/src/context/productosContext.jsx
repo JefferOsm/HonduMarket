@@ -1,3 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { createContext, useContext, useState, useEffect } from "react";
 import {
     obtenerCategoriasRequest, obtenerPublicacionesUsuario, obtenerPublicacionesHome, obtenerDepartamentosRequest,
