@@ -559,3 +559,17 @@ export const conteoproductos = async (req,res) =>{
     });
   }
 }
+
+
+//conteo de las calificaciones de los usuarios 
+export const conteoCalificacionUsuarios = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_ContarCalificacionUsuarios()");
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}
