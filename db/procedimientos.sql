@@ -514,3 +514,50 @@ CREATE EVENT inhabilitar_producto
 ON SCHEDULE EVERY 1 MINUTE
 DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
+  
+  
+  -- Contar los productos creado en cada mes de un year a la fecha
+DELIMITER //
+
+CREATE PROCEDURE sp_ContarProductosCreados()
+BEGIN
+    DECLARE mes_actual INT;
+     DECLARE year_actual INT;
+    DECLARE contador INT;
+    DECLARE fecha_inicio DATE;
+    DECLARE fecha_fin DATE;
+
+    DROP TEMPORARY TABLE IF EXISTS Temp_ConteoUltimos12Meses;
+    CREATE TEMPORARY TABLE Temp_ConteoUltimos12Meses (
+        Mes INT,
+        Conteo INT
+    );
+
+    SET fecha_fin = CURDATE();
+    SET fecha_inicio = DATE_SUB(fecha_fin, INTERVAL 1 YEAR);
+    SET mes_actual = MONTH(fecha_inicio);
+    SET year_actual = YEAR(fecha_inicio);
+
+    WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+        SELECT COUNT(*)
+        INTO contador
+        FROM tbl_productos
+        WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual;
+
+        INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+        
+        IF mes_actual = 12 THEN
+			SET mes_actual = 1;
+            SET year_actual = year_actual + 1;
+		ELSE
+			SET mes_actual = mes_actual + 1;
+		END IF;
+       
+    END WHILE;
+
+    SELECT * FROM Temp_ConteoUltimos12Meses;
+END //
+
+DELIMITER ;
+
+

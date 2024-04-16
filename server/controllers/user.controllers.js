@@ -546,3 +546,16 @@ export const inhabilitarCuenta= async(req,res)=>{
       });
   }
 }
+
+//conteo de los productos creados los ultimos 12 meses
+export const conteoproductos = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_ContarProductosCreados()");
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}

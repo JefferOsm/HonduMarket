@@ -5,7 +5,8 @@ import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
         usuariosDenunciados,
         obtenerCantidadReportadores,
         obtenerDetalleReportes,
-        inhabilitarCuenta} from '../controllers/user.controllers.js'
+        inhabilitarCuenta,
+        conteoproductos} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import {parserUsuarios} from '../middlewares/multer.js';
 
@@ -74,5 +75,8 @@ router.get('/denuncias-reportadores/:id', autenticacionUsuario, obtenerCantidadR
 router.get('/denuncias-detalle/:id', autenticacionUsuario, obtenerDetalleReportes)
 
 router.put('/inhabilitar-cuenta/:id', autenticacionUsuario, inhabilitarCuenta)
+
+//datos para la grafica
+router.get('/Conteo_Productos', autenticacionUsuario, conteoproductos)
 
 export default router;
