@@ -534,3 +534,19 @@ export const obtenerComentariosProducto = async (req, res) => {
     });
   }
 }
+
+//Eliminar video de la publicacion
+// Actualizar producto al eliminar video
+export const eliminarVideo = async (req, res) => {
+  try {
+    // Actualizar el producto en la base de datos para eliminar el id_video y url_video
+    const [rows] = await pool.query('CALL sp_subirVideoPublicacion(?,?,?)', [null, null, req.params.id]);
+
+    res.json({ message: 'Video Eliminado' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+};

@@ -29,6 +29,7 @@ import {
     editarCalificacionProductoRequest,
     obtenerCalificacionesProductoRequest,
     obtenerComentariosProductoRequest,
+    eliminarVideoRequest
 } from "../api/productos";
 
 
@@ -92,6 +93,8 @@ export const ProductosProvider = ({ children }) => {
     const [calificacionesProducto, setCalificacionesProducto] = useState([]);
     //obtener comentarios de un producto
     const [comentariosProducto, setComentariosProducto] = useState([]);
+    //Eliminar video de un producto
+    const [eliminarVideoProducto, setEliminarVideo] = useState([]);
 
 
     const obtenerCategorias = async () => {
@@ -218,6 +221,7 @@ export const ProductosProvider = ({ children }) => {
             setImagenesProduct(imagenes)
             //console.log(imagenes)
             setVideoProduct(video)
+            console.log(video)
         } catch (error) {
             console.log(error)
         }
@@ -342,7 +346,7 @@ export const ProductosProvider = ({ children }) => {
         }
     };
 
-    //validar mi lista de deseos
+    //Eliminar una imagen de la publicacion
     const eliminarImagenProd = async (id) => {
         try {
             const response = await eliminarImagenProdReq(id);
@@ -424,6 +428,18 @@ export const ProductosProvider = ({ children }) => {
             console.log(error)
         }
     }
+
+    //Eliminar video de un producto
+    const eliminarVideo = async (id) => {
+        try {
+            const response = await eliminarVideoRequest(id);
+            setEliminarVideo(response);
+            console.log(response)
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <ProductosContext.Provider value={{
             obtenerCategorias,
@@ -476,7 +492,10 @@ export const ProductosProvider = ({ children }) => {
             calificacionProducto,
             calificacionesProducto,
             comentariosProducto,
-            editarCalificacionProductos
+            editarCalificacionProductos,
+            eliminarVideo,
+            eliminarVideoProducto,
+            setEliminarVideo
         }}>
             {children}
         </ProductosContext.Provider>

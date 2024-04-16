@@ -142,3 +142,8 @@ export const obtenerComentariosProductoRequest = async (id) => {
   const response = await axios.get(`/productos/comentarios/${id}`);
   return response.data;
 };
+
+export const eliminarVideoRequest = async(id)=>{
+  const response= await axios.put(`/productos/publicacion/video/eliminar/${id}`);
+  return response.data
+}
