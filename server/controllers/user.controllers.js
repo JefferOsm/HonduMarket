@@ -586,3 +586,16 @@ export const ContarCalificacionProductos = async (req,res) =>{
     });
   }
 }
+
+//conteo de las calificaciones de los usuarios 
+export const conteoUsuariosRegistrados = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_ContarUsuariosRegistrados()");
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}

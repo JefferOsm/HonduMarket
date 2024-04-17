@@ -200,3 +200,5 @@ VALUES
 ('Otro problema');
 
 
+ALTER TABLE tbl_usuarios
+ADD COLUMN fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

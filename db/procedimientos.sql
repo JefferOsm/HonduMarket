@@ -634,3 +634,47 @@ BEGIN
 END //
 
 DELIMITER ;
+
+ -- Contar los usuarios registrados en cada mes de un año a la fecha
+DELIMITER //
+
+CREATE PROCEDURE sp_ContarUsuariosRegistrados()
+BEGIN
+    DECLARE mes_actual INT;
+	DECLARE year_actual INT;
+    DECLARE contador INT;
+    DECLARE fecha_inicio DATE;
+    DECLARE fecha_fin DATE;
+
+    DROP TEMPORARY TABLE IF EXISTS Temp_ConteoUsuarios;
+    CREATE TEMPORARY TABLE Temp_ConteoUsuarios (
+        Mes INT,
+        Conteo INT
+    );
+
+    SET fecha_fin = CURDATE();
+    SET fecha_inicio = DATE_SUB(fecha_fin, INTERVAL 1 YEAR);
+    SET mes_actual = MONTH(fecha_inicio);
+    SET year_actual = YEAR(fecha_inicio);
+
+    WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+        SELECT COUNT(*)
+        INTO contador
+        FROM tbl_usuarios
+        WHERE YEAR(fecha_registro) = year_actual AND MONTH(fecha_registro) = mes_actual;
+
+        INSERT INTO Temp_ConteoUsuarios (Mes, Conteo) VALUES (mes_actual, contador);
+        
+        IF mes_actual = 12 THEN
+			SET mes_actual = 1;
+            SET year_actual = year_actual + 1;
+		ELSE
+			SET mes_actual = mes_actual + 1;
+		END IF;
+       
+    END WHILE;
+
+    SELECT * FROM Temp_ConteoUsuarios;
+END //
+
+DELIMITER ;
