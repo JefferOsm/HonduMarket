@@ -573,3 +573,16 @@ export const conteoCalificacionUsuarios = async (req,res) =>{
     });
   }
 }
+
+//conteo de las calificaciones de los productos 
+export const ContarCalificacionProductos = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_ContarCalificacionProductos()");
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}

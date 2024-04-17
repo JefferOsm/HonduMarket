@@ -599,3 +599,38 @@ END //
 DELIMITER ;
 
 
+-- Contar los productos que tienen X calificacion 
+DELIMITER //
+
+CREATE PROCEDURE sp_ContarCalificacionProductos()
+BEGIN
+    DECLARE i INT;
+    DECLARE condicion INT;
+    DECLARE contador INT;
+    DECLARE elemento INT;
+
+    DROP TEMPORARY TABLE IF EXISTS Temp_ConteoCalificacionProducto;
+    CREATE TEMPORARY TABLE Temp_ConteoCalificacionProducto (
+        N_Calificacion INT,
+        Conteo INT
+    );
+  
+    SET i = 0;
+    SET condicion = 5;
+
+    WHILE i < condicion DO
+		SET elemento = i + 1;
+        SELECT COUNT(*)
+        INTO contador
+        FROM tbl_calificaciones_producto
+        WHERE calificacion = elemento;
+
+        INSERT INTO Temp_ConteoCalificacionProducto (N_Calificacion, Conteo) VALUES (elemento, contador);
+
+		SET i = i + 1;
+    END WHILE;
+
+    SELECT * FROM Temp_ConteoCalificacionProducto;
+END //
+
+DELIMITER ;
