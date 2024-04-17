@@ -244,7 +244,7 @@ BEGIN
 	p.fecha_publicacion
 	FROM tbl_listaDeseos d
     INNER JOIN tbl_productos p ON p.producto_id = d.producto_id
-	WHERE d.usuario_id= p_usuario_id;
+	WHERE d.usuario_id= p_usuario_id AND p.producto_inactivo<>1;
 END //
 DELIMITER ;
 
@@ -463,14 +463,14 @@ DELIMITER //
 create procedure sp_usuarios_denunciados (
 )
 BEGIN
-    SELECT DISTINCT u.id, u.nombre, u.username, u.url_imagen, url_imagen, u.correo
+    SELECT DISTINCT u.id, u.nombre, u.username, u.url_imagen, url_imagen, u.correo,u.inactivo,
+    COUNT(DISTINCT reportador) AS cantidad_reportadores
 	from tbl_denuncia_usuario INNER JOIN tbl_usuarios u 
     ON tbl_denuncia_usuario.usuario= u.id
-    WHERE u.inactivo <> 1;
+    GROUP BY u.id, u.nombre, u.username, u.url_imagen, u.correo
+    ORDER BY cantidad_reportadores DESC;
 END //
 DELIMITER ;
-
-drop procedure sp_usuarios_denunciados
 
 -- OBTENER LA CANTIDAD DE PERSONAS QUE REPORTARON A UN USUARIO
 DELIMITER //
@@ -499,13 +499,27 @@ BEGIN
 END //
 DELIMITER ;
 
--- OBTENER LA CANTIDAD DE REPORTES QUE TIENE EL USUARIO
+
+-- INHABILITAR USUARIO
 DELIMITER //
 create procedure sp_inhabilitarCuenta (
     IN p_usuario_id INT
 )
 BEGIN
+	UPDATE tbl_productos SET producto_inactivo=1 WHERE usuario_id=p_usuario_id;
 	UPDATE tbl_usuarios SET inactivo=1 WHERE id=p_usuario_id;
+END //
+DELIMITER ;
+
+
+-- HABILITAR USUARIO
+DELIMITER //
+create procedure sp_habilitarCuenta (
+    IN p_usuario_id INT
+)
+BEGIN
+	DELETE FROM tbl_denuncia_usuario WHERE usuario=p_usuario_id;
+	UPDATE tbl_usuarios SET inactivo=0 WHERE id=p_usuario_id;
 END //
 DELIMITER ;
 
@@ -516,6 +530,8 @@ DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
   
   
+----------------------------------------PROCEDIMIENTOS GRAFICOS--------------------------------------------------------------
+
   -- Contar los productos creado en cada mes de un year a la fecha
 DELIMITER //
 

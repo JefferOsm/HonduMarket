@@ -382,7 +382,7 @@ function VistaArticulo() {
                     <div className="btn bc-primary text-light mx-auto" onClick={handleShow}>
                       <FontAwesomeIcon icon={faPhone} /> Informacion
                     </div>
-                    {botonListaUsuario ? (
+                    {!botonListaUsuario ? (
                       <>
                         <button className="btn btn-danger my-2 mx-auto" onClick={handleOpenDenunciaModal}>
                           <FontAwesomeIcon icon={faTriangleExclamation} /> Reportar
