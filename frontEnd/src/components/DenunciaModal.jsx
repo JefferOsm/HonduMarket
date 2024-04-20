@@ -26,8 +26,8 @@ function ModalDenuncia({ show, handleClose, usuario }) {
         }
     },[show])
 
-    const envioDenuncia=(data)=>{
-        const response = reportarUsuario(data)
+    const envioDenuncia= async (data)=>{
+        const response = await reportarUsuario(data)
         console.log(response)
         setRender(false)
         setReporte(data)

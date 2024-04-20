@@ -223,7 +223,7 @@ export const loginUser = async(req,res) => {
     if(!comparacionPassword) return res.status(400).json([ "Contraseña Incorrecta" ]);
 
     if(rows[0].inactivo === 1){
-      return res.status(400).json([ "Tu cuenta ha sido bloqueada por incumplir las politicas del sistema" ]);
+      return res.status(400).json([ "Tu cuenta ha sido bloqueada por incumplir las politicas del sistema, hondumarket@gmail.com para mas información" ]);
     }
 
     //Crear token de autenticacion
@@ -474,6 +474,13 @@ export const obtenertiposDenuncias= async(req,res)=>{
 export const reportarUsuario= async(req,res)=>{
   const {denuncia,usuario}= req.body
   try {
+
+    const [rows]= await pool.query("SELECT *FROM tbl_denuncia_usuario WHERE usuario=? AND reportador=?", [usuario,req.user])
+
+    if(rows.length>0){
+      await pool.query("DELETE FROM tbl_denuncia_usuario WHERE usuario=? AND reportador=?", [usuario,req.user])
+    }
+
     await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario,reportador) VALUES (?, ?,? )", [
       denuncia, usuario, req.user
     ]);
@@ -530,6 +537,7 @@ export const usuariosDenunciados= async(req,res)=>{
 }
 }
 
+//INHABILITAR USUARIO
 export const inhabilitarCuenta= async(req,res)=>{
   try {
     await pool.query("CALL sp_inhabilitarCuenta(?)", [
@@ -543,6 +551,24 @@ export const inhabilitarCuenta= async(req,res)=>{
     console.log(error)
     return res.status(500).json({
         message: "Ha Ocurrido un Error al inhabilitar la cuenta",
+      });
+  }
+}
+
+//HABILITAR USUARIO
+export const habilitarCuenta= async(req,res)=>{
+  try {
+    await pool.query("CALL sp_habilitarCuenta(?)", [
+      req.params.id
+    ]);
+
+    res.status(200).json({
+      message: "Cuenta habilitada exitosamente",
+    });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+        message: "Ha Ocurrido un Error al habilitar la cuenta",
       });
   }
 }
