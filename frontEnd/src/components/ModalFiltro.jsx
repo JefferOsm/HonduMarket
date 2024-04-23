@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { usarProductosContex } from "../context/productosContext";
 
@@ -53,7 +52,6 @@ function ModalFiltro ({show,handleClose, onOptionSelected, onCategorySelected, o
   };
 
   //categorias
-
   const handleCategorySelect = (category) => {
     onCategorySelected(category);
     for (let i = 0; i < categorias.length; i++) {
