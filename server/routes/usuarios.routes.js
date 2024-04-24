@@ -85,7 +85,7 @@ router.put('/inhabilitar-cuenta/:id', autenticacionUsuario, inhabilitarCuenta)
 router.put('/habilitar-cuenta/:id', autenticacionUsuario, habilitarCuenta)
 
 //datos para la grafica
-router.get('/Contar_Productos', autenticacionUsuario, Contarproductos)
+router.post('/Contar_Productos', autenticacionUsuario, Contarproductos)
 
 router.get('/Conteo_Calificacion_Usuarios', autenticacionUsuario, conteoCalificacionUsuarios)
 

@@ -576,7 +576,7 @@ export const habilitarCuenta= async(req,res)=>{
 //conteo de los productos creados los ultimos 12 meses
 export const Contarproductos = async (req,res) =>{
   try{
-    const [rows] = await pool.query("CALL sp_ContarProductosCreados(?,?)", [req.body.id_Categoria, req.body.id_departamento]);
+    const [rows] = await pool.query("CALL sp_ContarProductosCreados(?,?)", [req.body.values_1, req.body.values_2]);
     res.send(rows[0])
   }catch (error) {
     console.error(error);
