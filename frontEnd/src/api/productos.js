@@ -83,8 +83,8 @@ export const obtenerPublicacionesBusqueda = async () => {
   return response.data;
 };
 
-export const buscarProductos = async (searchTerm) => {
-  const response = await axios.get(`/productos/buscar?searchTerm=${searchTerm}`);
+export const buscarProductos = async (searchTerm, categoriaId) => {
+  const response = await axios.get(`/productos/buscar?searchTerm=${searchTerm}&categoriaId=${categoriaId}`);
   return response.data;
 };
 

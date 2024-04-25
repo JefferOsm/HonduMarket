@@ -201,7 +201,8 @@ export const obtenerPublicacionesBusqueda = async (req, res) => {
 export const obtenerResultadosBusqueda = async (req, res) => {
   try {
     const searchTerm = req.query.searchTerm || '';
-    const [rows] = await pool.query('CALL sp_todasPublicacionesSearch(?)', [searchTerm]);
+    const categoriaId = req.query.categoriaId || null;
+    const [rows] = await pool.query('CALL sp_todasPublicacionesSearch(?, ?)', [searchTerm, categoriaId]);
     const resultados = await Promise.all(rows[0].map(async (producto) => {
       const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
       producto.url_imagen = imagen[0].url_imagen

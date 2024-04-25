@@ -12,6 +12,7 @@ function useQuery() {
 
 function SearchResultsPage() {
   const query = useQuery().get('query');
+  const categoriaId = useQuery().get('categoriaId');
   const [results, setResults] = useState([]);
   const [results_2, setResults_2] = useState([]);
 
@@ -35,7 +36,7 @@ function SearchResultsPage() {
     const fetchProducts = async () => {
       try {
         // Limpia los resultados anteriores
-        const filteredProducts = await buscarProductos(query);
+        const filteredProducts = await buscarProductos(query,categoriaId);
         console.log(filteredProducts)
         setResults(filteredProducts); // arreglo que tiene los resultados de la busqueda
         setResults_2(filteredProducts); //copia que no se modifica de los resultados de la busqueda
@@ -45,7 +46,7 @@ function SearchResultsPage() {
     };
 
     fetchProducts();
-  }, [query]);
+  }, [query, categoriaId]);
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
