@@ -201,3 +201,11 @@ VALUES
 ('Cuenta falsa'),
 ('Otro problema');
 
+
+-- AGREGAR CAMPO FECHA COMENTARIO A LA TABLA tbl_calificaciones_producto
+ALTER TABLE tbl_calificaciones_producto
+ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- AGREGAR CAMPO FECHA COMENTARIO A LA TABLA tbl_calificaciones
+alter table tbl_calificaciones
+ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

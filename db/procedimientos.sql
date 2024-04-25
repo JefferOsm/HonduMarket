@@ -430,19 +430,41 @@ BEGIN
 END//
 DELIMITER ;
 
-
+--NUEVO CAMBIADO EL 24/04/24
 -- Obtener calificaciones y comentarios de un producto
+--Se borra el anterior
+drop procedure sp_obtenerComentariosProducto
+
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentariosProducto(
     IN p_producto_id INT
 )
 BEGIN
-    -- Seleccionar las calificaciones, comentarios e imágenes del producto especificado
-    SELECT c.id, c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes
+    -- Seleccionar las calificaciones, comentarios, fechas e imágenes del producto especificado
+    SELECT c.id, c.calificacion, c.comentario, c.autor, GROUP_CONCAT(i.imagen_url) AS imagenes, c.fecha_comentario
     FROM tbl_calificaciones_producto c
     LEFT JOIN tbl_imagenes_calificaciones i ON c.id = i.calificacion_id
     WHERE c.producto_id = p_producto_id
-    GROUP BY c.id;
+    GROUP BY c.id
+    ORDER BY c.fecha_comentario DESC;
+END//
+DELIMITER ;
+
+--NUEVO CAMBIADO EL 24/04/24
+-- Obtener calificaciones y comentarios de un usuario
+--Se borra el anterior
+drop procedure sp_obtenerComentarios
+
+DELIMITER //
+CREATE PROCEDURE sp_obtenerComentarios(
+    IN p_usuario_id INT
+)
+BEGIN
+    -- Seleccionar las calificaciones y comentarios del usuario especificado
+    SELECT c.calificacion, c.comentario, c.autor,c.fecha_comentario
+    FROM tbl_calificaciones c
+    WHERE c.usuario_id = p_usuario_id
+    ORDER BY c.fecha_comentario DESC;
 END//
 DELIMITER ;
 
