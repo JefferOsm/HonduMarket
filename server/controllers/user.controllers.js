@@ -98,7 +98,7 @@ export const editarComentario = async (req, res) => {
   try {
     const { usuario_id, calificacion, comentario, autor } = req.body;
 
-    await pool.query("UPDATE tbl_calificaciones SET calificacion = ?, comentario = ? WHERE usuario_id = ? AND autor = ?", [
+    await pool.query("UPDATE tbl_calificaciones SET calificacion = ?, comentario = ?, fecha_comentario = NOW() WHERE usuario_id = ? AND autor = ?", [
       calificacion, comentario, usuario_id, autor
     ]);
 

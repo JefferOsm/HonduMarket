@@ -452,7 +452,7 @@ export const editarCalificacionProducto = async (req, res) => {
   try {
     // Actualizar la calificación y el comentario
     await pool.query(
-      'UPDATE tbl_calificaciones_producto SET calificacion = ?, comentario = ? WHERE id = ? AND producto_id = ? AND autor = ?',
+      'UPDATE tbl_calificaciones_producto SET calificacion = ?, comentario = ?, fecha_comentario = NOW() WHERE id = ? AND producto_id = ? AND autor = ?',
       [calificacion, comentario, id, producto_id, autor]
     );
 

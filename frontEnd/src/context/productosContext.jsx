@@ -221,7 +221,7 @@ export const ProductosProvider = ({ children }) => {
             setImagenesProduct(imagenes)
             //console.log(imagenes)
             setVideoProduct(video)
-            console.log(video)
+            //console.log(video)
         } catch (error) {
             console.log(error)
         }

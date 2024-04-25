@@ -199,6 +199,9 @@ function VistaArticulo() {
     fetchCalificacionesYComentarios();
   }, [detailProduct.id, calificacionProducto]);
 
+  // Ordena los comentarios por fecha en orden descendente
+  comentarios.sort((a, b) => new Date(b.fecha_comentario) - new Date(a.fecha_comentario));
+
 
   const COMMENTS_PER_PAGE = 3; // Cambia este valor para ajustar el número de comentarios por página
   const startIndex = (currentPage - 1) * COMMENTS_PER_PAGE;
@@ -388,9 +391,9 @@ function VistaArticulo() {
                           <FontAwesomeIcon icon={faTriangleExclamation} /> Reportar
                         </button>
                       </>
-                    ):(
-                    <>
-                    </>
+                    ) : (
+                      <>
+                      </>
                     )}
 
                   </div>
@@ -459,7 +462,7 @@ function VistaArticulo() {
               </p>
             </div>
           )}
-          <div> 
+          <div>
             <p className="ms-4 fs-6 fw-bold mb-2">Comentarios</p>
             {commentsForPage.map((comentario, index) => (
               <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2 mx-4" key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -474,6 +477,12 @@ function VistaArticulo() {
                     edit={false} // Hace que las estrellas sean solo de lectura
                     activeColor="#ffd700"
                   />
+                  {
+                    <p style={{ color: 'gray', fontSize: '0.6rem' }}>
+                      Calificado el {new Date(comentario.fecha_comentario).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+
+                  }
                   <div className="card-text">
                     <div className='card-descripcion fw-light' style={{ fontSize: '0.8rem' }}>
                       <p>{comentario.comentario}</p>
@@ -667,6 +676,8 @@ function VistaArticulo() {
 
                           // Buscar el comentario que quieres editar
                           const comentarioAEditar = comentariosResultado.find(comentario => comentario.autor === usuario.username);
+
+                          console.log(comentarioAEditar.id);
 
                           const data = new FormData();
                           data.append('producto_id', detailProduct.id);
