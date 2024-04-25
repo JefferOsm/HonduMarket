@@ -6,7 +6,7 @@ import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
         obtenerCantidadReportadores,
         obtenerDetalleReportes,
         inhabilitarCuenta,
-        conteoproductos,
+        Contarproductos,
         conteoCalificacionUsuarios,
         ContarCalificacionProductos,
         conteoUsuariosRegistrados,
@@ -89,7 +89,7 @@ router.put('/inhabilitar-cuenta/:id', autenticacionUsuario, inhabilitarCuenta)
 router.put('/habilitar-cuenta/:id', autenticacionUsuario, habilitarCuenta)
 
 //datos para la grafica
-router.get('/Conteo_Productos', autenticacionUsuario, conteoproductos)
+router.post('/Contar_Productos', autenticacionUsuario, Contarproductos)
 
 router.get('/Conteo_Calificacion_Usuarios', autenticacionUsuario, conteoCalificacionUsuarios)
 

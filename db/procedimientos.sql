@@ -546,47 +546,106 @@ DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
   
   
-----------------------------------------PROCEDIMIENTOS GRAFICOS--------------------------------------------------------------
-
   -- Contar los productos creado en cada mes de un year a la fecha
 DELIMITER //
 
-CREATE PROCEDURE sp_ContarProductosCreados()
+CREATE PROCEDURE sp_ContarProductosCreados(IN id_categoria INT, IN id_departamento INT)
 BEGIN
+
+	-- Iniciamos las variables
     DECLARE mes_actual INT;
-     DECLARE year_actual INT;
+	DECLARE year_actual INT;
     DECLARE contador INT;
     DECLARE fecha_inicio DATE;
     DECLARE fecha_fin DATE;
 
+	-- Iniciamos una tabla temporal
     DROP TEMPORARY TABLE IF EXISTS Temp_ConteoUltimos12Meses;
     CREATE TEMPORARY TABLE Temp_ConteoUltimos12Meses (
         Mes INT,
         Conteo INT
     );
 
+	-- llenamos las variables 
     SET fecha_fin = CURDATE();
     SET fecha_inicio = DATE_SUB(fecha_fin, INTERVAL 1 YEAR);
     SET mes_actual = MONTH(fecha_inicio);
     SET year_actual = YEAR(fecha_inicio);
+    
+    -- Si se escogieron 2 filtros entonces se ejecuta
+    IF id_categoria IS NOT NULL AND id_departamento IS NOT NULL THEN
 
-    WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
-        SELECT COUNT(*)
-        INTO contador
-        FROM tbl_productos
-        WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual;
+		WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+			SELECT COUNT(*)
+			INTO contador
+			FROM tbl_productos
+			WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual AND categoria_id = id_categoria AND departamento_id = id_departamento;
 
-        INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+			INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+			
+			IF mes_actual = 12 THEN
+				SET mes_actual = 1;
+				SET year_actual = year_actual + 1;
+			ELSE
+				SET mes_actual = mes_actual + 1;
+			END IF;
+		END WHILE;
         
-        IF mes_actual = 12 THEN
-			SET mes_actual = 1;
-            SET year_actual = year_actual + 1;
-		ELSE
-			SET mes_actual = mes_actual + 1;
-		END IF;
-       
-    END WHILE;
+	-- Si se escoge una categoria entonces se ejecuta
+	ELSE IF id_categoria IS NOT NULL THEN
+		WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+			SELECT COUNT(*)
+			INTO contador
+			FROM tbl_productos
+			WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual AND categoria_id = id_categoria;
 
+			INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+			
+			IF mes_actual = 12 THEN
+				SET mes_actual = 1;
+				SET year_actual = year_actual + 1;
+			ELSE
+				SET mes_actual = mes_actual + 1;
+			END IF;
+		END WHILE;
+	
+    ELSE IF id_departamento IS NOT NULL THEN
+		WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+			SELECT COUNT(*)
+			INTO contador
+			FROM tbl_productos
+			WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual AND departamento_id = id_departamento;
+
+			INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+			
+			IF mes_actual = 12 THEN
+				SET mes_actual = 1;
+				SET year_actual = year_actual + 1;
+			ELSE
+				SET mes_actual = mes_actual + 1;
+			END IF;
+		END WHILE;
+
+	ELSE
+		WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+			SELECT COUNT(*)
+			INTO contador
+			FROM tbl_productos
+			WHERE YEAR(fecha_publicacion) = year_actual AND MONTH(fecha_publicacion) = mes_actual;
+
+			INSERT INTO Temp_ConteoUltimos12Meses (Mes, Conteo) VALUES (mes_actual, contador);
+			
+			IF mes_actual = 12 THEN
+				SET mes_actual = 1;
+				SET year_actual = year_actual + 1;
+			ELSE
+				SET mes_actual = mes_actual + 1;
+			END IF;
+		END WHILE;
+    
+    END IF;
+	END IF;
+    END IF;
     SELECT * FROM Temp_ConteoUltimos12Meses;
 END //
 
