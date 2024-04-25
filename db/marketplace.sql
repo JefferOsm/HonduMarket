@@ -151,6 +151,7 @@ CREATE TABLE tbl_calificaciones_producto (
     calificacion INT NOT NULL,
     comentario TEXT NULL,
     autor VARCHAR(20) NULL,
+    fecha_calificacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT PKcalificacionesProducto PRIMARY KEY (id),
     CONSTRAINT FKproductoId FOREIGN KEY (producto_id) REFERENCES tbl_productos(producto_id)
 );
