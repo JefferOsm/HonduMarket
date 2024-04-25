@@ -10,7 +10,8 @@ import {getUsers,getUser,createUser,deleteUser,updateUser,loginUser,logoutUser,
         conteoCalificacionUsuarios,
         ContarCalificacionProductos,
         conteoUsuariosRegistrados,
-        habilitarCuenta} from '../controllers/user.controllers.js'
+        habilitarCuenta,
+        obtenerDescripcionProblemas} from '../controllers/user.controllers.js'
 import {autenticacionUsuario} from '../middlewares/auth.js'
 import {parserUsuarios} from '../middlewares/multer.js';
 
@@ -77,6 +78,9 @@ router.get('/denuncias-reportadores/:id', autenticacionUsuario, obtenerCantidadR
 
 //Obtener los detalles de las denuncias hacia cierto usuario
 router.get('/denuncias-detalle/:id', autenticacionUsuario, obtenerDetalleReportes)
+
+//Obtener las descripciones de los problemas
+router.post('/denuncias/problema/descripcion', autenticacionUsuario, obtenerDescripcionProblemas)
 
 //inhabilitar cuenta de usuario
 router.put('/inhabilitar-cuenta/:id', autenticacionUsuario, inhabilitarCuenta)

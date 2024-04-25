@@ -9,11 +9,13 @@ CREATE TABLE tbl_usuarios (
     telefono VARCHAR(8) NOT NULL UNIQUE KEY,
     direccion VARCHAR(100) NOT NULL,
     pass VARCHAR(100) NOT NULL,
-    id_imagen TEXT null,
-    url_imagen TEXT NULL ,
+    id_imagen TEXT NULL,
+    url_imagen TEXT NULL,
     inactivo TINYINT(1) NOT NULL DEFAULT 0,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
+
 
 
 CREATE TABLE tbl_calificaciones (
@@ -200,6 +202,3 @@ VALUES
 ('Cuenta falsa'),
 ('Otro problema');
 
-
-ALTER TABLE tbl_usuarios
-ADD COLUMN fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

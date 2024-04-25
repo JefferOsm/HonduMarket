@@ -438,10 +438,10 @@ function VistaArticulo() {
             <></>
           )}
         </div>
-        <div className="container-md mt-2 shadow-lg bg-white rounded" style={{ position: 'relative' }}>
-          <h5 className='mt-4'>Opiniones del producto:</h5>
+        <div className="container-md mt-2 shadow-lg bg-white rounded p-1" style={{ position: 'relative' }}>
+          <h5 className='mt-4 ms-4'>Calificación del producto</h5>
           {calificacionesProducto && calificacionesProducto.length > 0 && (
-            <div className='d-flex'>
+            <div className='d-flex ms-4'>
               <ReactStars
                 key={calificacionesProducto[0].promedio_calificacionesProductos}
                 count={5}
@@ -459,9 +459,10 @@ function VistaArticulo() {
               </p>
             </div>
           )}
-          <div>
+          <div> 
+            <p className="ms-4 fs-6 fw-bold mb-2">Comentarios</p>
             {commentsForPage.map((comentario, index) => (
-              <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2" key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2 mx-4" key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div className="card-body" style={{ flex: '1 0 auto' }}>
                   <h5 className="card-title fw-semibold" style={{ fontSize: '0.9rem' }}>{comentario.autor}</h5>
                   <ReactStars

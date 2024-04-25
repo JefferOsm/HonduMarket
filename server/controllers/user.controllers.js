@@ -472,7 +472,7 @@ export const obtenertiposDenuncias= async(req,res)=>{
 }
 
 export const reportarUsuario= async(req,res)=>{
-  const {denuncia,usuario}= req.body
+  const {denuncia,usuario,detalle}= req.body
   try {
 
     const [rows]= await pool.query("SELECT *FROM tbl_denuncia_usuario WHERE usuario=? AND reportador=?", [usuario,req.user])
@@ -481,8 +481,8 @@ export const reportarUsuario= async(req,res)=>{
       await pool.query("DELETE FROM tbl_denuncia_usuario WHERE usuario=? AND reportador=?", [usuario,req.user])
     }
 
-    await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario,reportador) VALUES (?, ?,? )", [
-      denuncia, usuario, req.user
+    await pool.query("INSERT INTO tbl_denuncia_usuario (tipoDenuncia, usuario,reportador,detalle) VALUES (?,?,?,? )", [
+      denuncia, usuario, req.user,detalle
     ]);
 
     res.status(201).json({
@@ -520,6 +520,21 @@ export const obtenerDetalleReportes= async(req,res)=>{
     console.log(error)
     return res.status(500).json({
       message: "Ha ocurrido un error al obtener el detalle de los reportes",
+    });
+  }
+}
+
+export const obtenerDescripcionProblemas= async(req,res)=>{
+  try {
+    //console.log(req.body)
+    const {problema,usuario}= req.body
+    const [rows]= await pool.query('CALL sp_descripcion_problema(?,?)',[usuario,problema])
+
+    res.send(rows[0])
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      message: "Ha ocurrido un error al obtener las descripciones del problema",
     });
   }
 }
