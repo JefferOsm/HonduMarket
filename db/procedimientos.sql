@@ -545,6 +545,8 @@ ON SCHEDULE EVERY 1 MINUTE
 DO
   UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
   
+
+--  PROCEDIMIENTOS APARTADO DE GRAFICAS --
   
   -- Contar los productos creado en cada mes de un year a la fecha
 DELIMITER //
