@@ -499,6 +499,22 @@ BEGIN
 END //
 DELIMITER ;
 
+-- OBTENER LAS DESCRIPCIONES DE LOS PROBLEMAS DADOS
+DELIMITER //
+create procedure sp_descripcion_problema (
+    IN p_usuario_id INT,
+    IN p_problema VARCHAR(100)
+)
+BEGIN
+	SELECT d.detalle, r.username From tbl_denuncia_usuario d 
+	INNER JOIN tbl_tipodenuncia t ON t.id=d.tipoDenuncia
+    INNER JOIN tbl_usuarios r ON r.id=d.reportador
+	WHERE t.nombre=p_problema AND d.usuario=p_usuario_id;
+END //
+DELIMITER ;
+
+
+
 
 -- INHABILITAR USUARIO
 DELIMITER //
