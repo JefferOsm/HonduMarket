@@ -1,6 +1,6 @@
 # Marketplace
 # Dependencias Backend
-```npm install --save express bcrypt body-parser cookie-parser dotenv express jsonwebtoken morgan mysql2 nodemon multer cloudinary multer-storage-cloudinary cors timeago.js socket.io```
+```npm install --save express bcrypt body-parser cookie-parser dotenv express jsonwebtoken morgan mysql2 nodemon multer cloudinary multer-storage-cloudinary cors timeago.js socket.io nodemailer node-cron pdfmake node-fetch image-to-base64```
 
 # Dependencias frontEnd
 accedeer a carpeta frontEnd y ejecutar npm run dev
