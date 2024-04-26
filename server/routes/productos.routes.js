@@ -2,7 +2,7 @@ import { Router } from "express";
 import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtenerDepartamentos, obtenerEstados, 
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
-    editarProducto,
+    editarProducto, Productos_Carrusel_Home_1,
     eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarCalificacionProducto,eliminarVideo,
     obtenerProductosCategoria,
     suscribirseCategoria,
@@ -94,6 +94,9 @@ router.post('/categorias/suscribir/:id', autenticacionUsuario, suscribirseCatego
 
 //Validar SUSCRIPCION
 router.get('/categorias/suscribir/validar/:id', autenticacionUsuario, validacionSuscripcion);
+
+//datos para la grafica
+router.post('/Carrusel_1', Productos_Carrusel_Home_1)
 
 
 export default router

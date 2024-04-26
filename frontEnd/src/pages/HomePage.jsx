@@ -6,12 +6,13 @@ import 'react-multi-carousel/lib/styles.css';
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import ModalBusqueda from "../components/modalBusqueda";
+import { Carrusel_1_Request } from '../api/productos';
 
 
 function HomePage() {
 
   const {obtenerCategorias,categorias,publicacionesHome,obtenerPublicacionesInicio,obtenerPublicacionesInicioAuth} = usarProductosContex();
-  const {autenticado} = usarAutenticacion();
+  const {autenticado, usuario} = usarAutenticacion();
   // Carousel
   const responsive = {
     superLargeDesktop: {
@@ -33,16 +34,27 @@ function HomePage() {
     }
   };
 
+  const [id_usuario, setid_usuario] = useState(null);
+  const [results, setresults] = useState([]);
+
 
   useEffect(()=>{
     obtenerCategorias();
     if (autenticado){
-      obtenerPublicacionesInicioAuth()
+      obtenerPublicacionesInicioAuth();
+      setid_usuario(usuario.id);
     }else{
       obtenerPublicacionesInicio();
     }
+
+    const cargarDatos = async () => {
+      const response = await Carrusel_1_Request( id_usuario);
+      setresults(response);
+    }
+
     console.log(categorias)
-  },[])
+    cargarDatos();
+  },[usuario])
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
@@ -53,18 +65,22 @@ function HomePage() {
     <>
     <div className="container-md my-4 ">
       
-      <div id="carouselExampleInterval" className="carousel slide" data-bs-ride="carousel">
-        <div className="carousel-inner">
-          <div className="carousel-item active" data-bs-interval="10000">
-            <img src="public/homeReference.jpg" className="d-block w-100" alt="..."/>
-          </div>
-          <div className="carousel-item" data-bs-interval="2000">
-            <img src="public/homeReference.jpg" className="d-block w-100" alt="..."/>
-          </div>
-          <div className="carousel-item">
-            <img src="public/homeReference.jpg" className="d-block w-100" alt="..."/>
-          </div>
+      <div id="carouselExampleInterval" className="carousel slide " data-bs-ride="carousel" style={{ position: 'relative' }}>
+
+        <div className="carousel-inner detalle-publicacion-imagen">
+          {results.map((producto, index) => (
+            <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
+              className={`card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2 `}
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
+                <div className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000">
+                  <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
+                </div>
+            </Link>
+          ))}
         </div>
+
+
+
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
             <span className="visually-hidden">Previous</span>

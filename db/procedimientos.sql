@@ -849,22 +849,140 @@ DELIMITER ;
 
 -- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
 DELIMITER //
-CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255), IN categoriaId INT)
+CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255))
 BEGIN
     SELECT  
-        p.producto_id AS id,
+		p.producto_id AS id,
         p.nombre_producto AS nombre,
         p.precio_producto AS precio,
         p.descripcion_producto AS descripcion,
-        p.categoria_id AS categoria,
+		p.categoria_id AS categoria,
         p.departamento_id AS departamento,
         p.fecha_publicacion
     FROM 
         tbl_productos p
     WHERE 
-        (p.nombre_producto LIKE CONCAT('%', searchTerm, '%') AND (p.categoria_id = categoriaId OR categoriaId IS NULL))
-        AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
-        AND p.producto_inactivo != 1
-        ORDER BY p.fecha_publicacion desc;
+        p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
+       AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
+       AND p.producto_inactivo != 1
+       ORDER BY p.fecha_publicacion desc;
+END //
+DELIMITER ;
+
+
+-- Buscar los productos que fueron calificados ultimamente con 5 estrellas
+DELIMITER //
+CREATE PROCEDURE sp_ProductosDeCincoEstrella(IN id_usuario INT)
+BEGIN
+    DECLARE i INT;
+    DECLARE elemento INT;
+	DECLARE mes_actual INT;
+	DECLARE year_actual INT;
+    DECLARE fecha_actual DATE;
+    DECLARE contador_filas INT;
+     
+    SET i = 0;
+    SET elemento = 5;
+    SET fecha_actual = CURDATE();
+    SET mes_actual = MONTH(fecha_actual);
+    SET year_actual = YEAR(fecha_actual);
+    
+    
+    IF id_usuario IS NULL THEN
+		WHILE i < 3 DO
+			IF i = 0 THEN
+				DROP TEMPORARY TABLE IF EXISTS Temp_ProductosConCincoEstrellas;
+				CREATE TEMPORARY TABLE Temp_ProductosConCincoEstrellas AS
+				SELECT DISTINCT ip.producto_id, p.nombre_producto, url_imagen
+				FROM tbl_calificaciones_producto cp
+				INNER JOIN tbl_productos p ON cp.producto_id = p.producto_id
+				INNER JOIN tbl_imagenesproductos ip ON cp.producto_id = ip.producto_id
+				WHERE cp.calificacion = elemento 
+				AND YEAR(cp.fecha_comentario) = year_actual 
+				AND MONTH(cp.fecha_comentario) = mes_actual 
+				AND ip.id_imagenesProd = (
+					SELECT MIN(id_imagenesProd)
+					FROM tbl_imagenesproductos
+					WHERE producto_id = cp.producto_id
+				);
+			ElSE 
+				INSERT INTO Temp_ProductosConCincoEstrellas 
+				SELECT DISTINCT ip.producto_id, p.nombre_producto, url_imagen
+				FROM tbl_calificaciones_producto cp
+				INNER JOIN tbl_productos p ON cp.producto_id = p.producto_id
+				INNER JOIN tbl_imagenesproductos ip ON cp.producto_id = ip.producto_id
+				WHERE cp.calificacion = elemento 
+				AND YEAR(cp.fecha_comentario) = year_actual 
+				AND MONTH(cp.fecha_comentario) = mes_actual 
+				AND ip.id_imagenesProd = (
+					SELECT MIN(id_imagenesProd)
+					FROM tbl_imagenesproductos
+					WHERE producto_id = cp.producto_id
+				);
+			END IF;
+            
+            SELECT COUNT(*) INTO contador_filas
+			FROM Temp_ProductosConCincoEstrellas;
+            
+			IF mes_actual = 1 THEN
+				SET mes_actual = 12;
+				SET year_actual = year_actual - 1;
+			ELSE
+				SET mes_actual = mes_actual - 1;
+			END IF;
+			SET i = i + contador_filas;
+            
+		END WHILE;
+        
+        
+	ElSE
+		WHILE i < 3 DO
+			IF i = 0 THEN
+				DROP TEMPORARY TABLE IF EXISTS Temp_ProductosConCincoEstrellas;
+				CREATE TEMPORARY TABLE Temp_ProductosConCincoEstrellas AS
+				SELECT DISTINCT ip.producto_id, p.nombre_producto, url_imagen
+				FROM tbl_calificaciones_producto cp
+				INNER JOIN tbl_productos p ON cp.producto_id = p.producto_id
+				INNER JOIN tbl_imagenesproductos ip ON cp.producto_id = ip.producto_id
+				WHERE cp.calificacion = elemento 
+				AND YEAR(cp.fecha_comentario) = year_actual 
+				AND MONTH(cp.fecha_comentario) = mes_actual 
+				AND p.usuario_id <> id_usuario
+				AND ip.id_imagenesProd = (
+					SELECT MIN(id_imagenesProd)
+					FROM tbl_imagenesproductos
+					WHERE producto_id = cp.producto_id
+				);
+			ElSE 
+				INSERT INTO Temp_ProductosConCincoEstrellas 
+				SELECT DISTINCT ip.producto_id, p.nombre_producto, url_imagen
+				FROM tbl_calificaciones_producto cp
+				INNER JOIN tbl_productos p ON cp.producto_id = p.producto_id
+				INNER JOIN tbl_imagenesproductos ip ON cp.producto_id = ip.producto_id
+				WHERE cp.calificacion = elemento 
+				AND YEAR(cp.fecha_comentario) = year_actual 
+				AND MONTH(cp.fecha_comentario) = mes_actual 
+				AND p.usuario_id <> id_usuario
+				AND ip.id_imagenesProd = (
+					SELECT MIN(id_imagenesProd)
+					FROM tbl_imagenesproductos
+					WHERE producto_id = cp.producto_id
+				);
+			END IF;
+            
+            SELECT COUNT(*) INTO contador_filas
+			FROM Temp_ProductosConCincoEstrellas;
+            
+			IF mes_actual = 1 THEN
+				SET mes_actual = 12;
+				SET year_actual = year_actual - 1;
+			ELSE
+				SET mes_actual = mes_actual - 1;
+			END IF;
+			SET i = i + contador_filas;
+		END WHILE;
+	END IF;
+	SELECT * FROM Temp_ProductosConCincoEstrellas;
+    
 END //
 DELIMITER ;
