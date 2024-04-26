@@ -1,6 +1,7 @@
 import {server, io} from './app.js'
 import {PORT} from './config.js'
 import {pool} from './db.js'
+import enviarCorreos from './helpers/email.js';
 let usuariosConectados=[]
 let salaProductos=[]
 
@@ -109,4 +110,5 @@ io.on('connection', socket =>{
 
 server.listen(PORT, () => {
   console.log("servidor inciado");
+  enviarCorreos();
 });
