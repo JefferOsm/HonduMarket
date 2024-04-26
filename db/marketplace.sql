@@ -211,7 +211,7 @@ ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 alter table tbl_calificaciones
 ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
--- Suscripciones a categorias
+
 -- Suscripciones a categorias
 CREATE TABLE tbl_suscipciones_categorias(
 	categoria INT(11) NOT NULL,
