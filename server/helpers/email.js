@@ -3,25 +3,23 @@ import nodemailer from 'nodemailer';
 import cron from 'node-cron';
 import pdfMake from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
-import fetch from 'node-fetch';
-import imageToBase64 from 'image-to-base64';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-// Crear una cuenta de prueba
-let testAccount = await nodemailer.createTestAccount();
 
 // Crear un transportador de correo con la configuración de Ethereal
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-    },
+ const transporter = nodemailer.createTransport({
+     service:'gmail',
+     host: 'smtp.gmail.com',
+     port: 587,
+     secure: false, // true for 465, false for other ports
+     auth: {
+         user: 'hondu.market22@gmail.com', // generated ethereal user
+         pass: 'yozochdyyrcgjjxs ', // generated ethereal password
+     },
 
-});
+ });
 
 // Función para obtener todos los usuarios suscritos
 const obtenerUsuariosSuscritos = async () => {
@@ -43,10 +41,17 @@ const obtenerProductos = async (categoriasId) => {
 
     for (const categoriaId of categoriasId) {
         const [rows] = await pool.query(`
-            SELECT tbl_productos.nombre_producto, tbl_productos.descripcion_producto, tbl_productos.precio_producto, tbl_productos.producto_id, tbl_imagenesProductos.url_imagen
-            FROM tbl_productos
-            LEFT JOIN tbl_imagenesProductos ON tbl_productos.producto_id = tbl_imagenesProductos.producto_id
-            WHERE tbl_productos.categoria_id = ? AND tbl_productos.fecha_publicacion >= ?
+        SELECT DISTINCT tbl_productos.nombre_producto, tbl_productos.descripcion_producto, tbl_productos.precio_producto,
+        tbl_productos.producto_id,
+            (SELECT url_imagen 
+            FROM tbl_imagenesProductos 
+            WHERE tbl_imagenesProductos.producto_id = tbl_productos.producto_id 
+            LIMIT 1) AS url_imagen
+        FROM tbl_productos
+        WHERE tbl_productos.categoria_id = ? AND tbl_productos.fecha_publicacion >= ?
+        ORDER BY
+            tbl_productos.producto_id DESC
+        LIMIT 5
         `, [categoriaId, unaSemanaAtras]);
         const [categoria] = await pool.query(`
             SELECT nombre_categoria
@@ -139,21 +144,21 @@ const crearPDF = async (productosPorCategoria) => {
             // Añadir un espacio después de la descripción del producto
             productCard.stack.push({ text: ' ', margin: [0, 0, 0, 10] });
 
-            if (producto.url_imagen) {
-                try {
-                    const response = await fetch(producto.url_imagen);
-                    const arrayBuffer = await response.arrayBuffer();
-                    const buffer = Buffer.from(arrayBuffer);
-                    const base64Image = buffer.toString('base64');
-                    productCard.stack.push({
-                        image: `data:image/jpeg;base64,${base64Image}`,
-                        width: 200,
-                        alignment: 'center'
-                    });
-                } catch (error) {
-                    console.error(`Error al procesar la imagen ${producto.url_imagen}: ${error.message}`);
-                }
-            }
+             if (producto.url_imagen) {
+                 try {
+                     const response = await fetch(producto.url_imagen);
+                     const arrayBuffer = await response.arrayBuffer();
+                     const buffer = Buffer.from(arrayBuffer);
+                     const base64Image = buffer.toString('base64');
+                     productCard.stack.push({
+                         image: `data:image/jpeg;base64,${base64Image}`,
+                         width: 200,
+                         alignment: 'center'
+                     });
+                 } catch (error) {
+                     console.error(`Error al procesar la imagen ${producto.url_imagen}: ${error.message}`);
+                 }
+             }
             productCard.stack.push({
                 text: `Precio: ${producto.precio_producto}`,
                 style: 'price'
@@ -196,29 +201,29 @@ const enviarCorreo = async (usuario, categoriasId) => {
     const productos = await obtenerProductos(categoriasId);
 
     // Verificar si hay productos nuevos en la última semana
-    if (Object.values(productos).every(categoria => categoria.length === 0)) {
-        console.log(`No hay productos nuevos en la última semana para el usuario ${usuario.correo}`);
-        return;
-    }
+    // if (Object.values(productos).every(categoria => categoria.length === 0)) {
+    //     console.log(`No hay productos nuevos en la última semana para el usuario ${usuario.correo}`);
+    //     return;
+    // }
 
     // Crear el PDF
     const pdfBuffer = await crearPDF(productos);
 
     const mailOptions = {
-        from: 'your-email@gmail.com',
+        from: 'HonduMarket <hondu.market22@gmail.com>',
         to: usuario.correo,
         subject: 'Actualización semanal',
         text: 'Aquí están tus actualizaciones semanales.',
         attachments: [{
             filename: 'productos.pdf',
-            content: pdfBuffer,
+            content: pdfBuffer.toString('base64'),
+            encoding: 'base64'
         }],
     };
 
     const info = await transporter.sendMail(mailOptions);
-
-    console.log(`Correo enviado: ${info.messageId}`);
-    console.log(`Ver correo en Ethereal: ${nodemailer.getTestMessageUrl(info)}`);
+    console.log(`correo enviado: ${info.messageId}`);
+    //console.log(`Ver correo en Ethereal: ${nodemailer.getTestMessageUrl(info)}`);
 };
 
 // Función para enviar correos a todos los usuarios suscritos
