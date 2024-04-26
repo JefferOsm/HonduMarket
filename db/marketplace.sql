@@ -212,10 +212,11 @@ alter table tbl_calificaciones
 ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 -- Suscripciones a categorias
+-- Suscripciones a categorias
 CREATE TABLE tbl_suscipciones_categorias(
 	categoria INT(11) NOT NULL,
     usuario INT(11) NOT NULL,
-	CONSTRAINT FKsuscribeCat FOREIGN KEY(categoria) REFERENCES tbl_productos(producto_id) 
+	CONSTRAINT FKsuscribeCat FOREIGN KEY(categoria) REFERENCES tbl_categorias(categoria_id) 
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKsuscribeUser FOREIGN KEY(usuario) REFERENCES tbl_usuarios(id) 
     ON DELETE CASCADE ON UPDATE CASCADE,
