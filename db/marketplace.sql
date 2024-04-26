@@ -153,7 +153,6 @@ CREATE TABLE tbl_calificaciones_producto (
     calificacion INT NOT NULL,
     comentario TEXT NULL,
     autor VARCHAR(20) NULL,
-    fecha_calificacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT PKcalificacionesProducto PRIMARY KEY (id),
     CONSTRAINT FKproductoId FOREIGN KEY (producto_id) REFERENCES tbl_productos(producto_id)
 );
@@ -211,7 +210,7 @@ ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 alter table tbl_calificaciones
 ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
--- Suscripciones a categorias
+
 -- Suscripciones a categorias
 CREATE TABLE tbl_suscipciones_categorias(
 	categoria INT(11) NOT NULL,

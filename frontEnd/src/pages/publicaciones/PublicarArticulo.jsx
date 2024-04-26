@@ -26,14 +26,15 @@ function PublicarArticulo() {
     const [imagenesSeleccionadas, setImagenesSeleccionadas] = useState([]);
     const[botonActive, setBotonActive]=useState(true)
     const[botonText, setBotonText]=useState('Publicar');
+    const [radioButton, setradioButton] = useState(null);
 
       //para programar publicacion
   const[fechaSeleccionada, setFechaSeleccionada] = useState(null)
 
     //opcion para subir
     const cammbiOpcion= (e)=>{
+      setradioButton(document.getElementById(e))
       setBotonActive(false);
-      console.log(fechaSeleccionada)
     }
 
   const handleDateSelected = (date)=>{
@@ -65,7 +66,7 @@ function PublicarArticulo() {
 
   //Peticion
   const onSubmit = handleSubmit(async(values)=>{
-    setBotonActive(false)
+    setBotonActive(true)
     setBotonText('Publicando ...')
     try {
        //DATOS Y FOTOS
@@ -112,6 +113,7 @@ function PublicarArticulo() {
     } catch (error) {
       console.log(error)
     } finally{
+      radioButton.checked = false;
       setBotonActive(true)
       setBotonText('Publicar')
       if(fechaSeleccionada){
@@ -397,7 +399,7 @@ function PublicarArticulo() {
                       <input className="form-check-input bg-secondary collapsed" type="radio" 
                       name="flexRadioDefault" id="flexRadioDefault1" data-bs-toggle="collapse" 
                       data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" 
-                       onChange={cammbiOpcion}/>
+                       onChange={() => cammbiOpcion("flexRadioDefault1")}/>
                       <label className="form-check-label" htmlFor="flexRadioDefault1">
                         Publicar Ahora
                       </label>
@@ -413,11 +415,11 @@ function PublicarArticulo() {
                   <li className="list-group-item bg-dark-subtle">
                     <div className="form-check">
                       <input className="form-check-input bg-secondary collapsed"
-                       type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                       type="radio" name="flexRadioDefault" id="flexRadioDefault2"
                         data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" 
                         aria-expanded="false" aria-controls="flush-collapseTwo"
-                        onChange={cammbiOpcion}/>
-                      <label className="form-check-label" htmlFor="flexRadioDefault1">
+                        onChange={() => cammbiOpcion("flexRadioDefault2")}/>
+                      <label className="form-check-label" htmlFor="flexRadioDefault2">
                         Programar Publicación
                       </label>
                     </div>

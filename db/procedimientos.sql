@@ -432,7 +432,7 @@ BEGIN
 END//
 DELIMITER ;
 
---NUEVO CAMBIADO EL 24/04/24
+-- NUEVO CAMBIADO EL 24/04/24
 -- Obtener calificaciones y comentarios de un producto
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentariosProducto(
@@ -449,10 +449,9 @@ BEGIN
 END//
 DELIMITER ;
 
---NUEVO CAMBIADO EL 24/04/24
+-- NUEVO CAMBIADO EL 24/04/24
 -- Obtener calificaciones y comentarios de un usuario
---Se borra el anterior
-drop procedure sp_obtenerComentarios
+
 
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentarios(
@@ -870,5 +869,27 @@ BEGIN
 	END WHILE;
     
     SELECT * FROM Temp_ContarCalificacionUsuarios;
+END //
+DELIMITER ;
+
+-- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
+DELIMITER //
+CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255))
+BEGIN
+    SELECT  
+		p.producto_id AS id,
+        p.nombre_producto AS nombre,
+        p.precio_producto AS precio,
+        p.descripcion_producto AS descripcion,
+		p.categoria_id AS categoria,
+        p.departamento_id AS departamento,
+        p.fecha_publicacion
+    FROM 
+        tbl_productos p
+    WHERE 
+        p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
+       AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
+       AND p.producto_inactivo != 1
+       ORDER BY p.fecha_publicacion desc;
 END //
 DELIMITER ;
