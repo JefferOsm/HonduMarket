@@ -30,8 +30,6 @@ function VistaArticulo() {
     setShowDenunciaModal(false);
   };
 
-
-
   //funcionalidades para el modal de Usuario
   const [show, setShow] = useState(false);
   const [Chat, setChat] = useState(false);

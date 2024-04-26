@@ -16,6 +16,7 @@ import ListaDeseosPage from './pages/publicaciones/ListaDeseosPage';
 import CentroChat from './pages/Chat/CentroChat';
 import Editar_Articulo from './pages/publicaciones/EditarArticulo';
 import { ChatProvider } from './context/chatContext';
+import PublicacionesCatPage from './pages/publicaciones/PublicacionesCatPage';
 
 
 function App(){
@@ -31,6 +32,7 @@ function App(){
               <Route path='/registro' element={<RegistroPage />} />
               <Route path='/Vista_del_articulo/:nombre/:id' element={<Vista_del_articulo/>}/>
               <Route path='/Editar_articulo/:nombre/:id' element={<Editar_Articulo/>} />
+              <Route path='/Categorias/:nombre/:id' element={<PublicacionesCatPage/>} />
               <Route path='/search' element={<SearchResultsPage/>}/>
               
             <Route element={<ProteccionRoute/>}>
@@ -38,8 +40,8 @@ function App(){
               <Route path='/perfil/editar' element={<EditPerfilPage/>} />
               <Route path='/perfil/publicar' element={<PublicarArticulo/>} />
               <Route path='/perfil/publicaciones' element={<MisPublicaciones/>} />
-              <Route path='/perfil/lista_deseos' element={<ListaDeseosPage/>} />
-              <Route path='/perfil/chat' element={<CentroChat/>} />
+              <Route path='/perfil/lista-deseos' element={<ListaDeseosPage/>} />
+              <Route path='/perfil/mensajes' element={<CentroChat/>} />
             </Route>
           </Routes>
         </BrowserRouter>

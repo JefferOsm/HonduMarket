@@ -40,7 +40,7 @@ function ModalBusqueda({show,handleClose}) {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        navigate(`/search?query=${busqueda}&categoriaId=`);
+        navigate(`/search?query=${busqueda}`);
 
     };
 
@@ -66,7 +66,7 @@ function ModalBusqueda({show,handleClose}) {
 
                         
                         <li className="list-group-item  fw-bold" key={publicacion.id}>
-                            <Link to={`/search?query=${publicacion.nombre}&categoriaId=`} className="text-decoration-none text-dark hover" onClick={handleClose}
+                            <Link to={`/search?query=${publicacion.nombre}`} className="text-decoration-none text-dark hover" onClick={handleClose}
                             >{publicacion.nombre}</Link>
                         </li>
                 

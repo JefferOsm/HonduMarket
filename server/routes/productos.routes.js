@@ -3,7 +3,10 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     agregarVideo, obtenerDetallePublicacion, obtenerImagenesPublicacion,obtenerPublicacionesHome, obtenerPublicacionesBusqueda,
     obtenerResultadosBusqueda, obtenerPublicacionesHomeAuth, agregarListaDeseos, obtenerListaDeseos, validarListaDeseo, eliminarPublicacion,
     editarProducto,
-    eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarCalificacionProducto,eliminarVideo} from "../controllers/productos.controller.js";
+    eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarCalificacionProducto,eliminarVideo,
+    obtenerProductosCategoria,
+    suscribirseCategoria,
+    validacionSuscripcion} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -81,6 +84,16 @@ router.put('/editarComentarioProducto/:id',productoParser.array('imagenes', 4), 
 
 //Eliminar video de un producto
 router.put('/publicacion/video/eliminar/:id', autenticacionUsuario, eliminarVideo);
+
+//suscripciones
+//obtener los productos de una categoria dada
+router.get(`/categorias/:id`, autenticacionUsuario, obtenerProductosCategoria)
+
+//AGREGAR SUSCRIPCION
+router.post('/categorias/suscribir/:id', autenticacionUsuario, suscribirseCategoria);
+
+//Validar SUSCRIPCION
+router.get('/categorias/suscribir/validar/:id', autenticacionUsuario, validacionSuscripcion);
 
 
 export default router

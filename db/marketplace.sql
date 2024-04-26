@@ -210,3 +210,14 @@ ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 -- AGREGAR CAMPO FECHA COMENTARIO A LA TABLA tbl_calificaciones
 alter table tbl_calificaciones
 ADD COLUMN fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Suscripciones a categorias
+CREATE TABLE tbl_suscipciones_categorias(
+	categoria INT(11) NOT NULL,
+    usuario INT(11) NOT NULL,
+	CONSTRAINT FKsuscribeCat FOREIGN KEY(categoria) REFERENCES tbl_productos(producto_id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FKsuscribeUser FOREIGN KEY(usuario) REFERENCES tbl_usuarios(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT PK_SuscribeCat PRIMARY KEY (categoria, usuario) 
+);

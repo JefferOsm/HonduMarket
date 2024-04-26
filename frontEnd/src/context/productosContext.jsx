@@ -29,7 +29,10 @@ import {
     editarCalificacionProductoRequest,
     obtenerCalificacionesProductoRequest,
     obtenerComentariosProductoRequest,
-    eliminarVideoRequest
+    eliminarVideoRequest,
+    productosCategoriasReq,
+    sucribirseCategoriaReq,
+    validarSuscripcionReq
 } from "../api/productos";
 
 
@@ -96,6 +99,9 @@ export const ProductosProvider = ({ children }) => {
     //Eliminar video de un producto
     const [eliminarVideoProducto, setEliminarVideo] = useState([]);
 
+    //productos de una categoria
+    const[productosCat,setProductosCat]=useState([]);
+    
 
     const obtenerCategorias = async () => {
         try {
@@ -111,7 +117,7 @@ export const ProductosProvider = ({ children }) => {
     const obtenerPublicaciones = async () => {
         try {
             const response = await obtenerPublicacionesUsuario();
-            console.log(response)
+            //console.log(response)
             setPublicacionesUser(response)
         } catch (error) {
             console.log(error)
@@ -121,7 +127,7 @@ export const ProductosProvider = ({ children }) => {
     const obtenerPublicacionesInicio = async () => {
         try {
             const response = await obtenerPublicacionesHome();
-            console.log(response)
+            //console.log(response)
             setPublicacionesHome(response)
         } catch (error) {
             console.log(error)
@@ -131,7 +137,7 @@ export const ProductosProvider = ({ children }) => {
     const obtenerPublicacionesInicioAuth = async () => {
         try {
             const response = await obtenerPublicacionesHomeAuth();
-            console.log(response)
+            //console.log(response)
             setPublicacionesHome(response)
         } catch (error) {
             console.log(error)
@@ -171,7 +177,7 @@ export const ProductosProvider = ({ children }) => {
         try {
             const response = await editarPublicacionRequest(id, values);
             setEditarPublicacion(response);
-            console.log(response)
+            //console.log(response)
             return response;
         } catch (error) {
             console.log(error);
@@ -182,7 +188,7 @@ export const ProductosProvider = ({ children }) => {
     const eliminarPublicacion = async (id) => {
         try {
             const response = await eliminarPublicacionRequest(id);
-            console.log(response)
+            //console.log(response)
             window.location.href = '/perfil/publicaciones'
         } catch (error) {
             console.log(error)
@@ -231,7 +237,7 @@ export const ProductosProvider = ({ children }) => {
     const obtenerUsuario = async (id) => {
         try {
             const response = await detalleUsuarioRequest(id)
-            console.log(response)
+            //console.log(response)
             setUsuarioProduct(response)
         } catch (error) {
             console.log(error)
@@ -306,7 +312,7 @@ export const ProductosProvider = ({ children }) => {
     const obtenerPublicacionesResult = async () => {
         try {
             const response = await buscarProductos();
-            console.log(response)
+            //console.log(response)
             setPublicacionesBusqueda(response)
         } catch (error) {
             console.log(error)
@@ -350,7 +356,7 @@ export const ProductosProvider = ({ children }) => {
     const eliminarImagenProd = async (id) => {
         try {
             const response = await eliminarImagenProdReq(id);
-            console.log(response)
+            //console.log(response)
         } catch (error) {
             console.log(error)
 
@@ -361,7 +367,7 @@ export const ProductosProvider = ({ children }) => {
     const cambiarEstadoPublicacion = async (id, estado) => {
         try {
             const response = await cambiarEstadoPublicacionRequest(id, estado);
-            console.log(response)
+            //console.log(response)
             setCambiarEstado(response)
         } catch (error) {
             console.log(error)
@@ -387,7 +393,7 @@ export const ProductosProvider = ({ children }) => {
         try {
             const response = await agregarCalificacionProductoRequest(values);
             setCalificacionProducto(response)
-            console.log(response)
+            //console.log(response)
             return response
         } catch (error) {
             console.log(error)
@@ -399,7 +405,7 @@ export const ProductosProvider = ({ children }) => {
         try {
             const response = await editarCalificacionProductoRequest(values, id);
             setEditarCalificacionProducto(response);
-            console.log(response);
+            //console.log(response);
             return response;
         } catch (error) {
             console.log(error);
@@ -434,12 +440,43 @@ export const ProductosProvider = ({ children }) => {
         try {
             const response = await eliminarVideoRequest(id);
             setEliminarVideo(response);
-            console.log(response)
+            //console.log(response)
             return response
         } catch (error) {
             console.log(error)
         }
     }
+
+        //Agregar a lista de deseos
+        const suscripcionCategoria = async (id) => {
+            try {
+                const response = await sucribirseCategoriaReq(id);
+                console.log(response)
+                return response
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        //traer los productos
+        const productosCategoria= async(id)=>{
+            try {
+                const response= await productosCategoriasReq(id)
+                setProductosCat(response)
+                console.log(response)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const validarSuscripcion= async(id)=>{
+            try {
+                const response= await validarSuscripcionReq(id)
+                return response
+            } catch (error) {
+                console.log(error)
+            }
+        }
     return (
         <ProductosContext.Provider value={{
             obtenerCategorias,
@@ -495,7 +532,11 @@ export const ProductosProvider = ({ children }) => {
             editarCalificacionProductos,
             eliminarVideo,
             eliminarVideoProducto,
-            setEliminarVideo
+            setEliminarVideo,
+            productosCategoria,
+            productosCat,
+            suscripcionCategoria,
+            validarSuscripcion
         }}>
             {children}
         </ProductosContext.Provider>

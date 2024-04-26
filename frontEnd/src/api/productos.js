@@ -83,8 +83,8 @@ export const obtenerPublicacionesBusqueda = async () => {
   return response.data;
 };
 
-export const buscarProductos = async (searchTerm, categoriaId) => {
-  const response = await axios.get(`/productos/buscar?searchTerm=${searchTerm}&categoriaId=${categoriaId}`);
+export const buscarProductos = async (searchTerm) => {
+  const response = await axios.get(`/productos/buscar?searchTerm=${searchTerm}`);
   return response.data;
 };
 
@@ -145,5 +145,20 @@ export const obtenerComentariosProductoRequest = async (id) => {
 
 export const eliminarVideoRequest = async(id)=>{
   const response= await axios.put(`/productos/publicacion/video/eliminar/${id}`);
+  return response.data
+}
+
+export const productosCategoriasReq = async(id)=>{
+  const response= await axios.get(`/productos/categorias/${id}`);
+  return response.data
+}
+
+export const sucribirseCategoriaReq= async(id)=>{
+  const response= await axios.post(`/productos/categorias/suscribir/${id}`);
+  return response.data
+}
+
+export const validarSuscripcionReq= async(id)=>{
+  const response= await axios.get(`/productos/categorias/suscribir/validar/${id}`);
   return response.data
 }

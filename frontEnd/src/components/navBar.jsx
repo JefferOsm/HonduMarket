@@ -10,7 +10,8 @@ import ModalChat from "../pages/Chat/ModalChat";
 
 function NavBar() {
 
-  const { detailProduct, obtenerUsuario, obtenerPublicacionesSearch, obtenerCategorias, categorias } = usarProductosContex();
+  const { detailProduct, obtenerUsuario, obtenerPublicacionesSearch,
+     obtenerCategorias, categorias, productosCategoria } = usarProductosContex();
   const { autenticado, logout, usuario } = usarAutenticacion();
 
   //funcionalidades para el modal de Busqueda
@@ -32,6 +33,11 @@ function NavBar() {
     obtenerUsuario(detailProduct.idUsuario)
     setChat(true)
   };
+
+  const navegarCategoria= async(data)=>{
+    await productosCategoria(data.id)
+    navigate(`/Categorias/${data.nombre}/${data.id}`)
+  }
 
 
 
@@ -57,7 +63,8 @@ function NavBar() {
 
             <Dropdown.Menu className='bc-primary'>
               {categorias.map((categoria) => (
-                <Dropdown.Item key={categoria.categoria_id} className='drop-home-item text-light fw-bold p-2' onClick={() => navigate(`/search?query=&categoriaId=${categoria.categoria_id}`)}>
+                <Dropdown.Item key={categoria.categoria_id} className='drop-home-item text-light fw-bold p-2'
+                onClick={()=>{navegarCategoria({id:categoria.categoria_id, nombre:categoria.nombre_categoria })}} >
                   {categoria.nombre_categoria}
                 </Dropdown.Item>
               ))}
@@ -101,11 +108,11 @@ function NavBar() {
                           <FontAwesomeIcon icon={faStore} />  Mis Publicaciones
                         </Dropdown.Item>
 
-                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/lista_deseos">
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/lista-deseos">
                           <FontAwesomeIcon icon={faBookmark} />  Lista de Deseos
                         </Dropdown.Item>
 
-                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/chat" >
+                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/mensajes" >
                           <FontAwesomeIcon icon={faMessage} /> Mensajes
                         </Dropdown.Item>
                       </Dropdown.Menu>

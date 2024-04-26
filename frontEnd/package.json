@@ -26,7 +26,8 @@
     "react-player": "^2.16.0",
     "react-rating-stars-component": "^2.2.0",
     "react-router-dom": "^6.22.3",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "sonner": "^1.4.41"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

@@ -201,8 +201,7 @@ export const obtenerPublicacionesBusqueda = async (req, res) => {
 export const obtenerResultadosBusqueda = async (req, res) => {
   try {
     const searchTerm = req.query.searchTerm || '';
-    const categoriaId = req.query.categoriaId || null;
-    const [rows] = await pool.query('CALL sp_todasPublicacionesSearch(?, ?)', [searchTerm, categoriaId]);
+    const [rows] = await pool.query('CALL sp_todasPublicacionesSearch(?)', [searchTerm]);
     const resultados = await Promise.all(rows[0].map(async (producto) => {
       const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
       producto.url_imagen = imagen[0].url_imagen
@@ -551,3 +550,75 @@ export const eliminarVideo = async (req, res) => {
     });
   }
 };
+
+// ----- SUSCRIPCION A CATEGORIAS
+export const obtenerProductosCategoria = async (req, res) => {
+  try {
+    // traer los productos que pertenecen a una categoria dada
+    const [rows] = await pool.query('CALL sp_productosCategoria(?)', [req.params.id]);
+    await Promise.all(rows[0].map(async (producto) => {
+      const [imagen] = await pool.query('SELECT url_imagen FROM tbl_imagenesProductos WHERE producto_id = ? LIMIT 1', [producto.id]);
+      if (imagen[0]) {
+        //console.log(imagen[0])
+        producto.imagen = imagen[0].url_imagen
+      }
+    }));
+
+    res.send(rows[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Ha ocurrido un error al traer los productos de la categoria",
+    });
+  }
+};
+
+
+export const suscribirseCategoria= async(req,res)=>{
+  try {
+    let validacion
+    const [rows] = await pool.query('INSERT INTO tbl_suscipciones_categorias(categoria,usuario) VALUES(?,?)', [req.params.id, req.user]);
+    const [validate] = await pool.query('CALL sp_validarSuscripcion(?,?)', [req.user, req.params.id]);
+    if(validate[0].length>0){
+      validacion=true
+    }else{
+      validacion=false
+    }
+    res.json({suscripcion:true, validacion});
+  } catch (error) {
+    let validacion
+    if (error.code === 'ER_DUP_ENTRY') {
+      await pool.query('CALL sp_AnularSuscripcion(?,?)', [req.user, req.params.id]);
+      const [validate] = await pool.query('CALL sp_validarSuscripcion(?,?)', [req.user, req.params.id]);
+      if(validate[0].length>0){
+        validacion=true
+      }else{
+        validacion=false
+      }
+      res.json({suscripcion:false, validacion})
+    } else {
+      res.status(500).json({
+        message: 'Ha ocurrido un error al suscribirse'
+      });
+      console.log(error);
+    }
+  }
+}
+
+export const validacionSuscripcion=async(req,res)=>{
+  try {
+    const [rows] = await pool.query('CALL sp_validarSuscripcion(?,?)', [req.user, req.params.id]);
+    if(rows[0].length>0){
+      res.send(true)
+    }else{
+      res.send(false)
+    }
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: 'Ha ocurrido un error al agregar a lista de productos'
+    });
+    console.log(error);
+  }
+}

@@ -445,3 +445,30 @@ input[type=number] { -moz-appearance:textfield; }
 .bc-mensaje{
   background-color: #f8f9fa;
 }
+
+.btn-suscribe{
+  background-color: var(--secundario);
+  color: white;
+  width: 140px;
+  height: 40px;
+}
+.btn-suscribe:hover{
+  background-color: #952c60;
+  color: white;
+  width: 142px;
+  height: 41px;
+}
+
+.btn-unsuscribe{
+  background-color: var(--gris);
+  color: white;
+  width: 180px;
+  height: 40px;
+}
+
+.btn-unsuscribe:hover{
+  background-color: #585858;
+  color: white;
+  width: 182px;
+  height: 41px;
+}

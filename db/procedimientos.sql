@@ -204,24 +204,25 @@ DELIMITER ;
 --Se borra el anterior
 drop procedure sp_todasPublicacionesSearch
 
+-- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
 DELIMITER //
-CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255), IN categoriaId INT)
+CREATE PROCEDURE sp_todasPublicacionesSearch(IN searchTerm VARCHAR(255))
 BEGIN
     SELECT  
-        p.producto_id AS id,
+		p.producto_id AS id,
         p.nombre_producto AS nombre,
         p.precio_producto AS precio,
         p.descripcion_producto AS descripcion,
-        p.categoria_id AS categoria,
+		p.categoria_id AS categoria,
         p.departamento_id AS departamento,
         p.fecha_publicacion
     FROM 
         tbl_productos p
     WHERE 
-        (p.nombre_producto LIKE CONCAT('%', searchTerm, '%') AND (p.categoria_id = categoriaId OR categoriaId IS NULL))
-        AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
-        AND p.producto_inactivo != 1
-        ORDER BY p.fecha_publicacion desc;
+        p.nombre_producto LIKE CONCAT('%', searchTerm, '%')
+       AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
+       AND p.producto_inactivo != 1
+       ORDER BY p.fecha_publicacion desc;
 END //
 DELIMITER ;
 
@@ -436,9 +437,6 @@ DELIMITER ;
 
 --NUEVO CAMBIADO EL 24/04/24
 -- Obtener calificaciones y comentarios de un producto
---Se borra el anterior
-drop procedure sp_obtenerComentariosProducto
-
 DELIMITER //
 CREATE PROCEDURE sp_obtenerComentariosProducto(
     IN p_producto_id INT
