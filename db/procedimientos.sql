@@ -201,8 +201,6 @@ DELIMITER ;
 
 -- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
 -- NUEVO CAMBIADO EL 24/04/24
---Se borra el anterior
-drop procedure sp_todasPublicacionesSearch
 
 -- PUBLICACIONES OBTENIDAS DE LA BUSQUEDA
 DELIMITER //
@@ -225,7 +223,6 @@ BEGIN
        ORDER BY p.fecha_publicacion desc;
 END //
 DELIMITER ;
-
 
 -- Eliminar de la lista de deseos
 DELIMITER //
