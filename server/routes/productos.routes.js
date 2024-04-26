@@ -87,7 +87,7 @@ router.put('/publicacion/video/eliminar/:id', autenticacionUsuario, eliminarVide
 
 //suscripciones
 //obtener los productos de una categoria dada
-router.get(`/categorias/:id`, autenticacionUsuario, obtenerProductosCategoria)
+router.get(`/categorias/:id`,  obtenerProductosCategoria)
 
 //AGREGAR SUSCRIPCION
 router.post('/categorias/suscribir/:id', autenticacionUsuario, suscribirseCategoria);
