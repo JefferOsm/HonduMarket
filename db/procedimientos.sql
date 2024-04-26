@@ -718,42 +718,6 @@ END //
 DELIMITER ;
 
 
--- Contar los productos que tienen X calificacion 
-DELIMITER //
-
-CREATE PROCEDURE sp_ContarCalificacionProductos()
-BEGIN
-    DECLARE i INT;
-    DECLARE condicion INT;
-    DECLARE contador INT;
-    DECLARE elemento INT;
-
-    DROP TEMPORARY TABLE IF EXISTS Temp_ConteoCalificacionProducto;
-    CREATE TEMPORARY TABLE Temp_ConteoCalificacionProducto (
-        N_Calificacion INT,
-        Conteo INT
-    );
-  
-    SET i = 0;
-    SET condicion = 5;
-
-    WHILE i < condicion DO
-		SET elemento = i + 1;
-        SELECT COUNT(*)
-        INTO contador
-        FROM tbl_calificaciones_producto
-        WHERE calificacion = elemento;
-
-        INSERT INTO Temp_ConteoCalificacionProducto (N_Calificacion, Conteo) VALUES (elemento, contador);
-
-		SET i = i + 1;
-    END WHILE;
-
-    SELECT * FROM Temp_ConteoCalificacionProducto;
-END //
-
-DELIMITER ;
-
  -- Contar los usuarios registrados en cada mes de un año a la fecha
 DELIMITER //
 
@@ -796,4 +760,81 @@ BEGIN
     SELECT * FROM Temp_ConteoUsuarios;
 END //
 
+DELIMITER ;
+
+
+-- Contar la cantidad de calificaciones que hay de un producto en los ultimos 3 meses
+DELIMITER //
+CREATE PROCEDURE sp_ContarCalificacionProductos()
+BEGIN
+    DECLARE i INT;
+    DECLARE condicion INT;
+    DECLARE contador INT;
+    DECLARE contador_filas INT;
+    DECLARE elemento INT;
+	DECLARE mes_actual INT;
+	DECLARE year_actual INT;
+    DECLARE fecha_inicio DATE;
+    DECLARE fecha_fin DATE;
+
+    DROP TEMPORARY TABLE IF EXISTS Temp_ConteoCalificacionProducto;
+    CREATE TEMPORARY TABLE Temp_ConteoCalificacionProducto (
+        Meses INT,
+        uno INT,
+        dos INT,
+        tres INT,
+        cuatro INT,
+        cinco INT
+    );
+  
+    SET i = 0;
+    SET condicion = 5;
+    SET fecha_fin = CURDATE();
+    SET fecha_inicio = DATE_SUB(fecha_fin, INTERVAL 3 MONTH);
+    SET mes_actual = MONTH(fecha_inicio);
+    SET year_actual = YEAR(fecha_inicio);
+    
+    WHILE mes_actual <= MONTH(fecha_fin)  OR year_actual < YEAR(fecha_fin) DO
+    
+		SELECT COUNT(*) INTO contador_filas
+			FROM Temp_ConteoCalificacionProducto
+			WHERE Meses = mes_actual;
+            
+            IF contador_filas = 0 THEN
+				INSERT INTO Temp_ConteoCalificacionProducto (Meses, uno, dos, tres, cuatro, cinco)
+				VALUES (mes_actual, NULL, NULL, NULL, NULL, NULL);
+			END IF;
+    
+		WHILE i < condicion DO
+			SET elemento = i + 1;
+			SELECT COUNT(*)
+			INTO contador
+			FROM tbl_calificaciones_producto
+			WHERE calificacion = elemento AND YEAR(fecha_comentario) = year_actual AND MONTH(fecha_comentario) = mes_actual;
+            
+            UPDATE Temp_ConteoCalificacionProducto
+			SET
+				uno   = CASE WHEN elemento = 1 THEN contador ELSE uno END,
+				dos   = CASE WHEN elemento = 2 THEN contador ELSE dos END,
+				tres  = CASE WHEN elemento = 3 THEN contador ELSE tres END,
+				cuatro = CASE WHEN elemento = 4 THEN contador ELSE cuatro END,
+				cinco = CASE WHEN elemento = 5 THEN contador ELSE cinco END
+			WHERE Meses = mes_actual;
+            
+			SET i = i + 1;
+		END WHILE;
+        
+        IF mes_actual = 12 THEN
+			SET mes_actual = 1;
+            SET year_actual = year_actual + 1;
+            SET i = 0;
+		ELSE
+			SET mes_actual = mes_actual + 1;
+            SET i = 0;
+		END IF;
+        
+	END WHILE;
+    
+    SELECT * FROM Temp_ConteoCalificacionProducto;
+END //
 DELIMITER ;
