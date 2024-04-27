@@ -91,10 +91,10 @@ function HomePage() {
         ):(
           <>
             {publicacionesHome.map((producto, index) => (
-              <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
+              <Link to={`/Vista_del_articulo/${producto.nombre}/${producto.id}`}
               className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
-              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
-                <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.id}>
+                <img src={producto.imagen} className="d-block size-detalle-imagen" alt="..." key={producto.id}/>
               </Link>
             ))}
           </>
