@@ -38,12 +38,21 @@ function HomePage() {
   const [id_usuario, setid_usuario] = useState(null);
   const [results, setresults] = useState([]);
 
+  useEffect(()=>{
+  
+    if (autenticado){
+      setid_usuario(usuario.id);
+    }else{
+      setid_usuario(null);
+    }
+    
+  },[autenticado])
+
 
   useEffect(()=>{
     obtenerCategorias();
     if (autenticado){
       obtenerPublicacionesInicioAuth();
-      setid_usuario(usuario.id);
     }else{
       obtenerPublicacionesInicio();
     }
@@ -55,7 +64,7 @@ function HomePage() {
 
     //console.log(categorias)
     cargarDatos();
-  },[usuario])
+  },[id_usuario])
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
