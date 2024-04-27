@@ -13,3 +13,4 @@ Proyecto Ingeniería de Software
 - Hector Leonel Reyes Castro 20181007664
 - Jeffer Osmany Martinez 20201002065
 - Carlos eduardo sosa 20171032445
+- Jesus Alberto Ramirez 20191004589
