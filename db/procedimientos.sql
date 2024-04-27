@@ -891,7 +891,6 @@ BEGIN
        AND (p.fecha_programada IS NULL OR p.fecha_programada <= NOW())
        AND p.producto_inactivo != 1
        ORDER BY p.fecha_publicacion desc;
-<<<<<<< HEAD
 END //
 DELIMITER ;
 
@@ -1010,7 +1009,5 @@ BEGIN
 	END IF;
 	SELECT * FROM Temp_ProductosConCincoEstrellas;
     
-=======
->>>>>>> 87213872fdd9066e5a2a1db7789015e8fb09e54f
 END //
 DELIMITER ;

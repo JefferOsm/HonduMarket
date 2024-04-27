@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect,useState } from "react"
 import { usarProductosContex } from "../context/productosContext";
 import { usarAutenticacion } from "../context/autenticacion";
@@ -52,7 +53,7 @@ function HomePage() {
       setresults(response);
     }
 
-    console.log(categorias)
+    //console.log(categorias)
     cargarDatos();
   },[usuario])
 
