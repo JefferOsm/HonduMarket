@@ -68,14 +68,14 @@ function HomePage() {
       
       <div id="carouselExampleInterval" className="carousel slide " data-bs-ride="carousel" style={{ position: 'relative' }}>
 
-        <div className="carousel-inner detalle-publicacion-imagen">
+        <div className="carousel-inner ">
           {results.map((producto, index) => (
             <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
-              className={`card bg-primary-light shadow text-decoration-none mb-3 mt-2 mx-2 `}
-              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
-                <div className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000">
+            className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
+            style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
+                
                   <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
-                </div>
+                
             </Link>
           ))}
         </div>
