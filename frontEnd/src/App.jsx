@@ -17,6 +17,7 @@ import CentroChat from './pages/Chat/CentroChat';
 import Editar_Articulo from './pages/publicaciones/EditarArticulo';
 import { ChatProvider } from './context/chatContext';
 import PublicacionesCatPage from './pages/publicaciones/PublicacionesCatPage';
+import { CSV_Publicar } from './pages/publicaciones/CSV_Publicar';
 
 
 function App(){
@@ -39,6 +40,7 @@ function App(){
               <Route path='/perfil' element={<PerfilPage/>} />
               <Route path='/perfil/editar' element={<EditPerfilPage/>} />
               <Route path='/perfil/publicar' element={<PublicarArticulo/>} />
+              <Route path='/perfil/CSV_publicar' element={<CSV_Publicar/>} />
               <Route path='/perfil/publicaciones' element={<MisPublicaciones/>} />
               <Route path='/perfil/lista-deseos' element={<ListaDeseosPage/>} />
               <Route path='/perfil/mensajes' element={<CentroChat/>} />
