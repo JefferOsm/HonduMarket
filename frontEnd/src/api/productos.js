@@ -162,3 +162,8 @@ export const validarSuscripcionReq= async(id)=>{
   const response= await axios.get(`/productos/categorias/suscribir/validar/${id}`);
   return response.data
 }
+
+export const Carrusel_1_Request= async (values_1)=> {
+  const response = await axios.post(`/productos/Carrusel_1`, { values_1});
+  return response.data; // Devuelve los datos de respuesta del servidor
+}

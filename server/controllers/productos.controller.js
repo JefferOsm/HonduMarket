@@ -622,3 +622,17 @@ export const validacionSuscripcion=async(req,res)=>{
     console.log(error);
   }
 }
+
+
+//Productos que tienen 5 estrellas ultimamente
+export const Productos_Carrusel_Home_1 = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_ProductosDeCincoEstrella(?)", [req.body.values_1]);
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error",
+    });
+  }
+}
