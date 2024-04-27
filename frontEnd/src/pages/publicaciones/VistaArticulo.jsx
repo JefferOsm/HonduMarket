@@ -235,6 +235,8 @@ function VistaArticulo() {
   };
 
 
+
+
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
     if (value !== undefined && value !== null) {
@@ -656,7 +658,7 @@ function VistaArticulo() {
                             />
                           </div>
 
-                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading}>Enviar</button>
+                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading || !formValues.calificacion || !formValues.comentario}>Enviar</button>
                         </form>
                       </div>
                     </div>
@@ -768,7 +770,7 @@ function VistaArticulo() {
                             />
                           </div>
 
-                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading}>Enviar</button>
+                          <button type="submit" className="btn fw-bold bc-secondary" disabled={isLoading || !formValues.calificacion || !formValues.comentario}>Enviar</button>
                         </form>
                       </div>
                     </div>
