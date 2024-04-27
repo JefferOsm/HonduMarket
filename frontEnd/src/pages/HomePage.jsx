@@ -78,18 +78,28 @@ function HomePage() {
       <div id="carouselExampleInterval" className="carousel slide " data-bs-ride="carousel" style={{ position: 'relative' }}>
 
         <div className="carousel-inner ">
-          {results.map((producto, index) => (
-            <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
-            className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
-            style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
-                
-                  <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
-                
-            </Link>
-          ))}
+        {results.length>0 ? (
+          <>
+            {results.map((producto, index) => (
+              <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
+              className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
+                <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
+              </Link>
+            ))}
+          </>
+        ):(
+          <>
+            {publicacionesHome.map((producto, index) => (
+              <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
+              className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
+                <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
+              </Link>
+            ))}
+          </>
+        )}
         </div>
-
-
 
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
