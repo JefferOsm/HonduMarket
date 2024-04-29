@@ -7,6 +7,10 @@ function CSV_Publicar() {
   const [id_categoria, set_id_categoria] = useState([]);
   const [id_departamento, set_id_departamento] = useState([]);
   const [id_estados, set_id_estados] = useState([]);
+
+  //funcionalidades para el error
+  
+
   const { obtenerCategorias, obtenerDepartamentos, obtenerEstados, categorias,
     departamentos, estados, agregarPublicacion, subirVideoPublicacion } = usarProductosContex();
 
@@ -30,10 +34,11 @@ function CSV_Publicar() {
     const lines = content.split('\n');
     const parsedContent = lines.map(line => {
       const values = line.split(',');
+      const precio = parseInt(values[2].replace(/[^\d.]/g, ''));
       return {
         nombre: values[0],
         descripcion: values[1],
-        precio: values[2],
+        precio: isNaN(precio) ? "Valor no aceptado" : precio, 
         categoria: values[3],
         estado: values[4],
         departamento: values[5]
@@ -69,19 +74,22 @@ function CSV_Publicar() {
       if (CategoriaEncontrada !== undefined) {
         categoria_id.push(CategoriaEncontrada.categoria_id);
       } else {
-        alert('No hay ninguna coincidencia con ' + categoriaActual);
+        A_contenido[i].categoria = CategoriaEncontrada;
+        set_contenido(A_contenido);
       }
 
       if (EstadoEncontrado !== undefined) {
         estado_id.push(EstadoEncontrado.id_estado);
       } else {
-        alert('No hay ninguna coincidencia con ' + estadoActual);
+        A_contenido[i].estado = EstadoEncontrado;
+        set_contenido(A_contenido);
       }
 
       if (DepartamentoEncontrado !== undefined) {
         departamento_id.push(DepartamentoEncontrado.id_departamento);
       } else {
-        alert('No hay ninguna coincidencia con ' + departamentoActual);
+        A_contenido[i].departamento = DepartamentoEncontrado;
+        set_contenido(A_contenido);
       }
     }
 
@@ -128,9 +136,11 @@ function CSV_Publicar() {
       const producto = contenido[i];
       const imagenesProducto = imagenes[i];
 
-      if (!imagenesProducto || imagenesProducto.length === 0) {
+      if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio)) {
+        continue;
+      } else if (!imagenesProducto || imagenesProducto.length === 0) {
         alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
-        return;
+        continue;
       }
 
       const formData = new FormData();
@@ -161,17 +171,18 @@ function CSV_Publicar() {
   };
 
   return (
-    <div className='card'>
+    <div className='card' style={{height: "88vh"}}>
       <div className='mx-auto py-3'>
         <h2>Cargar archivo CSV</h2>
         <input type="file" onChange={handleFileUpload} accept=".csv" />
       </div>
 
-      <div className='py-3 px-3'>
+      <div className='card py-3 px-3 overflow-auto' style={{height: "70vh"}}>
         <table className="table table-bordered">
           <caption>Productos por subir</caption>
           <thead>
             <tr>
+              <th scope="col">N de linea</th>
               <th scope="col">Nombre</th>
               <th scope="col">Descripcion</th>
               <th scope="col">Precio</th>
@@ -185,15 +196,28 @@ function CSV_Publicar() {
             {contenido.map((producto, index) => (
               <React.Fragment key={index}>
                 <tr>
+                  <td>{index + 1}</td>
                   <td>{producto.nombre}</td>
                   <td>{producto.descripcion}</td>
-                  <td>{producto.precio}</td>
-                  <td>{producto.categoria}</td>
-                  <td>{producto.estado}</td>
-                  <td>{producto.departamento}</td>
-                  <td>
-                    <input type="file" accept="image/*" onChange={handleImageUpload(index)} ref={el => fileInputRefs.current[index] = el} multiple />
+                  <td className={isNaN(producto.precio) ? 'bg-danger-subtle text-danger-emphasis' : ''}>{producto.precio}</td>
+
+                  <td className={producto.categoria !== undefined ? '' : 'bg-danger-subtle text-danger-emphasis'}>
+                    {producto.categoria !== undefined ? producto.categoria : 'valor no aceptado'}
                   </td>
+
+                  <td className={producto.estado !== undefined ? '' : 'bg-danger-subtle text-danger-emphasis'}>
+                    {producto.estado !== undefined ? producto.estado : 'valor no aceptado'}
+                  </td>
+
+                  <td className={producto.departamento !== undefined ? '' : 'bg-danger-subtle text-danger-emphasis'}>
+                    {producto.departamento !== undefined ? producto.departamento : 'valor no aceptado'}
+                  </td>
+
+                  <td>
+                    <input type="file" accept="image/*" onChange={handleImageUpload(index)} ref={el => fileInputRefs.current[index] = el} multiple 
+                      disabled={producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio)} />
+                  </td>
+
                 </tr>
               </React.Fragment>
             ))}
@@ -201,7 +225,7 @@ function CSV_Publicar() {
         </table>
       </div>
 
-      <div className='card'>
+      <div>
         <div className='py-3 px-3 d-flex justify-content-end'>
           <button className="btn btn-primary" onClick={handleAgregarPublicacion} disabled={contenido.length === 0 || subiendo}>Agregar publicaciones</button>
         </div>
@@ -213,7 +237,7 @@ function CSV_Publicar() {
         </div>
       )}
 
-      <div className=' py-3 px-3'>
+      {/*<div className=' py-3 px-3'>
         <h6>categorias</h6>
         {id_categoria.map(categoria => (
           <h6>{categoria}</h6>
@@ -226,7 +250,7 @@ function CSV_Publicar() {
         {id_departamento.map(categoria => (
           <h6>{categoria}</h6>
         ))}
-      </div>
+      </div>*/}
     </div>
   );
 }
