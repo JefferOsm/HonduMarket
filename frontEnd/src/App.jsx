@@ -17,7 +17,7 @@ import CentroChat from './pages/Chat/CentroChat';
 import Editar_Articulo from './pages/publicaciones/EditarArticulo';
 import { ChatProvider } from './context/chatContext';
 import PublicacionesCatPage from './pages/publicaciones/PublicacionesCatPage';
-import { CSV_Publicar } from './pages/publicaciones/CSV_Publicar';
+import CSV_Publicar from './pages/publicaciones/CSV_Publicar';
 
 
 function App(){
