@@ -96,21 +96,29 @@ function CSV_Publicar() {
   const [subiendo, setSubiendo] = useState(false);
 
   const handleImageUpload = (index) => (event) => {
-    const file = event.target.files[0];
+    const files = Array.from(event.target.files);
     const producto = contenido[index];
-    if (file) {
+
+    if (files.length > 6) {
+      alert(`No puedes subir más de 6 imágenes para el producto ${producto.nombre}.`);
+      event.target.value = null;
+      return;
+    }
+
+    files.forEach(file => {
       // Verificar el tamaño del archivo
       if (file.size > 10 * 1024 * 1024) {
         alert(`El tamaño de la imagen para el producto ${producto.nombre} no puede ser mayor a 10MB.`);
+        event.target.value = null;
         return;
       }
-  
-      setImagenes(prev => {
-        const newImagenes = [...prev];
-        newImagenes[index] = file;
-        return newImagenes;
-      });
-    }
+    });
+
+    setImagenes(prev => {
+      const newImagenes = [...prev];
+      newImagenes[index] = files;
+      return newImagenes;
+    });
   };
 
 
@@ -118,9 +126,9 @@ function CSV_Publicar() {
     setSubiendo(true);
     for (let i = 0; i < contenido.length; i++) {
       const producto = contenido[i];
-      const imagen = imagenes[i];
+      const imagenesProducto = imagenes[i];
 
-      if (!imagen) {
+      if (!imagenesProducto || imagenesProducto.length === 0) {
         alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
         return;
       }
@@ -133,7 +141,9 @@ function CSV_Publicar() {
       formData.append('estado', id_estados[i]);
       formData.append('departamento', id_departamento[i]);
 
-      formData.append('imagenes', imagen, `imagen-${i}`);
+      imagenesProducto.forEach((imagen, j) => {
+        formData.append('imagenes', imagen, `imagen-${i}-${j}`);
+      });
 
       await agregarPublicacion(formData);
     }
@@ -149,7 +159,6 @@ function CSV_Publicar() {
     setMensaje('Los artículos han sido publicados correctamente.');
     setSubiendo(false);
   };
-
 
   return (
     <div className='card'>
@@ -169,6 +178,7 @@ function CSV_Publicar() {
               <th scope="col">Categoria</th>
               <th scope="col">Estado</th>
               <th scope="col">Departamento</th>
+              <th scope="col">Imágenes</th>
             </tr>
           </thead>
           <tbody>
@@ -182,7 +192,7 @@ function CSV_Publicar() {
                   <td>{producto.estado}</td>
                   <td>{producto.departamento}</td>
                   <td>
-                    <input type="file" accept="image/*" onChange={handleImageUpload(index)} ref={el => fileInputRefs.current[index] = el} />
+                    <input type="file" accept="image/*" onChange={handleImageUpload(index)} ref={el => fileInputRefs.current[index] = el} multiple />
                   </td>
                 </tr>
               </React.Fragment>
