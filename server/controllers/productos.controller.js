@@ -636,3 +636,35 @@ export const Productos_Carrusel_Home_1 = async (req,res) =>{
     });
   }
 }
+
+//Productos que tienen 5 estrellas ultimamente
+export const inactividadProductos = async (req,res) =>{
+  const{cantidadDias}= req.body
+  try{
+    const [rows] = await pool.query("CALL sp_cambioDiasInactivar(?)", [cantidadDias]);
+    console.log(rows.affectedRows)
+    if(rows.affectedRows>0){
+      res.json({mensaje:'Se actualizo el limite correctamente'})
+    }else{
+      res.json({mensaje:'Ocurrio un fallo al realizar la actualización'})
+    }
+    
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error al configurar los dias del producto",
+    });
+  }
+}
+
+export const obtenerDiasInactividad = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_obtenerDiasLimite()");
+    res.send(rows[0])
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error al configurar los dias del producto",
+    });
+  }
+}
