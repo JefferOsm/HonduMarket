@@ -93,20 +93,6 @@ CREATE TABLE tbl_listaDeseos(
 );
 
 
-CREATE TABLE tbl_mensajes(
-	mensaje_id INT(11) NOT NULL AUTO_INCREMENT,
-    emisor_id INT(11) NOT NULL,
-    receptor_id INT(11) NOT NULL,
-    producto_id INT(11) NULL,
-    mensaje TEXT ,
-    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT PkMensajes PRIMARY KEY(mensaje_id),
-    CONSTRAINT FKemisor FOREIGN KEY(emisor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKreceptor FOREIGN KEY(receptor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKmsjProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
 INSERT INTO tbl_categorias(nombre_categoria) 
 VALUES('Inmuebles'),
 ('Vehiculos'),
@@ -220,4 +206,51 @@ CREATE TABLE tbl_suscipciones_categorias(
     CONSTRAINT FKsuscribeUser FOREIGN KEY(usuario) REFERENCES tbl_usuarios(id) 
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT PK_SuscribeCat PRIMARY KEY (categoria, usuario) 
+);
+
+
+-- CHATS
+
+CREATE TABLE tbl_mensajes(
+	mensaje_id INT(11) NOT NULL AUTO_INCREMENT,
+    emisor_id INT(11) NOT NULL,
+    receptor_id INT(11) NOT NULL,
+    producto_id INT(11) NULL,
+    mensaje TEXT ,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PkMensajes PRIMARY KEY(mensaje_id),
+    CONSTRAINT FKemisor FOREIGN KEY(emisor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FKreceptor FOREIGN KEY(receptor_id) REFERENCES tbl_usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FKmsjProducto FOREIGN KEY(producto_id) REFERENCES tbl_productos(producto_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE tbl_canales(
+	canal_id INT(11) NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(60) NOT NULL,
+    descripcion VARCHAR(200) NOT NULL,
+    imagen VARCHAR(150) NOT NULL,
+    administrador INT(11) NOT NULL,
+    CONSTRAINT PKcanal PRIMARY KEY(canal_id),
+    CONSTRAINT FKcanal_admin FOREIGN KEY (administrador) REFERENCES tbl_usuarios(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE tbl_canales_seguidores(
+	canal INT(11) NOT NULL,
+    seguidor INT(11) NOT NULL,
+    CONSTRAINT FKseguido_canal FOREIGN KEY(canal) REFERENCES tbl_canales(canal_id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT Fkseguido_seguidor FOREIGN KEY(seguidor) REFERENCES tbl_usuarios(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT PK_SeguidoresCan PRIMARY KEY (canal, seguidor) 
+);
+
+CREATE TABLE tbl_canales_mensaje(
+	mensaje_id INT(11) NOT NULL AUTO_INCREMENT,
+    mensaje TEXT,
+    canal INT(11) NOT NULL,
+	fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PKmensaje_canal PRIMARY KEY(mensaje_id),
+    CONSTRAINT FKmensaje_canal FOREIGN KEY(canal) REFERENCES tbl_canales(canal_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );

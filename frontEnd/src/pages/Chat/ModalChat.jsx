@@ -54,10 +54,10 @@ function ModalChat ({show,handleClose,receptor}){
     }
   
 
-    return()=>{
-      socket.off('agregarUsuariosProductos')
-    }
-  },[socket,usuario,autenticado,receptor]);
+    // return()=>{
+    //   socket.off('agregarUsuariosProductos')
+    // }
+  },[socket,usuario,autenticado]);
 
 
   const handleSubmit= (e)=>{
@@ -117,7 +117,8 @@ function ModalChat ({show,handleClose,receptor}){
               <>
                 {message.emisor!==usuarioLog ? (
                   <>
-                  <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5 list-unstyled" key={message.mensajeID} style={{wordWrap:'break-word'}}>
+                  <li className="bc-secondary-body text-light rounded ml-auto p-2 my-2 col-md-5 list-unstyled" 
+                  key={message.mensajeID ? message.mensajeID : i} style={{wordWrap:'break-word'}}>
                   {message.mensaje}
                   </li>
                   </>

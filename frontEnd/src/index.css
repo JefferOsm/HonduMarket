@@ -20,7 +20,10 @@ code {
     monospace;
 }
 
-
+.bgc-secondary{
+  background: var(--secundario);
+  color: white;
+}
 /* Estilos de Colores */
 .bc-degrate{
   background-image: linear-gradient(to left, #6f42c1 0%, var(--primario) 100%);
@@ -471,4 +474,48 @@ input[type=number] { -moz-appearance:textfield; }
   color: white;
   width: 182px;
   height: 41px;
+}
+
+
+/* Canales */
+.btn-channel:hover{
+  transform: scale(1.1);
+  background: var(--secundario);
+  color: white;
+}
+
+.btn-seguir-canal{
+  width: 65px;
+  height: 35px;
+  line-height: 35px;
+  background: #6232bb;
+  color: white;
+  text-align: center;
+}
+
+.btn-seguir-canal:hover{
+  transform: scale(1.03);
+  background: #6e39d2;
+  color: white;
+}
+
+.bg-aside-canales{
+  background: #451034;
+  color: white;
+}
+
+.chat-ultimo-mensaje{
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgb(211, 204, 204);
+}
+
+.chat-fecha-ultimo{
+  font-size: .9rem;
+}
+
+.chat-seleccionado{
+  background: #1d0314;
 }

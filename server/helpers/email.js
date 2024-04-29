@@ -249,5 +249,4 @@ const enviarCorreos = async () => {
 // Programar la función para que se ejecute una vez a la semana (cada domingo a las 00:00)
 //cron.schedule('0 0 * * SUN', enviarCorreos);
 //cron.schedule('*/5 * * * *', enviarCorreos);
-
 export default enviarCorreos;

@@ -9,17 +9,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCloudArrowUp, faHeart, faPhone, faSquarePen, faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
-import ModalChat from "../Chat/ModalChat";
 import ReactStars from "react-rating-stars-component";
 import { Link } from 'react-router-dom';
 import ModalDenuncia from '../../components/DenunciaModal';
-
+import {Toaster, toast} from 'sonner'
 import { Collapse, Button } from 'react-bootstrap';
 import ImageModal from '../../components/ImageModal';
+import { usarChatContext } from "../../context/chatContext";
 
 
 function VistaArticulo() {
-
+  const {enviarMensajeProd}= usarChatContext()
   //para el modal de denuncias
   const [showDenunciaModal, setShowDenunciaModal] = useState(false);
   const handleOpenDenunciaModal = () => {
@@ -32,18 +32,21 @@ function VistaArticulo() {
 
   //funcionalidades para el modal de Usuario
   const [show, setShow] = useState(false);
-  const [Chat, setChat] = useState(false);
-  const ChatClose = () => setChat(false);
+
 
   const handleShow = () => {
     obtenerUsuario(detailProduct.idUsuario)
     setShow(true)
   };
 
-  const handleChat = () => {
-    obtenerUsuario(detailProduct.idUsuario)
-    setChat(true)
-  };
+  const enviarMensaje= async(data)=>{
+    const response = await enviarMensajeProd(data)
+    if(response.mensaje){
+      toast.success(<div>Se envio el mensaje <Link to={'/perfil/mensajes'}>Ver Mensajes</Link></div> )
+    }else{
+      toast.error(<div>Ya preguntaste por este producto <Link to={'/perfil/mensajes'}>Ver Mensajes</Link></div>)
+    }
+  }
 
   //funcionalidades para el modal de Eliminar Publicacion
   const [showDelete, setShowDelete] = useState(false);
@@ -252,7 +255,7 @@ function VistaArticulo() {
       <div style={{ overflow: 'auto' }}>
         {/*card dinamica para que el tamano se ajuste a la pantalla y se divide en 2*/}
         <div className="container-md mt-2 shadow-lg bg-white rounded" style={{ position: 'relative' }}>
-
+        <Toaster richColors position='bottom-left'/>
           {/*parte del card para presentar la imagen y videos si tiene*/}
           <div id="carouselExample" className="carousel slide mx-auto shadow contenedor-detalle" >
             <div className="carousel-inner detalle-publicacion-imagen">
@@ -334,7 +337,10 @@ function VistaArticulo() {
                 <tbody>
                   <tr>
                     <th scope="row">Categoria </th>
-                    <td>{detailProduct.categoria}</td>
+                    <td><Link className="text-decoration-none text-dark" 
+                    to={`/Categorias/${detailProduct.categoria}/${detailProduct.categoria_id}`}>
+                    {detailProduct.categoria}  
+                    </Link></td>
                   </tr>
                   <tr>
                     <th scope="row">Estado</th>
@@ -399,19 +405,35 @@ function VistaArticulo() {
                   </div>
 
                 </div>
-                {autenticado ? (
+                {!botonListaUsuario ? (
                   <>
-                    <div>Envía un mensaje al vendedor</div>
-                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
-                    <div className="btn bc-secondary fw-bold mt-2" onClick={handleChat}>Enviar</div>
+                      {autenticado ? (
+                        <>
+                          <div>Envía un mensaje al vendedor</div>
+                          <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                          <div className="btn bc-secondary fw-bold mt-2" 
+                          onClick={()=>{enviarMensaje(
+                            {
+                              producto:detailProduct.id,
+                              receptor:detailProduct.idUsuario,
+                              mensaje:"Hola. ¿Sigue disponible?"
+                            }
+                          )}}>
+                          Enviar</div>
+                        </>
+                      ) : (
+                        <>
+                          <div>Envíale un mensaje al vendedor</div>
+                          <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
+                          <Link to={'/login'} className='btn bc-secondary fw-bold mt-2'>Enviar</Link>
+                        </>
+                      )}
                   </>
-                ) : (
+                ):(
                   <>
-                    <div>Envíale un mensaje al vendedor</div>
-                    <input type="text" className="form-control bc-mensaje" id="mensaje" defaultValue={"Hola. ¿Sigue disponible?"} />
-                    <Link to={'/login'} className='btn bc-secondary fw-bold mt-2'>Enviar</Link>
                   </>
                 )}
+
               </div>
             </div>
             {/* Botón para abrir el modal de denuncias */}
@@ -786,7 +808,6 @@ function VistaArticulo() {
       <UsuarioModal show={show} handleClose={handleClose} />
       <DeletePublicacionModal show={showDelete} handleClose={handleCloseDelete} id={detailProduct.id} />
       {/*<EditarProductoModal show={showEdit} handleClose={handleCloseEdit} id={detailProduct.id} />*/}
-      <ModalChat show={Chat} handleClose={ChatClose} receptor={detailProduct.idUsuario} />
       <ModalDenuncia show={showDenunciaModal} handleClose={handleCloseDenunciaModal} usuario={detailProduct.idUsuario} />
 
     </>
