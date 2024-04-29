@@ -38,12 +38,21 @@ function HomePage() {
   const [id_usuario, setid_usuario] = useState(null);
   const [results, setresults] = useState([]);
 
+  useEffect(()=>{
+  
+    if (autenticado){
+      setid_usuario(usuario.id);
+    }else{
+      setid_usuario(null);
+    }
+    
+  },[autenticado])
+
 
   useEffect(()=>{
     obtenerCategorias();
     if (autenticado){
       obtenerPublicacionesInicioAuth();
-      setid_usuario(usuario.id);
     }else{
       obtenerPublicacionesInicio();
     }
@@ -55,7 +64,7 @@ function HomePage() {
 
     //console.log(categorias)
     cargarDatos();
-  },[usuario])
+  },[id_usuario])
 
   // Convertir el número del precio con formato con comas
   const comas = (value) => {
@@ -69,18 +78,28 @@ function HomePage() {
       <div id="carouselExampleInterval" className="carousel slide " data-bs-ride="carousel" style={{ position: 'relative' }}>
 
         <div className="carousel-inner ">
-          {results.map((producto, index) => (
-            <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
-            className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
-            style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
-                
-                  <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
-                
-            </Link>
-          ))}
+        {results.length>0 ? (
+          <>
+            {results.map((producto, index) => (
+              <Link to={`/Vista_del_articulo/${producto.nombre_producto}/${producto.producto_id}`}
+              className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.producto_id}>
+                <img src={producto.url_imagen} className="d-block size-detalle-imagen" alt="..." key={producto.producto_id}/>
+              </Link>
+            ))}
+          </>
+        ):(
+          <>
+            {publicacionesHome.map((producto, index) => (
+              <Link to={`/Vista_del_articulo/${producto.nombre}/${producto.id}`}
+              className={`carousel-item ${index === 0 ? 'active' : ''}`} data-bs-interval="10000" 
+              style={{ width: '100%', objectFit: 'cover' }} key={producto.id}>
+                <img src={producto.imagen} className="d-block size-detalle-imagen" alt="..." key={producto.id}/>
+              </Link>
+            ))}
+          </>
+        )}
         </div>
-
-
 
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
             <span className="carousel-control-prev-icon" aria-hidden="true"></span>

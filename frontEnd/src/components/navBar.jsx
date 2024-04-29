@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { usarAutenticacion } from '../context/autenticacion';
 import { usarProductosContex } from '../context/productosContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore, faSearch, faBookmark, faSignal, faMessage } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket, faCircleUser, faBars, faFileArrowUp, faStore, faSearch, faBookmark, faSignal, faMessage, faClipboard, faFileCsv, faTable, faUpDown, faCloudUpload } from '@fortawesome/free-solid-svg-icons';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ModalBusqueda from './modalBusqueda';
 import ModalChat from "../pages/Chat/ModalChat";
@@ -100,9 +100,31 @@ function NavBar() {
                           <FontAwesomeIcon icon={faCircleUser} />  Perfil
                         </Dropdown.Item>
 
-                        <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicar">
-                          <FontAwesomeIcon icon={faFileArrowUp} />  Publicar Producto
-                        </Dropdown.Item>
+                       
+                          <li>
+                            <div className="accordion-item">
+                              <h5 className="accordion-header bc-primary d-flex text-center text-light">
+                                
+                                <button className="accordion-button bc-primary text-light fw-bold p-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                 <FontAwesomeIcon icon={faCloudUpload} style={{ marginRight: '6px' }}/>  Publicar
+                                </button>
+                              </h5>
+                              <div id="flush-collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                <div className="accordion-body px-3">
+                                  <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicar">
+                                    <FontAwesomeIcon icon={faClipboard} />  Publicar manualmente
+                                  </Dropdown.Item>
+
+                                  <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/CSV_publicar">
+                                    <FontAwesomeIcon icon={faTable} />  Publicar con CSV
+                                  </Dropdown.Item>
+
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                       
+                        
 
                         <Dropdown.Item className='drop-home-item text-light fw-bold p-2' href="/perfil/publicaciones">
                           <FontAwesomeIcon icon={faStore} />  Mis Publicaciones
