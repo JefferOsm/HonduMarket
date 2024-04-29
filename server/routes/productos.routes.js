@@ -6,7 +6,9 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     eliminarImagenProducto,cambiarEstadoPublicacion, agregarCalificacionProducto, obtenerCalificacionesProducto, obtenerComentariosProducto, editarCalificacionProducto,eliminarVideo,
     obtenerProductosCategoria,
     suscribirseCategoria,
-    validacionSuscripcion} from "../controllers/productos.controller.js";
+    validacionSuscripcion,
+    inactividadProductos,
+    obtenerDiasInactividad} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -97,6 +99,14 @@ router.get('/categorias/suscribir/validar/:id', autenticacionUsuario, validacion
 
 //datos para la grafica
 router.post('/Carrusel_1', Productos_Carrusel_Home_1)
+
+
+//datos para la grafica
+router.put('/inactividad', autenticacionUsuario, inactividadProductos)
+
+//obtener el dia limite
+router.get('/inactividad/dia', autenticacionUsuario, obtenerDiasInactividad)
+
 
 
 export default router

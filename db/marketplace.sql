@@ -16,8 +16,6 @@ CREATE TABLE tbl_usuarios (
     CONSTRAINT Pk_usuarios PRIMARY KEY(id)
 );
 
-
-
 CREATE TABLE tbl_calificaciones (
     id INT(11) NOT NULL AUTO_INCREMENT,
     usuario_id INT(11) NOT NULL,
@@ -254,3 +252,11 @@ CREATE TABLE tbl_canales_mensaje(
     CONSTRAINT FKmensaje_canal FOREIGN KEY(canal) REFERENCES tbl_canales(canal_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- INACTIVIDAD
+
+CREATE TABLE configuracion_inactividad (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dias_inactividad INT
+);
+-- INSERT INTO configuracion_inactividad (dias_inactividad) VALUES (15);

@@ -559,12 +559,6 @@ BEGIN
 END //
 DELIMITER ;
 
--- Inhabilitar Productos
-CREATE EVENT inhabilitar_producto
-ON SCHEDULE EVERY 1 MINUTE
-DO
-  UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL 3 MINUTE) AND producto_inactivo = 1;
-  
 
 --  PROCEDIMIENTOS APARTADO DE GRAFICAS --
   
@@ -1009,5 +1003,39 @@ BEGIN
 	END IF;
 	SELECT * FROM Temp_ProductosConCincoEstrellas;
     
+END //
+DELIMITER ;
+
+
+-- procedimiento para elegir dias para inhabilitar productos
+DELIMITER //
+CREATE PROCEDURE sp_cambioDiasInactivar (
+    IN p_dias INT(11)
+)
+BEGIN
+    UPDATE configuracion_inactividad SET dias_inactividad = p_dias WHERE id = 1;
+END //
+DELIMITER ;
+
+-- procedimiento para traer el limite de dias de inactividad
+DELIMITER //
+CREATE PROCEDURE sp_obtenerDiasLimite (
+)
+BEGIN
+    SELECT *FROM configuracion_inactividad WHERE id = 1;
+END //
+DELIMITER ;
+
+
+-- EVENTO DE INACTIVIDAD
+DELIMITER //
+CREATE EVENT inhabilitar_producto
+ON SCHEDULE EVERY 10 MINUTE
+DO
+BEGIN
+    DECLARE v_dias INT;
+    SELECT dias_inactividad INTO v_dias FROM configuracion_inactividad WHERE id = 1;
+    
+    UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL v_dias DAY) AND producto_inactivo = 0;
 END //
 DELIMITER ;
