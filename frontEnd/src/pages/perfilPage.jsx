@@ -21,7 +21,7 @@ const { obtenerPublicaciones,publicacionesUser} = usarProductosContex();
 const {register, handleSubmit, formState:{errors}} = useForm();
 const [idSeleccionado, setIdSeleccionado] = useState(null);
 
- 
+const [loading , set_loading] = useState(false);
 
 useEffect(()=>{
   obtenerPublicaciones();
@@ -30,13 +30,14 @@ useEffect(()=>{
 
 //Peticion para foto de perfil
 const onSubmit= async(data)=>{
+    set_loading(true);
 
     const formData= new FormData();
     formData.append('image',data.imagen[0])
     console.log(formData)
   
     await fotoPerfil(formData)
-  
+    set_loading(false);
 }
 
 //funcion para la pagina vista del producto
@@ -44,32 +45,45 @@ function handleClick(id) {
   setIdSeleccionado(id);
 }
 
+const spinner = (
+  <div className="spinner-border" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+);
+
 
   return (
     <>
     <div className='container-md bg-primary-light mt-7 mb-4 rounded shadow contenedor-perfil p-2' style={{ height:'30rem', backgroundColor:'white'}}> 
       <div className="row ">
         {/* Imagen */}
-        <Link to={usuario.url_imagen} target='_blank' className='foto-perfil rounded-circle mx-auto shadow' style={{width:'160px', 
-        height:'160px', backgroundImage:`url(${usuario.url_imagen})`, backgroundRepeat:'no-repeat', backgroundSize:'cover'}} >
-          
+        <Link to={usuario.url_imagen} target='_blank' className= 'foto-perfil rounded-circle mx-auto shadow'
+          style={{width:'160px', height:'160px', backgroundRepeat:'no-repeat', backgroundSize:'cover', backgroundImage: `url(${usuario.url_imagen})`}}>
+  
         </Link>
+
             
           <div className="content-perfil">
             {/* Formulario para subir la imagen */}
             <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='input-group d-flex justify-content-center'>
-              
-              <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' title='Subir Foto'>
-                <FontAwesomeIcon icon={faImage}/>
-              </label>
+              <div className='input-group d-flex justify-content-center'>
+                
+                <label htmlFor="imagen" className='btn btn-outline-secondary rounded-1' title='Subir Foto'>
+                {loading && (
+                        spinner
+                    )}
 
-              <input 
-                type='file' className='form-control' accept='image/*'
-                {... register('imagen',{ required: 'Selecciona una imagen' })} id='imagen' style={{ display: 'none' }}
-                onChange={(event) => onSubmit({ imagen: event.target.files })} />
+                {!loading && (
+                       <FontAwesomeIcon icon={faImage}/>
+                    )}
+                </label>
 
-            </div>
+                <input 
+                  type='file' className='form-control' accept='image/*'
+                  {... register('imagen',{ required: 'Selecciona una imagen' })} id='imagen' style={{ display: 'none' }}
+                  onChange={(event) => onSubmit({ imagen: event.target.files })} />
+
+              </div>
             </form>
 
             <p className='text-center mb-1 fw-bold fs-3 '>{usuario.nombre}</p>

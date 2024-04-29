@@ -925,6 +925,7 @@ BEGIN
 				WHERE cp.calificacion = elemento 
 				AND YEAR(cp.fecha_comentario) = year_actual 
 				AND MONTH(cp.fecha_comentario) = mes_actual 
+                AND p.producto_inactivo = 0
 				AND ip.id_imagenesProd = (
 					SELECT MIN(id_imagenesProd)
 					FROM tbl_imagenesproductos
@@ -939,6 +940,7 @@ BEGIN
 				WHERE cp.calificacion = elemento 
 				AND YEAR(cp.fecha_comentario) = year_actual 
 				AND MONTH(cp.fecha_comentario) = mes_actual 
+                AND p.producto_inactivo = 0
 				AND ip.id_imagenesProd = (
 					SELECT MIN(id_imagenesProd)
 					FROM tbl_imagenesproductos
@@ -972,6 +974,7 @@ BEGIN
 				WHERE cp.calificacion = elemento 
 				AND YEAR(cp.fecha_comentario) = year_actual 
 				AND MONTH(cp.fecha_comentario) = mes_actual 
+                AND p.producto_inactivo = 0
 				AND p.usuario_id <> id_usuario
 				AND ip.id_imagenesProd = (
 					SELECT MIN(id_imagenesProd)
@@ -987,6 +990,7 @@ BEGIN
 				WHERE cp.calificacion = elemento 
 				AND YEAR(cp.fecha_comentario) = year_actual 
 				AND MONTH(cp.fecha_comentario) = mes_actual 
+                AND p.producto_inactivo = 0
 				AND p.usuario_id <> id_usuario
 				AND ip.id_imagenesProd = (
 					SELECT MIN(id_imagenesProd)
