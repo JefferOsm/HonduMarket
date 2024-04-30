@@ -32,16 +32,22 @@ function CSV_Publicar() {
   };
 
   const handleFileRead = (event) => {
+    let precio = null;
     const content = event.target.result;
     const lines = content.split('\n');
     const parsedContent = lines.map(line => {
       const values = line.split(',');
       console.log(values)
-      const precio = parseInt(values[2].replace(/[^\d.]/g, ''));
+      if(values[2] !== undefined){
+        precio = parseInt(values[2].replace(/[^\d.]/g, ''));
+      }else{
+        precio = undefined;
+      }
+      
       return {
         nombre: values[0],
         descripcion: values[1],
-        precio: isNaN(precio) ? "Valor no aceptado" : precio, 
+        precio: isNaN(precio) || precio === undefined ? "Valor no aceptado" : precio, 
         categoria: values[3],
         estado: values[4],
         departamento: values[5]
@@ -152,7 +158,7 @@ function CSV_Publicar() {
       const producto = contenido[i];
       const imagenesProducto = imagenes[i];
 
-      if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio)) {
+      if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio) || producto.precio === undefined) {
         alert('Hay campos incorrectos')
         setSubiendo(false);
         return
@@ -218,7 +224,7 @@ function CSV_Publicar() {
                   <td>{index + 1}</td>
                   <td>{producto.nombre}</td>
                   <td>{producto.descripcion}</td>
-                  <td className={isNaN(producto.precio) ? 'bg-danger-subtle text-danger-emphasis' : ''}>{producto.precio}</td>
+                  <td className={isNaN(producto.precio) || producto.precio === undefined ? 'bg-danger-subtle text-danger-emphasis' : ''}>{producto.precio}</td>
 
                   <td className={producto.categoria !== undefined ? '' : 'bg-danger-subtle text-danger-emphasis'}>
                     {producto.categoria !== undefined ? producto.categoria : 'valor no aceptado'}
