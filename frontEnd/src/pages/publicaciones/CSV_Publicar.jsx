@@ -146,7 +146,11 @@ function CSV_Publicar() {
       const producto = contenido[i];
       const imagenesProducto = imagenes[i];
 
-      if(!imagenesProducto || imagenesProducto.length === 0){
+      if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio) || producto.precio === undefined) {
+        alert('Hay campos incorrectos')
+        setSubiendo(false);
+        return;
+      } else if (!imagenesProducto || imagenesProducto.length === 0) {
         alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
         setSubiendo(false);
         return;
@@ -157,16 +161,6 @@ function CSV_Publicar() {
     for (let i = 0; i < contenido.length; i++) {
       const producto = contenido[i];
       const imagenesProducto = imagenes[i];
-
-      if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio) || producto.precio === undefined) {
-        alert('Hay campos incorrectos')
-        setSubiendo(false);
-        return
-      } else if (!imagenesProducto || imagenesProducto.length === 0) {
-        alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
-        setSubiendo(false);
-        return;
-      }
 
       const formData = new FormData();
       formData.append('nombre', producto.nombre);
