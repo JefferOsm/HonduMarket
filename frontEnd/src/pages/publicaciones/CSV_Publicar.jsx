@@ -27,6 +27,7 @@ function CSV_Publicar() {
       reader.onload = handleFileRead;
       reader.readAsText(file);
     }
+
   };
 
   const handleFileRead = (event) => {
@@ -34,6 +35,7 @@ function CSV_Publicar() {
     const lines = content.split('\n');
     const parsedContent = lines.map(line => {
       const values = line.split(',');
+      console.log(values)
       const precio = parseInt(values[2].replace(/[^\d.]/g, ''));
       return {
         nombre: values[0],
@@ -127,20 +129,36 @@ function CSV_Publicar() {
       newImagenes[index] = files;
       return newImagenes;
     });
+
+
   };
 
 
   const handleAgregarPublicacion = async () => {
+    for (let i = 0; i < contenido.length; i++){
+      const producto = contenido[i];
+      const imagenesProducto = imagenes[i];
+
+      if(!imagenesProducto || imagenesProducto.length === 0){
+        alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
+        setSubiendo(false);
+        return;
+      }
+    }
+
     setSubiendo(true);
     for (let i = 0; i < contenido.length; i++) {
       const producto = contenido[i];
       const imagenesProducto = imagenes[i];
 
       if (producto.departamento === undefined || producto.estado === undefined || producto.categoria === undefined || isNaN(producto.precio)) {
-        continue;
+        alert('Hay campos incorrectos')
+        setSubiendo(false);
+        return
       } else if (!imagenesProducto || imagenesProducto.length === 0) {
         alert('Es necesario subir al menos una imagen para el producto: ' + producto.nombre);
-        continue;
+        setSubiendo(false);
+        return;
       }
 
       const formData = new FormData();
@@ -227,7 +245,10 @@ function CSV_Publicar() {
 
       <div>
         <div className='py-3 px-3 d-flex justify-content-end'>
-          <button className="btn btn-primary" onClick={handleAgregarPublicacion} disabled={contenido.length === 0 || subiendo}>Agregar publicaciones</button>
+          <button className="btn btn-primary" onClick={handleAgregarPublicacion} 
+          disabled={contenido.length === 0 || subiendo }>
+            Agregar publicaciones
+          </button>
         </div>
       </div>
 
