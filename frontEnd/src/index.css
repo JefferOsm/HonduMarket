@@ -414,6 +414,12 @@ input[type=number] { -moz-appearance:textfield; }
   right: 10px;
 }
 
+.btn-vendido-publicacion{
+  position: absolute;
+  bottom: 10px;
+  right: 215px;
+}
+
 .btn-editar-publicacion{
   position: absolute;
   bottom: 10px;

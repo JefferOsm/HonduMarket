@@ -167,3 +167,8 @@ export const Carrusel_1_Request= async (values_1)=> {
   const response = await axios.post(`/productos/Carrusel_1`, { values_1});
   return response.data; // Devuelve los datos de respuesta del servidor
 }
+
+export const venderProdReq= async(id)=>{
+  const response= await axios.put(`/productos/vendido/${id}`);
+  return response.data
+}

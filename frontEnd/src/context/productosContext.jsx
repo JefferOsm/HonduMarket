@@ -32,7 +32,8 @@ import {
     eliminarVideoRequest,
     productosCategoriasReq,
     sucribirseCategoriaReq,
-    validarSuscripcionReq
+    validarSuscripcionReq,
+    venderProdReq
 } from "../api/productos";
 
 
@@ -477,6 +478,20 @@ export const ProductosProvider = ({ children }) => {
                 console.log(error)
             }
         }
+
+        const venderProducto= async(id)=>{
+            try {
+                const response= await venderProdReq(id)
+                console.log(response.mensaje)
+                return response
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+
     return (
         <ProductosContext.Provider value={{
             obtenerCategorias,
@@ -536,7 +551,8 @@ export const ProductosProvider = ({ children }) => {
             productosCategoria,
             productosCat,
             suscripcionCategoria,
-            validarSuscripcion
+            validarSuscripcion,
+            venderProducto
         }}>
             {children}
         </ProductosContext.Provider>

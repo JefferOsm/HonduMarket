@@ -6,7 +6,7 @@ import { usarProductosContex } from '../../context/productosContext';
 import { usarAutenticacion } from "../../context/autenticacion";
 import UsuarioModal from '../../components/UsuarioModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faCloudArrowUp, faHeart, faPhone, faSquarePen, faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCloudArrowUp, faHeart, faPhone, faSquareCheck, faSquarePen, faTrash, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import ReactPlayer from 'react-player'
 import DeletePublicacionModal from "../../components/DeletePublicacionModal";
 import ReactStars from "react-rating-stars-component";
@@ -55,6 +55,13 @@ function VistaArticulo() {
     setShowDelete(true)
   };
 
+  const[btnVenta,setBtnVenta]=useState(true)
+  const marcarVenta = async(id) => {
+    setBtnVenta(false)
+    const response= await venderProducto(id)
+    toast.success(response.mensaje)
+  };
+
   const navigate = useNavigate();
   const handleShowEdit = () => {
     navigate(`/Editar_articulo/${detailProduct.nombre}/${detailProduct.id}`);
@@ -74,7 +81,7 @@ function VistaArticulo() {
   const { obtenerImagenes, obtenerDetalles, detailProduct, imagenesProduct,
     videoProduct, obtenerUsuario, agregarListaDeseos, mensajeDeseo, validarListaDeseo, validarLista,
     obtenerCalificaciones, cambiarEstadoPublicacion, obtenerCalificacionesProducto, obtenerComentariosProducto,
-    agregarCalificacionProducto, editarCalificacionProducto, usuarioProduct } = usarProductosContex();
+    agregarCalificacionProducto, editarCalificacionProducto, usuarioProduct, venderProducto } = usarProductosContex();
 
 
 
@@ -447,13 +454,20 @@ function VistaArticulo() {
 
           {botonListaUsuario ? (
             <>
+            {(detailProduct.producto_inactivo != 1 && btnVenta) && (
+              <button className="btn btn-outline-success btn-vendido-publicacion" 
+              onClick={()=>{marcarVenta(id)}}>
+                <FontAwesomeIcon icon={faSquareCheck} /> Marcar como vendido
+              </button>
+            )}
+
               <button className="btn btn-outline-danger btn-eliminar-publicacion" onClick={handleShowDelete}>
                 <FontAwesomeIcon icon={faTrash} /> Eliminar
               </button>
               <button className="btn btn-outline-primary btn-editar-publicacion" onClick={handleShowEdit}>
                 <FontAwesomeIcon icon={faSquarePen} /> Editar
               </button>
-              {detailProduct.producto_inactivo === 1 && (
+              {(detailProduct.producto_inactivo === 1 || !btnVenta) && (
                 <button className="btn bc-secondary btn-resubir-publicacion" onClick={handleResubir}>
                   <FontAwesomeIcon icon={faCloudArrowUp} /> Resubir
                 </button>
