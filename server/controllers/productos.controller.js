@@ -668,3 +668,19 @@ export const obtenerDiasInactividad = async (req,res) =>{
     });
   }
 }
+
+export const marcarProdVendido = async (req,res) =>{
+  try{
+    const [rows] = await pool.query("CALL sp_marcarVendido(?)",[req.params.id]);
+    if(rows.affectedRows>0){
+      res.json({mensaje:'El producto ahora esta inactivo'})
+    }else{
+      res.json({mensaje:'Ocurrio un fallo al marcar como vendido el producto'})
+    }
+  }catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Ha Ocurrido un Error al vender el producto",
+    });
+  }
+}

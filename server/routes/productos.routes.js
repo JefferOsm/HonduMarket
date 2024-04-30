@@ -8,7 +8,8 @@ import { obtenerCategorias,agregarProducto, obtenerPublicacionesUsuario, obtener
     suscribirseCategoria,
     validacionSuscripcion,
     inactividadProductos,
-    obtenerDiasInactividad} from "../controllers/productos.controller.js";
+    obtenerDiasInactividad,
+    marcarProdVendido} from "../controllers/productos.controller.js";
 import { autenticacionUsuario } from "../middlewares/auth.js";
 import {productoParser, videoParser} from '../middlewares/multer.js'
 
@@ -106,6 +107,9 @@ router.put('/inactividad', autenticacionUsuario, inactividadProductos)
 
 //obtener el dia limite
 router.get('/inactividad/dia', autenticacionUsuario, obtenerDiasInactividad)
+
+//obtener el dia limite
+router.put('/vendido/:id', autenticacionUsuario, marcarProdVendido)
 
 
 

@@ -1043,3 +1043,16 @@ BEGIN
     UPDATE tbl_productos SET producto_inactivo = 1 WHERE fecha_publicacion < DATE_SUB(NOW(), INTERVAL v_dias DAY) AND producto_inactivo = 0;
 END //
 DELIMITER ;
+
+
+-- Cambiar estado del producto
+DELIMITER //
+CREATE PROCEDURE sp_marcarVendido(IN p_producto_id INT)
+BEGIN
+    UPDATE tbl_productos
+    SET 
+        producto_inactivo = 1
+    WHERE 
+        producto_id = p_producto_id;
+END //
+DELIMITER ;
