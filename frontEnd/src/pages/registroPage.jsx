@@ -166,7 +166,7 @@ function RegistroPage() {
                     </div>
                     
                     <div className="col-12">
-                      <button type="submit" className="btn bc-secondary " disabled={!isAcept}>Crear Cuenta</button>
+                      <button type="submit" className="btn btn-channel bgc-secondary text-light " disabled={!isAcept}>Crear Cuenta</button>
                     </div>
                     
                     <p><a>Ya tienes una cuenta? </a><Link to='/login' className="link-info fw-bold">Inicia Sesion</Link></p> 

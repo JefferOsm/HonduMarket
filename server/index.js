@@ -189,5 +189,5 @@ io.on('connection', socket =>{
 
 server.listen(PORT, () => {
   console.log("servidor inciado");
-  //enviarCorreos();
+  enviarCorreos();
 });

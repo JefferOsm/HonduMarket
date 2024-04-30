@@ -61,7 +61,7 @@ function LoginPage() {
                         <p className="text-danger">La Contraseña es Obligatoria</p>
                       )
                 }
-                  <button type="submit" className="btn fw-bold bc-secondary">Iniciar sesión</button>
+                  <button type="submit" className="btn fw-bold bgc-secondary btn-channel">Iniciar sesión</button>
               </form>
 
               <div className="dropdown-divider"></div>
