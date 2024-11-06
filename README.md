@@ -22,14 +22,14 @@ hace responsable de cualquier mal uso que se le dé.
 
 - RF3: Los usuarios registrados podrán registrar productos para la venta
 proporcionando una:
- Descripción
- Monto
- Departamento donde se encuentre el producto
- Seleccionar categoría (ejemplo: inmuebles, vehículos, hogar, moda,
+ - Descripción
+ - Monto
+ - Departamento donde se encuentre el producto
+ - Seleccionar categoría (ejemplo: inmuebles, vehículos, hogar, moda,
 futuros padres, mascotas, electrónica, servicios, negocios, empleo)
- Estado (nuevo o usado)
- Fotografías (6 como máximo)
- Vídeo (opcional para el usuario)
+ - Estado (nuevo o usado)
+ - Fotografías (6 como máximo)
+ - Vídeo (opcional para el usuario)
 
 - RF4: El sistema debe permitir realizar búsquedas de productos a usuarios no
 registrados, pero solo a los usuarios registrados se les mostrara los datos del
@@ -40,12 +40,12 @@ categoría, palabra clave, precio y departamento donde se encuentre el
 producto.
 
 - RF6: El sistema proporcionara tres tipos de chat:
- El primero servirá para proporcionar comunicación entre los vendedores
+ - El primero servirá para proporcionar comunicación entre los vendedores
 y los clientes que tengan dudas o quieran ponerse de acuerdo por este
 medio, además de poder compartir archivos.
- El segundo servirá como un canal de difusión para que los vendedores
+ - El segundo servirá como un canal de difusión para que los vendedores
 puedan compartir noticias de nuevos productos publicados.
- Un tercero donde los usuarios podrán comunicarse buscando los
+ - Un tercero donde los usuarios podrán comunicarse buscando los
 nombres de los mismos
 
 - RF7: Los productos publicados tendrán una vigencia de 60 días, pero esto será
