@@ -22,10 +22,10 @@ hace responsable de cualquier mal uso que se le dé.
 
 - RF3: Los usuarios registrados podrán registrar productos para la venta
 proporcionando una:
- - Descripción
- - Monto
- - Departamento donde se encuentre el producto
- - Seleccionar categoría (ejemplo: inmuebles, vehículos, hogar, moda,
+ -- Descripción
+ -- Monto
+ -- Departamento donde se encuentre el producto
+ -- Seleccionar categoría (ejemplo: inmuebles, vehículos, hogar, moda,
 futuros padres, mascotas, electrónica, servicios, negocios, empleo)
  - Estado (nuevo o usado)
  - Fotografías (6 como máximo)
